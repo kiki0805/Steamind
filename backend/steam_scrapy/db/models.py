@@ -5,7 +5,7 @@ db = SqliteExtDatabase('steam.db')
 
 class BaseModel(Model):
     class Meta:
-        db = db
+        database = db
 
 class Game(BaseModel):
     appid = IntegerField(primary_key=True)
@@ -43,7 +43,7 @@ class Review(Model):
     voted_up = BooleanField()
 
     class Meta:
-        db = db
+        database = db
         indexes = ((('reviewer', 'game'), True), )
 
 
@@ -52,7 +52,7 @@ class GenreProps(Model):
     game = ForeignKeyField(Game)
 
     class Meta:
-        db = db
+        database = db
         indexes = ((('genre', 'game'), True), )
 
 
@@ -61,7 +61,7 @@ class Tagged(Model):
     game = ForeignKeyField(Game)
 
     class Meta:
-        db = db
+        database = db
         indexes = ((('tag', 'game'), True), )
 
 
@@ -71,7 +71,7 @@ class Playtime(Model):
     time = IntegerField()
 
     class Meta:
-        db = db
+        database = db
         indexes = ((('user', 'game'), True), )
 
 
@@ -80,7 +80,7 @@ class Recommended(Model):
     tag = ForeignKeyField(Tag)
 
     class Meta:
-        db = db
+        database = db
         indexes = ((('user', 'tag'), True), )
 
 
@@ -89,7 +89,7 @@ class Friendship(Model):
     user2 = ForeignKeyField(User)
 
     class Meta:
-        db = db
+        database = db
         constraints = [Check('user1_id > user2_id'), ]
 
 

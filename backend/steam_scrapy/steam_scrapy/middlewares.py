@@ -3,10 +3,14 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import scrapy
 from scrapy import signals
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+from steam_scrapy.items import *
+import logging
+logger = logging.getLogger(__name__)
 
 
 class SteamScrapySpiderMiddleware:
@@ -34,7 +38,25 @@ class SteamScrapySpiderMiddleware:
 
         # Must return an iterable of Request, or item objects.
         for i in result:
-            yield i
+            appid = i["appid"]
+
+            if type(i) is RetrieveDetailError:
+                # parse store page
+                url = f'https://store.steampowered.com/app/{appid}'
+                yield scrapy.Request(url, callback=spider.parse_store_page, meta={'appid': appid})
+            elif type(i) is GameDetailItem:
+                yield i
+                # parse tags
+                url = f'https://store.steampowered.com/app/{appid}'
+                yield scrapy.Request(url, callback=spider.parse_tags, meta={'appid': appid})
+            elif type(i) is TagsItem:
+                yield i
+                # parse reviews
+                url = f'https://store.steampowered.com/appreviews/{appid}?json=1&language=all'
+                yield scrapy.Request(url, callback=spider.parse_reviews, meta={'appid': appid})
+            elif type(i) is ReviewsItem:
+                yield i
+            
 
     def process_spider_exception(self, response, exception, spider):
         # Called when a spider or process_spider_input() method

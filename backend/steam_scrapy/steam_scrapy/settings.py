@@ -63,7 +63,9 @@ SPIDER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'steam_scrapy.pipelines.SteamScrapyPipeline': 300,
+   'steam_scrapy.pipelines.GameDetailPipeline': 300,
+   'steam_scrapy.pipelines.GameTagsPipeline': 301,
+   'steam_scrapy.pipelines.GameReviewsPipeline': 302,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -17,3 +17,16 @@ class GameDetailItem(scrapy.Item):
     price_overview = scrapy.Field()
     genres = scrapy.Field()
 
+
+class RetrieveDetailError(scrapy.Item):
+    appid = scrapy.Field()
+
+
+class TagsItem(scrapy.Item):
+    tags = scrapy.Field()
+    appid = scrapy.Field()
+
+
+class ReviewsItem(scrapy.Item):
+    reviews = scrapy.Field()
+    appid = scrapy.Field()
