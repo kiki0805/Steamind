@@ -11,7 +11,6 @@ class GameDetailItem(scrapy.Item):
     name = scrapy.Field()
     is_free = scrapy.Field()
     header_image = scrapy.Field()
-    website = scrapy.Field()
     developers = scrapy.Field()
     publishers = scrapy.Field()
     price_overview = scrapy.Field()
@@ -28,5 +27,12 @@ class TagsItem(scrapy.Item):
 
 
 class ReviewsItem(scrapy.Item):
+    positive = scrapy.Field()
+    negative = scrapy.Field()
     reviews = scrapy.Field()
+    appid = scrapy.Field()
+
+
+class OnlineItem(scrapy.Item):
+    count = scrapy.Field()
     appid = scrapy.Field()

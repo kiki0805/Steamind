@@ -11,7 +11,6 @@ class Game(BaseModel):
     appid = IntegerField(primary_key=True)
     name = CharField()
     header_img = TextField()
-    website = TextField(null=True)
     developers = JSONField(default=[])
     publishers = JSONField(default=[])
     price = IntegerField()
@@ -27,24 +26,22 @@ class User(BaseModel):
 
 
 class Genre(BaseModel):
-    description = CharField()
-    id = IntegerField(primary_key=True)
+    description = CharField(unique=True)
 
 
 class Tag(BaseModel):
-    name = CharField()
-    tagid = IntegerField(primary_key=True)
+    name = CharField(unique=True)
 
 
 class Review(Model):
-    reviewer = ForeignKeyField(User)
+    reviewer_steamid = CharField()
     game = ForeignKeyField(Game)
     weight = FloatField()
     voted_up = BooleanField()
 
     class Meta:
         database = db
-        indexes = ((('reviewer', 'game'), True), )
+        indexes = ((('reviewer_steamid', 'game'), True), )
 
 
 class GenreProps(Model):

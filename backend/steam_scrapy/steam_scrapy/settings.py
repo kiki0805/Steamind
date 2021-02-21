@@ -17,15 +17,15 @@ NEWSPIDER_MODULE = 'steam_scrapy.spiders'
 #USER_AGENT = 'steam_scrapy (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+# CONCURRENT_REQUESTS = 5
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+# DOWNLOAD_DELAY = 0.25
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -50,9 +50,11 @@ SPIDER_MIDDLEWARES = {
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'steam_scrapy.middlewares.SteamScrapyDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   # 'steam_scrapy.middlewares.SteamScrapyDownloaderMiddleware': 543,
+   'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+   'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -66,11 +68,12 @@ ITEM_PIPELINES = {
    'steam_scrapy.pipelines.GameDetailPipeline': 300,
    'steam_scrapy.pipelines.GameTagsPipeline': 301,
    'steam_scrapy.pipelines.GameReviewsPipeline': 302,
+   'steam_scrapy.pipelines.GameOnlinePipeline': 303,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = True
 # The initial download delay
 #AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
@@ -83,13 +86,23 @@ ITEM_PIPELINES = {
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
+HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
 #HTTPCACHE_DIR = 'httpcache'
-#HTTPCACHE_IGNORE_HTTP_CODES = []
+HTTPCACHE_IGNORE_HTTP_CODES = [400, 401, 403, 404, 405, 406, 407, 408, 409, 500, 501, 502, 503, 504, 505, 506, 507, 508]
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # CUSTOMIZE
 # LOG_ENABLED = True
-# LOG_LEVEL = 'DEBUG'
-# LOG_FILE = 'log.txt'
+LOG_LEVEL = 'INFO'
+LOG_FILE = 'log-online.txt'
+
+ROTATING_PROXY_LIST = [
+   #  'http://medmjwyq-dest:1k8vvxalgyc7@209.127.191.180:9279',
+   #  'http://medmjwyq-dest:1k8vvxalgyc7@45.94.47.108:8152',
+   '209.127.191.180:9279',
+   '45.94.47.108:8152',
+   '45.95.99.20:7580',
+   '45.95.96.132:8691',
+   '45.95.99.226:7786'
+]

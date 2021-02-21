@@ -1,0 +1,3 @@
+- Use rotated proxy to avoid IP bans
+    - maybe: https://www.webshare.io/
+    - Current proxy setting is only useful for my personal IP
