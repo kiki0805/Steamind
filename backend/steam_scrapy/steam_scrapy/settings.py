@@ -98,8 +98,8 @@ HTTPCACHE_IGNORE_HTTP_CODES = [400, 401, 403, 404, 405, 406, 407, 408, 409, 500,
 
 # CUSTOMIZE
 # LOG_ENABLED = True
-# LOG_LEVEL = 'INFO'
-# LOG_FILE = 'log.txt'
+LOG_LEVEL = 'INFO'
+LOG_FILE = 'log.txt'
 
 # ROTATING_PROXY_LIST = [
 #    #  'http://medmjwyq-dest:1k8vvxalgyc7@209.127.191.180:9279',

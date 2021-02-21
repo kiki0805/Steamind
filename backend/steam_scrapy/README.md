@@ -1,3 +1,10 @@
 - Use rotated proxy to avoid IP bans
+    - Set `ROTATING_PROXY_LIST` / `ROTATING_PROXY_LIST_PATH` in [settings.py](steam_scrapy/settings.py)
     - maybe: https://www.webshare.io/
-    - Current proxy setting is only useful for my personal IP
+    - Current proxy setting is only useful for my personal IP (Zezhe)
+- Game spider:
+    - Set `appids` in [games_spider.py](steam_scrapy/spiders/games_spider.py)
+    - Run `scrapy crawl details`
+- Users spider:
+    - Set `USER_REQUEST_DEPTH` in [constants.py](constants.py)
+    - Run `scrapy crawl users`

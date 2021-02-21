@@ -20,13 +20,13 @@ class UserSpider(scrapy.Spider):
         depth = response.request.meta['depth']
         content = json.loads(response.text)
         player = content['response']['players'][0]
-        yield UserItem(steamid=player['steamid'], avatar=player['avatarfull'], personanate=player['personaname'], depth=depth)
+        yield UserItem(steamid=player['steamid'], avatar=player['avatarfull'], personaname=player['personaname'], depth=depth)
         
     def parse_playtime(self, response):
         depth = response.request.meta['depth']
         steamid = response.request.meta['steamid']
         content = json.loads(response.text)
-        games = content['response']['games']
+        games = content['response'].get('games', [])
         games = [{'appid': game['appid'], 'playtime': game['playtime_forever']} for game in games]
         yield PlaytimeItem(steamid=steamid, games=games, depth=depth)
     

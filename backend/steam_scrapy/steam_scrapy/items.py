@@ -59,5 +59,5 @@ class PlaytimeItem(scrapy.Item):
 
 class RecommendedItem(scrapy.Item):
     steamid = scrapy.Field()
-    tag_name = scrapy.Field()
+    tags = scrapy.Field()
     depth = scrapy.Field()

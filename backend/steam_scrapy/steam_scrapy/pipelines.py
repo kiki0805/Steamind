@@ -135,7 +135,7 @@ class FriendshipPipeline:
             friend_user = None
             query = User.select().where(User.steamid==friend)
             if not query.exists():
-                friend_user = User.create(steanid=friend, avatar="", personaname="")
+                friend_user = User.create(steamid=friend, avatar="", personaname="")
             else:
                 friend_user = query.first()
             if not Friendship.select().where(Friendship.user1==user, Friendship.user2==friend_user).exists() and not Friendship.select().where(Friendship.user2==user, Friendship.user1==friend_user).exists():
@@ -143,6 +143,7 @@ class FriendshipPipeline:
                     Friendship.create(user1=user, user2=friend_user).save()
                 else:
                     Friendship.create(user2=user, user1=friend_user).save()
+        logger.info(f"Saved friendship of {steamid}.")
         return item
 
 
@@ -170,6 +171,7 @@ class PlaytimePipeline:
                 continue
             else:
                 Playtime.create(user=user, game=game_instance, time=playtime).save()
+        logger.info(f"Saved playtime of {steamid}.")
         return item
 
 
@@ -195,4 +197,5 @@ class RecommendedPipeline:
                 continue
             else:
                 Recommended.create(user=user, tag=tag_instance).save()
+        logger.info(f"Saved recommended of {steamid}.")
         return item

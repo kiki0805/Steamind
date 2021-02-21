@@ -39,26 +39,29 @@ class SteamScrapySpiderMiddleware:
 
         # Must return an iterable of Request, or item objects.
         for i in result:
-            appid = i["appid"]
 
             if type(i) is RetrieveDetailError:
+                appid = i["appid"]
                 # parse store page
                 url = f'https://store.steampowered.com/app/{appid}'
                 yield scrapy.Request(url, callback=spider.parse_store_page, meta={'appid': appid}, cookies={'birthtime': '28801','path' : '/',
             'domain' : 'store.steampowered.com'})
             elif type(i) is GameDetailItem:
                 yield i
+                appid = i["appid"]
                 # parse tags
                 url = f'https://store.steampowered.com/app/{appid}'
                 yield scrapy.Request(url, callback=spider.parse_tags, meta={'appid': appid}, cookies={'birthtime': '28801','path' : '/',
             'domain' : 'store.steampowered.com'})
             elif type(i) is TagsItem:
                 yield i
+                appid = i["appid"]
                 # parse reviews
                 url = f'https://store.steampowered.com/appreviews/{appid}?json=1&language=all'
                 yield scrapy.Request(url, callback=spider.parse_reviews, meta={'appid': appid})
             elif type(i) is ReviewsItem:
                 yield i
+                appid = i["appid"]
                 # parse online count
                 url = f'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid={appid}'
                 yield scrapy.Request(url, callback=spider.parse_oneline, meta={'appid': appid})
