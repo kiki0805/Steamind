@@ -10,6 +10,7 @@ from scrapy import signals
 from itemadapter import is_item, ItemAdapter
 from steam_scrapy.items import *
 import logging
+from constants import STEAM_KEY, USER_REQUEST_DEPTH
 logger = logging.getLogger(__name__)
 
 
@@ -58,8 +59,36 @@ class SteamScrapySpiderMiddleware:
                 yield scrapy.Request(url, callback=spider.parse_reviews, meta={'appid': appid})
             elif type(i) is ReviewsItem:
                 yield i
+                # parse online count
+                url = f'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid={appid}'
+                yield scrapy.Request(url, callback=spider.parse_oneline, meta={'appid': appid})
             elif type(i) is OnlineItem:
                 yield i
+            elif type(i) is UserItem:
+                yield i
+                # parse play time
+                url = f'http://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key={STEAM_KEY}&steamid={i["steamid"]}'
+                yield scrapy.Request(url, callback=spider.parse_playtime, meta={'steamid': i["steamid"], 'depth': i['depth']})
+            elif type(i) is PlaytimeItem:
+                yield i
+                # parse recommended
+                url = f'https://store.steampowered.com/dynamicstore/userdata/?id={i["steamid"]}'
+                yield scrapy.Request(url, callback=spider.parse_recommended, meta={'steamid': i["steamid"], 'depth': i['depth']})
+                # if game not exists, yield
+            elif type(i) is RecommendedItem:
+                yield i
+                # parse friends
+                url = f'http://api.steampowered.com/ISteamUser/GetFriendList/v1/?key={STEAM_KEY}&steamid={i["steamid"]}'
+                yield scrapy.Request(url, callback=spider.parse_friends, meta={'steamid': i["steamid"], 'depth': i['depth']})
+            elif type(i) is FriendshipItem:
+                yield i
+                # parse users
+                if i["depth"] > USER_REQUEST_DEPTH:
+                    return
+                for steamid in i['friends']:
+                    url = f'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={STEAM_KEY}&steamids={steamid}'
+                    yield scrapy.Request(url, callback=spider.parse, meta={'depth': i['depth']})
+                
             
 
     def process_spider_exception(self, response, exception, spider):

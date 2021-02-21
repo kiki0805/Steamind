@@ -12,7 +12,7 @@ class GamesSpider(scrapy.Spider):
         
         count = 0
         # appids = [726780,]
-        id_range = [1000, 2000]
+        id_range = [3000, 5000]
         # for appid in appids:
         for appid in appids[id_range[0]: id_range[1]]:
             # if count > 10:
@@ -142,3 +142,14 @@ class GamesSpider(scrapy.Spider):
             negative=summary['total_negative'],
         )
         yield item
+
+    # yield OnlineItem
+    def parse_oneline(self, response):
+        appid = response.request.meta['appid']
+        content = json.loads(response.text)
+        if response.status == 404:
+            yield OnlineItem(count=content['response']['result'], appid=appid)
+        else:
+            yield OnlineItem(count=content['response']['player_count'], appid=appid)
+        self.logger.info(f'[{str(appid):7s}]\tSucceed in parse_online.')
+

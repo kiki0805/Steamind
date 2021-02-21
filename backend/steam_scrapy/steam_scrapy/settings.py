@@ -69,6 +69,10 @@ ITEM_PIPELINES = {
    'steam_scrapy.pipelines.GameTagsPipeline': 301,
    'steam_scrapy.pipelines.GameReviewsPipeline': 302,
    'steam_scrapy.pipelines.GameOnlinePipeline': 303,
+   'steam_scrapy.pipelines.UserPipeline': 304,
+   'steam_scrapy.pipelines.FriendshipPipeline': 305,
+   'steam_scrapy.pipelines.PlaytimePipeline': 306,
+   'steam_scrapy.pipelines.RecommendedPipeline': 307,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -94,15 +98,25 @@ HTTPCACHE_IGNORE_HTTP_CODES = [400, 401, 403, 404, 405, 406, 407, 408, 409, 500,
 
 # CUSTOMIZE
 # LOG_ENABLED = True
-LOG_LEVEL = 'INFO'
-LOG_FILE = 'log-online.txt'
+# LOG_LEVEL = 'INFO'
+# LOG_FILE = 'log.txt'
 
-ROTATING_PROXY_LIST = [
-   #  'http://medmjwyq-dest:1k8vvxalgyc7@209.127.191.180:9279',
-   #  'http://medmjwyq-dest:1k8vvxalgyc7@45.94.47.108:8152',
-   '209.127.191.180:9279',
-   '45.94.47.108:8152',
-   '45.95.99.20:7580',
-   '45.95.96.132:8691',
-   '45.95.99.226:7786'
-]
+# ROTATING_PROXY_LIST = [
+#    #  'http://medmjwyq-dest:1k8vvxalgyc7@209.127.191.180:9279',
+#    #  'http://medmjwyq-dest:1k8vvxalgyc7@45.94.47.108:8152',
+#    # '209.127.191.180:9279',
+#    # '45.94.47.108:8152',
+#    # '45.95.99.20:7580',
+#    # '45.95.96.132:8691',
+#    # '45.95.99.226:7786',
+#    # '45.95.96.237:8796',
+#    # '45.95.96.187:8746',
+#    # '45.136.228.154:6209',
+#    '193.8.56.119:9183',
+#    '45.94.47.66:8110'
+# ]
+ROTATING_PROXY_LIST_PATH = 'proxies.txt'
+
+# RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429, 403, 404]
+# RETRY_TIMES = 5
+HTTPERROR_ALLOWED_CODES  =[404]

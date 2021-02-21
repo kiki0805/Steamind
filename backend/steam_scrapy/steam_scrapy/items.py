@@ -36,3 +36,28 @@ class ReviewsItem(scrapy.Item):
 class OnlineItem(scrapy.Item):
     count = scrapy.Field()
     appid = scrapy.Field()
+
+
+class UserItem(scrapy.Item):
+    steamid = scrapy.Field()
+    avatar = scrapy.Field()
+    personaname = scrapy.Field()
+    depth = scrapy.Field()
+
+
+class FriendshipItem(scrapy.Item):
+    steamid = scrapy.Field()
+    friends = scrapy.Field()
+    depth = scrapy.Field()
+
+
+class PlaytimeItem(scrapy.Item):
+    games = scrapy.Field()
+    steamid = scrapy.Field()
+    depth = scrapy.Field()
+
+
+class RecommendedItem(scrapy.Item):
+    steamid = scrapy.Field()
+    tag_name = scrapy.Field()
+    depth = scrapy.Field()

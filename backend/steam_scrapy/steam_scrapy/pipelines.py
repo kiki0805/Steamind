@@ -17,17 +17,28 @@ class GameDetailPipeline:
     def process_item(self, item, spider):
         if type(item) is not GameDetailItem:
             return item
-        if Game.select().where(Game.appid==item['appid']).exists():
+        query = Game.select().where(Game.appid==item['appid'])
+        if query.exists() and query.first().name != "":
             logger.info(f"Game {item['appid']} is already recorded.")
             return item
-        game = Game.create(
-            name=item['name'],
-            appid=item['appid'],
-            header_img=item['header_image'],
-            developers=item['developers'],
-            price=0 if item['is_free'] else item['price_overview']['initial'], # EUR
-        )
-        game.save()
+        game = None
+        if not query.exists():
+            game = Game.create(
+                name=item['name'],
+                appid=item['appid'],
+                header_img=item['header_image'],
+                developers=item['developers'],
+                publishers=item['publishers'],
+                price=0 if item['is_free'] else item['price_overview']['initial'], # EUR
+            )
+            game.save()
+        else:
+            game = query.first()
+            game.name=item['name']
+            game.appid=item['appid']
+            game.header_img=item['header_image']
+            game.price=0 if item['is_free'] else item['price_overview']['initial'] # EUR
+            game.save()
         for genre in item['genres']:
             query = Genre.select().where(Genre.description==genre)
             if query.exists():
@@ -90,7 +101,98 @@ class GameOnlinePipeline:
             return item
         appid = item['appid']
         game = Game.select().where(Game.appid==appid).first()
+        if game is None:
+            return item
         game.current_online = item['count']
         game.save()
         logger.info(f"Saved online count of {appid}.")
+        return item
+
+from constants import STEAM_KEY, STEAMID, USER_REQUEST_DEPTH
+class UserPipeline:
+    collection_name = 'user'
+
+    def process_item(self, item, spider):
+        if type(item) is not UserItem:
+            return item
+        steamid = item['steamid']
+        if User.select().where(User.steamid==steamid).exists():
+            return item
+        user = User.create(steamid=steamid, avatar=item['avatar'], personaname=item['personaname'])
+        user.save()
+        return item
+
+
+class FriendshipPipeline:
+    collection_name = 'friend'
+
+    def process_item(self, item, spider):
+        if type(item) is not FriendshipItem:
+            return item
+        steamid = item['steamid']
+        user = User.select().where(User.steamid==steamid).first()
+        for friend in item['friends']:
+            friend_user = None
+            query = User.select().where(User.steamid==friend)
+            if not query.exists():
+                friend_user = User.create(steanid=friend, avatar="", personaname="")
+            else:
+                friend_user = query.first()
+            if not Friendship.select().where(Friendship.user1==user, Friendship.user2==friend_user).exists() and not Friendship.select().where(Friendship.user2==user, Friendship.user1==friend_user).exists():
+                if (user.id > friend_user.id):
+                    Friendship.create(user1=user, user2=friend_user).save()
+                else:
+                    Friendship.create(user2=user, user1=friend_user).save()
+        return item
+
+
+class PlaytimePipeline:
+    collection_name = 'playtime'
+
+    def process_item(self, item, spider):
+        if type(item) is not PlaytimeItem:
+            return item
+        steamid = item['steamid']
+        user = User.select().where(User.steamid==steamid).first()
+        for game in item['games']:
+            appid = game['appid']
+            playtime = game['playtime']
+            game_instance = None
+            query = Game.select().where(Game.appid==appid)
+            if query.exists():
+                game_instance = query.first()
+            else:
+                game_instance = Game.create(appid=appid, name="", header_img="", price=-1)
+                game_instance.save()
+
+            query = Playtime.select().where(Playtime.user==user, Playtime.game==game_instance)
+            if query.exists():
+                continue
+            else:
+                Playtime.create(user=user, game=game_instance, time=playtime).save()
+        return item
+
+
+class RecommendedPipeline:
+    collection_name = 'recommended'
+
+    def process_item(self, item, spider):
+        if type(item) is not RecommendedItem:
+            return item
+        steamid = item['steamid']
+        user = User.select().where(User.steamid==steamid).first()
+        for tag in item['tags']:
+            tag_instance = None
+            query = Tag.select().where(Tag.name==tag)
+            if query.exists():
+                tag_instance = query.first()
+            else:
+                tag_instance = Tag.create(name=tag)
+                tag_instance.save()
+            
+            query = Recommended.select().where(Recommended.user==user, Recommended.tag==tag_instance)
+            if query.exists():
+                continue
+            else:
+                Recommended.create(user=user, tag=tag_instance).save()
         return item
