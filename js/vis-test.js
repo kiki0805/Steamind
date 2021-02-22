@@ -1,7 +1,6 @@
 import { load_data } from './load-data.js';
 
 var graph = load_data();
-console.log(graph);
 
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
@@ -22,7 +21,7 @@ setTimeout(function(){
         .selectAll("line")
         .data(graph.links)
         .enter().append("line")
-        .style('stroke-width', function(d) { return d.value });
+        .style('stroke-width', function(d) { return d.width });
 
     var node = svg.append("g")
         .attr("class", "nodes")
