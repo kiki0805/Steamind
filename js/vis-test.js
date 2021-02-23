@@ -2,7 +2,7 @@ function load_data(){
     var links = [];
     var nodes = [];
 
-    d3.json('../db/new_users.json', function(data) {
+    d3.json('backend/steam_scrapy/new_users.json', function(data) {
         var user = data[0]; // main user
         user.playtime.forEach(game => {    // link user to owned games
             var size = game.playtime/100; // decide size of game-node
@@ -12,7 +12,7 @@ function load_data(){
         nodes.push({'id':user.steamid, 'name':user.personaname, 'type':1}); // type 1: user
     })
 
-    d3.json('../db/new_games.json', function(data) {
+    d3.json('backend/steam_scrapy/new_games.json', function(data) {
         userGames = nodes.filter(game => game.type == 2); // get user-owned games
 
         // grab 50 first mock-data games
