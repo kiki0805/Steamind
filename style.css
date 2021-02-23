@@ -12,3 +12,8 @@ text {
     font-family: sans-serif;
     font-size: 10px;
 }
+
+.svg {
+    width: auto;
+    height: auto;
+}

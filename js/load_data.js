@@ -1,12 +1,10 @@
-function load_data(){
+export function load_data(){
     var links = [];
     var nodes = [];
 
-
-    d3.json('backend/steam_scrapy/new_users.json')
+    d3.json('../backend/steam_scrapy/new_users.json')
         .then(function(data) {
         var user = data[0]; // main user
-
         user.playtime.forEach(game => {    // link user to owned games
             var size = game.playtime/100; // decide size of game-node
             links.push({'source':user.steamid, 'target':game.game_name, 'value':2});
@@ -28,20 +26,5 @@ function load_data(){
             }
         }
     });
-
-    console.log(nodes, links);
     return {nodes, links};
 };
-
-var graph = load_data();
-
-var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
-
-var color = d3.scaleOrdinal(d3.schemePaired);
-
-//var simulation = d3.forceSimulation()
-//    .force("link", d3.forceLink().id(function(d) { return d.id; }))
-//    .force("charge", d3.forceManyBody())
-//    .force("center", d3.forceCenter(width / 2, height / 2));
