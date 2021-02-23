@@ -1,4 +1,4 @@
-import {load_data} from './load_data.js';
+import { load_data } from './load-data.js';
 
 var graph = load_data();
 
@@ -9,9 +9,9 @@ var svg = d3.select("svg"),
 var color = d3.scaleOrdinal(d3.schemePaired);
 
 var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(150).strength(0.1))
     .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    .force("center", d3.forceCenter(width/2, height/2));
 
 
 // render
@@ -21,8 +21,47 @@ setTimeout(function(){
         .selectAll("line")
         .data(graph.links)
         .enter().append("line")
-        .style('stroke-width', function(d) { return d.value });
+        .style('stroke-width', function(d) { return d.width });
 
+    var node = svg.append("g")
+        .attr("class", "nodes")
+        .selectAll('.nodes')
+        .data(graph.nodes)
+        .enter().append("g")
+        .attr('class', function(d) {
+            if(d.type == 1) {
+                return 'user' // class cannot be ints
+            }else {
+                return 'game'
+            }
+        })
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+
+    d3.selectAll('.user').append('rect')
+        .data(graph.nodes)
+        .attr('width', 20)
+        .attr('height', 20)
+        .attr('fill', function(d) { return color(d.type); });
+
+    d3.selectAll('.game').append('circle')
+        .data(graph.nodes)
+        .attr("r", function(d){
+            if(d.type == 2) {
+                return d.size;
+            }else {
+                return 5;
+            }
+        })
+        .attr("fill", function(d) { return color(d.type); })
+        .on('click', function(d, i) {
+            // d : data object, i : index of d within collection
+            console.log('you clicked on ' + d.id);
+        });
+
+        /*
     var node = svg.append("g")
         .attr("class", "nodes")
         .selectAll("g")
@@ -46,6 +85,7 @@ setTimeout(function(){
                 // d : data object, i : index of d within collection
                 console.log('you clicked on ' + d.id);
             })
+            */
     
     node.append("title")
         .text(function(d) { 
