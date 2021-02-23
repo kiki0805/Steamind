@@ -6,16 +6,17 @@ var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
-var color = d3.scaleOrdinal(d3.schemePaired);
+var color = d3.scaleOrdinal(d3.schemeSet1);
 
 var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(150).strength(0.1))
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(500).strength(0.1))
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width/2, height/2));
 
 
 // render
 setTimeout(function(){
+
     var link = svg.append("g")
         .attr("class", "links")
         .selectAll("line")
@@ -35,10 +36,22 @@ setTimeout(function(){
                 return 'game'
             }
         })
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
+        .call(d3.drag() 
+            .on("start", function(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            })
+            .on("drag", function(event, d) {
+                //d3.select(this).raise().attr("cx", d.x = event.x).attr("cy", d.y = event.y);
+                d.fx = event.x;
+                d.fy = event.y;
+            })
+            .on("end", function(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }));
 
     d3.selectAll('.user').append('rect')
         .data(graph.nodes)
@@ -55,37 +68,7 @@ setTimeout(function(){
                 return 5;
             }
         })
-        .attr("fill", function(d) { return color(d.type); })
-        .on('click', function(d, i) {
-            // d : data object, i : index of d within collection
-            console.log('you clicked on ' + d.id);
-        });
-
-        /*
-    var node = svg.append("g")
-        .attr("class", "nodes")
-        .selectAll("g")
-        .data(graph.nodes)
-        .enter().append("g");
-    
-    var circles = node.append("circle")
-        .attr("r", function(d){
-            if(d.type == 2) {
-                return d.size;
-            }else {
-                return 5;
-            }
-        })
-        .attr("fill", function(d) { return color(d.type); })
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended))
-        .on('click', function(d, i) {
-                // d : data object, i : index of d within collection
-                console.log('you clicked on ' + d.id);
-            })
-            */
+        .attr("fill", function(d) { return color(d.type); });
     
     node.append("title")
         .text(function(d) { 
@@ -114,19 +97,21 @@ setTimeout(function(){
     console.log('ok');
 }, 3000);
 
+/*
 function dragstarted(d) {
-    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
+    //if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    //d.fx = d.x;
+    //d.fy = d.y;
 };
   
 function dragged(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
+    //d.fy = d3.event.y;
+    //d.fx = d3.event.x;
+    //d.fy = d3.event.y;
 };
   
 function dragended(d) {
-    if (!d3.event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-};
+    //if (!d3.event.active) simulation.alphaTarget(0);
+    //d.fx = null;
+    //d.fy = null;
+};*/
