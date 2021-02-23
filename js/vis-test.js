@@ -6,10 +6,10 @@ var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
-var color = d3.scaleOrdinal(d3.schemeSet1);
+var color = d3.scaleOrdinal(d3.schemeTableau10);
 
 var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(500).strength(0.1))
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(250).strength(0.1))
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width/2, height/2));
 
@@ -51,24 +51,26 @@ setTimeout(function(){
                 if (!event.active) simulation.alphaTarget(0);
                 d.fx = null;
                 d.fy = null;
-            }));
+            })
+        );
+            
 
     d3.selectAll('.user').append('rect')
         .data(graph.nodes)
-        .attr('width', 20)
-        .attr('height', 20)
-        .attr('fill', function(d) { return color(d.type); });
+        .attr('width', function(d) { return d.size })
+        .attr('height', function(d) { return d.size })
+        .attr('fill', '#ff9da7');
 
     d3.selectAll('.game').append('circle')
         .data(graph.nodes)
-        .attr("r", function(d){
+        .attr("r", function(d){ return d.size; })
+        .attr("fill", function(d) {
             if(d.type == 2) {
-                return d.size;
-            }else {
-                return 5;
+                return '#edc949';
+            }else if(d.type == 3){
+                return '#bab0ab';
             }
-        })
-        .attr("fill", function(d) { return color(d.type); });
+         });
     
     node.append("title")
         .text(function(d) { 
@@ -95,7 +97,7 @@ setTimeout(function(){
         });
     };
     console.log('ok');
-}, 3000);
+}, 1000);
 
 /*
 function dragstarted(d) {
