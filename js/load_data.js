@@ -18,7 +18,7 @@ export function load_data() {
             });
         })
         //Use the "old" new_games.json for demo
-    d3.json('../backend/steam_scrapy/new_games.json')
+    d3.json('backend/steam_scrapy/new_games.json')
         .then(function(data) {
             var userGames = nodes.filter(game => game.type == 2); // get user-owned games
 
