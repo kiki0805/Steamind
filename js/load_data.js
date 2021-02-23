@@ -2,7 +2,7 @@ export function load_data(){
     var links = [];
     var nodes = [];
 
-    d3.json('../backend/steam_scrapy/new_users.json')
+    d3.json('backend/steam_scrapy/new_users.json')
         .then(function(data) {
             var user = data[0]; // main user
             user.playtime.forEach(game => {    // link user to owned games
@@ -13,7 +13,7 @@ export function load_data(){
             nodes.push({'id':user.steamid, 'name':user.personaname, 'type':1, 'size':5}); // type 1: user
         })
 
-    d3.json('../backend/steam_scrapy/connection.json')
+    d3.json('backend/steam_scrapy/connection.json')
         .then(function(data) {
             var user_games = nodes.filter(game => game.type == 2);  // get user owned games
 
