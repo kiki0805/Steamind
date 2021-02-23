@@ -1,4 +1,4 @@
-import { load_data } from './load-data.js';
+import { load_data } from './load_data.js';
 
 var graph = load_data();
 
