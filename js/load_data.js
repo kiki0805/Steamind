@@ -1,49 +1,75 @@
-export function load_data(){
+export function load_data() {
     var links = [];
     var nodes = [];
 
     d3.json('backend/steam_scrapy/new_users.json')
         .then(function(data) {
             var user = data[0]; // main user
-            nodes.push({'id':user.steamid, 'name':user.personaname, 'type':1, 'size':50}); // type 1: user
-            user.playtime.forEach(game => {    // link user to owned games
-                var size = game.playtime/60;
+            nodes.push({ 'id': user.steamid, 'name': user.personaname, 'type': 1, 'size': 50 }); // type 1: user
+            user.playtime.forEach(game => { // link user to owned games
+                var size = game.playtime / 60;
                 // Decide size of game-node
-                if(size < 10) {
+                if (size < 10) {
                     var size = 10;
                 }
-                
-                links.push({'source':user.steamid, 'target':game.game_name, 'width':2});
-                nodes.push({'id':game.game_name, 'name':game.game_name, 'type':2, 'size':size}) // type 2: user-owned game
+
+                links.push({ 'source': user.steamid, 'target': game.game_name, 'width': 2 });
+                nodes.push({ 'id': game.game_name, 'name': game.game_name, 'playtime': game.playtime, 'type': 2, 'size': size }) // type 2: user-owned game
             });
         })
-
-    d3.json('backend/steam_scrapy/connection.json')
+        //Use the "old" new_games.json for demo
+    d3.json('../backend/steam_scrapy/new_games.json')
         .then(function(data) {
-            var user_games = nodes.filter(game => game.type == 2);  // get user owned games
+            var userGames = nodes.filter(game => game.type == 2); // get user-owned games
 
-            // show 50 first games
-            for(var i = 0; i < 100; i++) {
-                if( (user_games.find(game => game.name == data.nodes[i].name)) == undefined) { // if not owned by user, add node to graph
-                    //console.log(data.nodes[i].name, " is not owned.");
-                    nodes.push({'id':data.nodes[i].name, 'name':data.nodes[i].name, 'type':3, 'size':10}) // type 3: not owned
-                }else {
-                    //console.log(data.nodes[i].name, " IS owned.");
+            // grab 50 first mock-data games
+            for (var i = 0; i < 50; i++) {
+                // check if user owns game
+                if ((userGames.find(game => game.game_name == data[i].name)) == null) {
+                    //console.log(data[i].name, ' is not owned.');
+                    nodes.push({
+                        'id': data[i].appid,
+                        'name': data[i].name,
+                        'header': data[i].header_img,
+                        'currentonline': data[i].current_online,
+                        'genres': data[i].genres,
+                        'totalpositive': data[i].total_positive,
+                        'totalnegative': data[i].total_negative,
+                        'totalreviews': data[i].total_negative + data[i].total_positive,
+                        'type': 3,
+                        'size': 10
+                    }); // if not owned, create new node
                 }
             }
+        });
 
-        // generate connections with the nodes we have
-        for(var i = 0; i < data.links.length; i++) {
-            if( (nodes.find(game => game.name == data.links[i].source)) && (nodes.find(game => game.name == data.links[i].target)) ) {
-                if( (data.links[i].common_tags + data.links[i].common_genres) > 10) { // if games have more than 10 common things
-                    var width = 2;
-                }else {
-                    var width = 0;
+    /*
+        d3.json('backend/steam_scrapy/connection.json')
+            .then(function(data) {
+                var user_games = nodes.filter(game => game.type == 2);  // get user owned games
+
+                // show 50 first games
+                for(var i = 0; i < 100; i++) {
+                    if( (user_games.find(game => game.name == data.nodes[i].name)) == undefined) { // if not owned by user, add node to graph
+                        //console.log(data.nodes[i].name, " is not owned.");
+                        nodes.push({'id':data.nodes[i].name, 'name':data.nodes[i].name, 'type':3, 'size':10}) // type 3: not owned
+                    }else {
+                        //console.log(data.nodes[i].name, " IS owned.");
+                    }
                 }
-                links.push({'source':data.links[i].source, 'target':data.links[i].target, 'width':width});
+
+            // generate connections with the nodes we have
+            for(var i = 0; i < data.links.length; i++) {
+                if( (nodes.find(game => game.name == data.links[i].source)) && (nodes.find(game => game.name == data.links[i].target)) ) {
+                    if( (data.links[i].common_tags + data.links[i].common_genres) > 10) { // if games have more than 10 common things
+                        var width = 2;
+                    }else {
+                        var width = 0;
+                    }
+                    links.push({'source':data.links[i].source, 'target':data.links[i].target, 'width':width});
+                }
             }
-        }
-    });
+        });*/
 
     /*
     // trying second user with games that first user doesn't own
@@ -56,5 +82,5 @@ export function load_data(){
     links.push({'source':76561198240447068, 'target':'Middle-earth\u2122: Shadow of War\u2122', 'width':2});
     */
 
-    return {nodes, links};
+    return { nodes, links };
 };

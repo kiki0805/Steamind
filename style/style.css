@@ -22,3 +22,15 @@ text {
     width: auto;
     height: auto;
 }
+
+#tooltip,
+#cooltip {
+    height: 280px;
+    width: 250px;
+    border-radius: 10px;
+    font-size: 10px;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background-color: #312450;
+}
