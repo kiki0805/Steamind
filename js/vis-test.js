@@ -9,7 +9,7 @@ var svg = d3.select("svg"),
 var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(150))
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(150).strength(0.1))
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width/2, height/2));
 

@@ -9,7 +9,7 @@ export function load_data(){
             links.push({'source':user.steamid, 'target':game.game_name, 'width':2});
             nodes.push({'id':game.game_name, 'name':game.game_name, 'type':2, 'size':size}) // type 2: user-owned game
         });
-        nodes.push({'id':user.steamid, 'name':user.personaname, 'type':1, size:5}); // type 1: user
+        nodes.push({'id':user.steamid, 'name':user.personaname, 'type':1, 'size':5}); // type 1: user
     })
 
     d3.json('../backend/steam_scrapy/connection.json', function(data) {
@@ -37,5 +37,15 @@ export function load_data(){
             }
         }
     });
+
+    // trying second user with games that first user doesn't own
+    nodes.push({'id':76561198240447068,'name':'anna','type':1,'size':5});
+    links.push({'source':76561198240447068, 'target':'The Legend of Heroes: Trails in the Sky', 'width':2});
+    links.push({'source':76561198240447068, 'target':'Sacred 2 Gold', 'width':2});
+    links.push({'source':76561198240447068, 'target':'DARK SOULS\u2122 II: Scholar of the First Sin', 'width':2});
+    links.push({'source':76561198240447068, 'target':'The Elder Scrolls\u00ae Online', 'width':2});
+    links.push({'source':76561198240447068, 'target':"Sherlock Holmes: The Devil's Daughter", 'width':2});
+    links.push({'source':76561198240447068, 'target':'Middle-earth\u2122: Shadow of War\u2122', 'width':2});
+
     return {nodes, links};
 };
