@@ -6,7 +6,9 @@ export function load_data() {
         .then(function(data) {
             var user = data[0]; // main user
             nodes.push({ 'id': user.steamid, 'name': user.personaname, 'type': 1, 'size': 50 }); // type 1: user
-            user.playtime.forEach(game => { // link user to owned games
+            
+            // Link user to owned games
+            user.playtime.forEach(game => {
                 var size = game.playtime / 60;
                 // Decide size of game-node
                 if (size < 10) {
@@ -14,10 +16,17 @@ export function load_data() {
                 }
 
                 links.push({ 'source': user.steamid, 'target': game.game_name, 'width': 2 });
-                nodes.push({ 'id': game.game_name, 'name': game.game_name, 'playtime': game.playtime, 'type': 2, 'size': size }) // type 2: user-owned game
+                nodes.push({
+                    'id': game.game_name,
+                    'name': game.game_name,
+                    'playtime': game.playtime,
+                    'genres': [],
+                    'type': 2,
+                    'size': size }) // type 2: user-owned game
             });
         })
-        //Use the "old" new_games.json for demo
+    
+    //Use the "old" new_games.json for demo
     d3.json('backend/steam_scrapy/new_games.json')
         .then(function(data) {
             var userGames = nodes.filter(game => game.type == 2); // get user-owned games
@@ -28,7 +37,7 @@ export function load_data() {
                 if ((userGames.find(game => game.game_name == data[i].name)) == null) {
                     //console.log(data[i].name, ' is not owned.');
                     nodes.push({
-                        'id': data[i].appid,
+                        'id': data[i].name, // has to be name for now for links to work
                         'name': data[i].name,
                         'header': data[i].header_img,
                         'currentonline': data[i].current_online,
@@ -41,7 +50,22 @@ export function load_data() {
                     }); // if not owned, create new node
                 }
             }
+
+            var gamenodes = nodes.filter(game => game.type != 1);
+
+            for(var i = 61; i < 72; i++) { // arbitrary numbers... user owns 60 games
+                for(var j = 52; j < 73; j++) {
+                    var common = (gamenodes[i].genres).filter(value => (gamenodes[j].genres).includes(value));
+                    if(common != []) {
+                        var source = nodes.filter(game => game.name == gamenodes[i].name);
+                        var target = nodes.filter(game => game.name == gamenodes[j].name);
+                        links.push({'source':source[0].name, 'target':target[0].name, 'width': 2 });
+                    }
+                }
+            }
         });
+
+    
 
     /*
         d3.json('backend/steam_scrapy/connection.json')

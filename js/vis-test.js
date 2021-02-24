@@ -33,7 +33,12 @@ setTimeout(function() {
         .selectAll("line")
         .data(graph.links)
         .enter().append("line")
-        .style('stroke-width', function(d) { return d.width });
+        .style('stroke-width', function(d) { return d.width })
+        .attr('display', function(d) {
+            if(d.target == 'Portal') {
+                return 'none'
+            }
+        });
 
     var node = svg.append("g")
         .attr("class", "nodes")
@@ -63,26 +68,27 @@ setTimeout(function() {
                 //d.fx = null;
                 //d.fy = null;
             })
-        );
+        )
+        .attr('display', function(d) {
+            if(d.name == 'Portal') {
+                return 'none'
+            }
+        });
 
 
     d3.selectAll('.user').append('rect')
         .data(graph.nodes)
         .attr('width', function(d) { return d.size })
         .attr('height', function(d) { return d.size })
-        .attr('fill', '#ff9da7')
+        .attr('fill', function(d) { return color(d.type) })
         .on('click', showprofile);
 
     d3.selectAll('.game').append('circle')
         .data(graph.nodes)
         .attr("r", function(d) { return d.size; })
-        .attr("fill", function(d) {
-            if (d.type == 2) {
-                return '#edc949';
-            } else if (d.type == 3) {
-                return '#bab0ab';
-            }
-        });
+        .attr("fill", function(d) { return color(d.type)});
+
+
     //Tooltip creation and CSS
     var tooltip = d3.select('#viz').append('div')
         .attr('id', 'tooltip')
