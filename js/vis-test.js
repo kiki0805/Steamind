@@ -152,16 +152,6 @@ setTimeout(function() {
         d3.select('#cooltip').style('opacity', 0).style('display', 'none')
     });
 
-
-    node.append("title")
-        .text(function(d) {
-            if (d.name == '-') {
-                return d.id;
-            } else {
-                return d.name;
-            }
-        });
-
     simulation.nodes(graph.nodes).on('tick', ticked);
 
     simulation.force('link').links(graph.links);
