@@ -50,8 +50,8 @@ setTimeout(function() {
         .call(d3.drag()
             .on("start", function(event, d) {
                 if (!event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x;
-                d.fy = d.y;
+                //d.fx = d.x;
+                //d.fy = d.y;
             })
             .on("drag", function(event, d) {
                 //d3.select(this).raise().attr("cx", d.x = event.x).attr("cy", d.y = event.y);
@@ -60,8 +60,8 @@ setTimeout(function() {
             })
             .on("end", function(event, d) {
                 if (!event.active) simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
+                //d.fx = null;
+                //d.fy = null;
             })
         );
 
@@ -161,15 +161,17 @@ setTimeout(function() {
     simulation.force('link').links(graph.links);
 
     function ticked() {
+        node.attr('transform', function(d) {
+            d.x = Math.max(d.size, Math.min(width - d.size, d.x));
+            d.y = Math.max(d.size, Math.min(height - d.size, d.y));
+            return 'translate(' + d.x + ',' + d.y + ')';
+        });
+
         link
             .attr('x1', function(d) { return d.source.x; })
             .attr('y1', function(d) { return d.source.y; })
             .attr('x2', function(d) { return d.target.x; })
             .attr('y2', function(d) { return d.target.y; });
-
-        node.attr('transform', function(d) {
-            return 'translate(' + d.x + ',' + d.y + ')';
-        });
     };
     console.log('ok');
 }, 1000);
@@ -184,22 +186,3 @@ function showprofile(d) {
         .style('left', this.getBoundingClientRect().x - 300 + 'px')
         .style('top', this.getBoundingClientRect().y - 60 + 'px')
 }
-
-/*
-function dragstarted(d) {
-    //if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-    //d.fx = d.x;
-    //d.fy = d.y;
-};
-  
-function dragged(d) {
-    //d.fy = d3.event.y;
-    //d.fx = d3.event.x;
-    //d.fy = d3.event.y;
-};
-  
-function dragended(d) {
-    //if (!d3.event.active) simulation.alphaTarget(0);
-    //d.fx = null;
-    //d.fy = null;
-};*/
