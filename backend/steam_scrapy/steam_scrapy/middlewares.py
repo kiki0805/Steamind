@@ -5,10 +5,13 @@
 
 import scrapy
 from scrapy import signals
-
+import json
+import os
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 from steam_scrapy.items import *
+from db import Game
+import subprocess
 import logging
 from constants import STEAM_KEY, USER_REQUEST_DEPTH
 logger = logging.getLogger(__name__)
@@ -51,8 +54,11 @@ class SteamScrapySpiderMiddleware:
                 appid = i["appid"]
                 # parse tags
                 url = f'https://store.steampowered.com/app/{appid}'
-                yield scrapy.Request(url, callback=spider.parse_tags, meta={'appid': appid}, cookies={'birthtime': '28801','path' : '/',
-            'domain' : 'store.steampowered.com'})
+                yield scrapy.Request(url, callback=spider.parse_tags, meta={'appid': appid}, cookies={'birthtime': '28801','path' : '/', 'domain' : 'store.steampowered.com'})
+                price_url = f'https://club.steam250.com/app/{appid}'
+                yield scrapy.Request(price_url, callback=spider.parse_price, meta={'appid': appid})
+            elif type(i) is GamePriceItem:
+                yield i
             elif type(i) is TagsItem:
                 yield i
                 appid = i["appid"]
@@ -78,6 +84,16 @@ class SteamScrapySpiderMiddleware:
                 url = f'https://store.steampowered.com/dynamicstore/userdata/?id={i["steamid"]}'
                 yield scrapy.Request(url, callback=spider.parse_recommended, meta={'steamid': i["steamid"], 'depth': i['depth']})
                 # if game not exists, yield
+                missing_games = []
+                for game in i['games']:
+                    appid = game['appid']
+                    if Game.select().where(Game.appid==appid, Game.name!="").exists():
+                        continue
+                    missing_games.append(appid)
+                with open('missingGames.json', 'w') as f:
+                    f.write(json.dumps(missing_games))
+                if missing_games != []:
+                    logger.info(f'Miss data of games. Try to fetch...')
             elif type(i) is RecommendedItem:
                 yield i
                 # parse friends

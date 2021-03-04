@@ -17,6 +17,7 @@ class Game(BaseModel):
     current_online = IntegerField(default=-1)
     total_positive = IntegerField(default=-1)
     total_negative = IntegerField(default=-1)
+    positive_review_ratio = FloatField(default=-1)
 
 
 class User(BaseModel):
