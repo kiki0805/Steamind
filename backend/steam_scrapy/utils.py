@@ -26,12 +26,15 @@ def dump_games_for_user(user):
     data = []
     for game in games:
         single = model_to_dict(game, backrefs=True, max_depth=2)
+        tags = [t['tag']['name'] for t in single.pop('tagged_set')]
+        if tags != []:
+            if not check_relevant(game, user):
+                continue
+        single['tags'] = tags
         single.pop('publishers')
         single.pop('review_set')
         genres = [g["genre"]['description'] for g in single.pop('genreprops_set')]
         single['genres'] = genres
-        tags = [t['tag']['name'] for t in single.pop('tagged_set')]
-        single['tags'] = tags
         single.pop('playtime_set')
 
         query = Playtime.select().where(Playtime.user==user, Playtime.game==game)
@@ -41,6 +44,20 @@ def dump_games_for_user(user):
             single['playtime'] = -1
         data.append(single)
     return data
+
+
+def check_relevant(game, user):
+    recommended = Recommended.select().where(Recommended.user==user)
+    recommended = [r.tag.id for r in recommended]
+    tagged = Tagged.select().where(Tagged.game==game)
+    tags = [tag.tag.id for tag in tagged]
+    num_in_recommended = 0
+    for tag in tags:
+        if tag in recommended:
+            num_in_recommended += 1
+    if num_in_recommended > 3:
+        return True
+    return False
 
 
 def dump_users():
