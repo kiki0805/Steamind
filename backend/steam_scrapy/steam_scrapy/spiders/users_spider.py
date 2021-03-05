@@ -10,10 +10,10 @@ class UserSpider(scrapy.Spider):
     def start_requests(self):
         url = f'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={STEAM_KEY}&steamids={STEAMID}'
         yield scrapy.Request(url, callback=self.parse, meta={'depth': 0})
-        yield scrapy.Request('https://api.my-ip.io/ip', callback=self.test_ip)
+        # yield scrapy.Request('https://api.my-ip.io/ip', callback=self.test_ip)
 
-    def test_ip(self, response):
-        self.logger.info(response.text)
+    # def test_ip(self, response):
+    #     self.logger.info(response.text)
 
     # yield UserItem
     def parse(self, response):

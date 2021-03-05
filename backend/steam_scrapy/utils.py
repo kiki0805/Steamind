@@ -1,9 +1,11 @@
 from playhouse.shortcuts import model_to_dict
 from db import *
+import json
 
 def dump_games():
     games = Game.select().where(Game.name!="")
     data = []
+    games_id = []
     for game in games:
         single = model_to_dict(game, backrefs=True, max_depth=2)
         single.pop('publishers')
@@ -14,6 +16,9 @@ def dump_games():
         single['tags'] = tags
         single.pop('playtime_set')
         data.append(single)
+        games_id.append(game.appid)
+    with open('currentGames.json', 'w') as f:
+        f.write(json.dumps(games_id))
     return data
 
 def dump_games_for_user(user):
@@ -21,12 +26,15 @@ def dump_games_for_user(user):
     data = []
     for game in games:
         single = model_to_dict(game, backrefs=True, max_depth=2)
+        tags = [t['tag']['name'] for t in single.pop('tagged_set')]
+        if tags != []:
+            if not check_relevant(game, user):
+                continue
+        single['tags'] = tags
         single.pop('publishers')
         single.pop('review_set')
         genres = [g["genre"]['description'] for g in single.pop('genreprops_set')]
         single['genres'] = genres
-        tags = [t['tag']['name'] for t in single.pop('tagged_set')]
-        single['tags'] = tags
         single.pop('playtime_set')
 
         query = Playtime.select().where(Playtime.user==user, Playtime.game==game)
@@ -36,6 +44,20 @@ def dump_games_for_user(user):
             single['playtime'] = -1
         data.append(single)
     return data
+
+
+def check_relevant(game, user):
+    recommended = Recommended.select().where(Recommended.user==user)
+    recommended = [r.tag.id for r in recommended]
+    tagged = Tagged.select().where(Tagged.game==game)
+    tags = [tag.tag.id for tag in tagged]
+    num_in_recommended = 0
+    for tag in tags:
+        if tag in recommended:
+            num_in_recommended += 1
+    if num_in_recommended > 3:
+        return True
+    return False
 
 
 def dump_users():
@@ -179,3 +201,33 @@ def common_genres(game1, game2):
     genres2 = [genreprops.genre for genreprops in genreprops2]
     genres_common = list(set(genres1).intersection(genres2))
     return genres_common
+
+import requests
+def get_proxies():
+    response = requests.get("https://proxy.webshare.io/api/proxy/list/?page=1", headers={"Authorization": "Token bc85b045d7416e93dcb2c3e05f98df35ee01fb26"})
+    data = response.json()['results']
+    with open('proxies.txt', 'w') as f:
+        for proxy in data:
+            f.write(f"{proxy['proxy_address']}:{proxy['ports']['http']}\n")
+
+def refresh_proxies():
+    requests.post(
+        "https://proxy.webshare.io/api/proxy/replacement/info/refresh/",
+        headers={"Authorization": "Token bc85b045d7416e93dcb2c3e05f98df35ee01fb26"}
+    )
+
+
+def update_review_ratio():
+    for game in Game.select().where(Game.name!=""):
+        total_positive = game.total_positive
+        total_negative = game.total_negative
+        sum_ = total_negative + total_positive
+        if total_negative == -1 or total_positive == -1:
+            print('all -1')
+            continue
+        elif sum_ == 0:
+            print('sum 0')
+            continue
+        ratio = total_positive / sum_
+        game.positive_review_ratio = ratio
+        game.save()

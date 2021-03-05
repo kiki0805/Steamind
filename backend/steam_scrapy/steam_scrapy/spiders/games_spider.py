@@ -7,24 +7,25 @@ class GamesSpider(scrapy.Spider):
     name = "games"
 
     def start_requests(self):
-        with open('allAppsId.json', 'r') as f:
+        # with open('currentGames.json', 'r') as f:
+        # with open('top-250.json', 'r') as f:
+        with open('missingGames.json', 'r') as f:
+        # with open('allAppsId.json', 'r') as f:
             appids = json.loads(f.read())
         
         count = 0
-        # appids = [726780,]
+        appids = [682110, 707220, 722400, 725870]
         id_range = [3000, 5000]
-        # for appid in appids:
-        for appid in appids[id_range[0]: id_range[1]]:
+        for appid in appids:
+        # for appid in appids[id_range[0]: id_range[1]]:
             # if count > 10:
             #     break
-            url = f'https://store.steampowered.com/api/appdetails/?appids={appid}'
-            yield scrapy.Request(url, callback=self.parse, meta={'appid': appid})
-            yield scrapy.Request('https://api.my-ip.io/ip', callback=self.test_ip)
-            count += 1
-            # break
 
-    def test_ip(self, response):
-        self.logger.info(response.text)
+            # url = f'https://store.steampowered.com/api/appdetails/?appids={appid}'
+            # yield scrapy.Request(url, callback=self.parse, meta={'appid': appid})
+            price_url = f'https://club.steam250.com/app/{appid}'
+            yield scrapy.Request(price_url, callback=self.parse_price, meta={'appid': appid})
+            count += 1
 
     # yield GameDetailItem/RetrieveDetailError
     def parse(self, response):
@@ -55,6 +56,31 @@ class GamesSpider(scrapy.Spider):
         )
         yield item
         self.logger.info(f'[{str(appid):7s}]\tSucceed in parse.')
+
+    def parse_price(self, response):
+        appid = response.request.meta['appid']
+        soup =  BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div',{'class':'price'})
+        if len(price) == 0:
+            yield GamePriceItem(
+                appid=appid,
+                price=-1
+            )
+            return
+        price = price[0]
+        spans = price.find_all('span', {'class': 'was'}) 
+        if spans != []:
+            price = spans[0].text.strip()
+        else:
+            price = price.text.strip()
+        if price == "Free":
+            price = 0
+        else:
+            price = float(price[1:])
+        yield GamePriceItem(
+            appid=appid,
+            price=price
+        )
 
     # yield GameDetailItem
     def parse_store_page(self, response):

@@ -15,6 +15,15 @@ class GameDetailPipeline:
     collection_name = 'game_details'
 
     def process_item(self, item, spider):
+        if type(item) is GamePriceItem:
+            query = Game.select().where(Game.appid==item['appid'])
+            if not query.exists():
+                return item
+            game = query.first()
+            game.price = item['price']
+            game.save()
+            logger.info(f"Updated price of {item['appid']}.")
+            return item
         if type(item) is not GameDetailItem:
             return item
         query = Game.select().where(Game.appid==item['appid'])
@@ -37,7 +46,7 @@ class GameDetailPipeline:
             game.name=item['name']
             game.appid=item['appid']
             game.header_img=item['header_image']
-            game.price=0 if item['is_free'] else item['price_overview']['initial'] # EUR
+            # game.price=0 if item['is_free'] else item['price_overview']['initial'] # EUR
             game.save()
         for genre in item['genres']:
             query = Genre.select().where(Genre.description==genre)
@@ -85,6 +94,16 @@ class GameReviewsPipeline:
         game = Game.select().where(Game.appid==appid).first()
         game.total_positive = item['positive']
         game.total_negative = item['negative']
+        total_positive = item['positive']
+        total_negative = item['negative']
+        sum_ = total_negative + total_positive
+        if total_negative == -1 or total_positive == -1:
+            ratio = -1
+        elif sum_ == 0:
+            ratio = -1
+        else:
+            ratio = total_positive / sum_
+        game.positive_review_ratio = ratio
         game.save()
         for review in item['reviews']:
             if not Review.select().where(Review.game==game, Review.reviewer_steamid==review['steamid']).exists():
