@@ -34,3 +34,11 @@ text {
     color: white;
     background-color: #312450;
 }
+
+
+
+.fa-info-circle {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}

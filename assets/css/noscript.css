@@ -28,6 +28,14 @@
 		transform: none !important;
 	}
 
+
+	.fa-info-circle {
+		position: absolute;
+		top: 8px;
+		right: 16px;
+		size: 20px;
+	}
+
 /* Sidebar */
 
 	#sidebar > .inner {
