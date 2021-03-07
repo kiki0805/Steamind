@@ -188,3 +188,20 @@
 			});
 
 })(jQuery);
+
+
+var mini = true;
+function toggleSidebar(){
+	if(mini){
+		console.log("open sidebar");
+		document.getElementById("sidebar").style.width = "250px";
+		document.getElementById("wrapper").style.marginLeft = "250px";
+		this.mini = false;
+	}
+	else{
+		console.log("close sidebar");
+		document.getElementById("sidebar").style.width = "100px";
+		document.getElementById("wrapper").style.marginLeft = "100px";
+		this.mini = true;
+	}
+}
