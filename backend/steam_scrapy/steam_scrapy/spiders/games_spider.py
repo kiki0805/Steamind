@@ -2,30 +2,38 @@ import scrapy
 import json
 from bs4 import BeautifulSoup
 from steam_scrapy.items import *
+import os
+import time
 
 class GamesSpider(scrapy.Spider):
     name = "games"
 
+    def __init__(self, json_file):
+        self.json_file = json_file
+
     def start_requests(self):
+        self.logger.info(f'Crawling {self.json_file}')
         # with open('currentGames.json', 'r') as f:
         # with open('top-250.json', 'r') as f:
-        with open('missingGames.json', 'r') as f:
+        while not os.path.isfile(self.json_file):
+            time.sleep(1)
+        with open(self.json_file, 'r') as f:
         # with open('allAppsId.json', 'r') as f:
             appids = json.loads(f.read())
         
         count = 0
-        appids = [682110, 707220, 722400, 725870]
-        id_range = [3000, 5000]
         for appid in appids:
-        # for appid in appids[id_range[0]: id_range[1]]:
             # if count > 10:
             #     break
 
-            # url = f'https://store.steampowered.com/api/appdetails/?appids={appid}'
-            # yield scrapy.Request(url, callback=self.parse, meta={'appid': appid})
-            price_url = f'https://club.steam250.com/app/{appid}'
-            yield scrapy.Request(price_url, callback=self.parse_price, meta={'appid': appid})
+            url = f'https://store.steampowered.com/api/appdetails/?appids={appid}'
+            yield scrapy.Request(url, callback=self.parse, meta={'appid': appid})
+            # price_url = f'https://club.steam250.com/app/{appid}'
+            # yield scrapy.Request(price_url, callback=self.parse_dev_pub, meta={'appid': appid})
             count += 1
+
+    def closed(self, reason):
+        os.remove(self.json_file)
 
     # yield GameDetailItem/RetrieveDetailError
     def parse(self, response):
@@ -60,6 +68,16 @@ class GamesSpider(scrapy.Spider):
     def parse_price(self, response):
         appid = response.request.meta['appid']
         soup =  BeautifulSoup(response.text, 'html.parser')
+        divs = soup.find('section',{'class':'app_banner'}).div.find_all('div')
+        dev = divs[0].find_all('li')
+        pub = divs[1].find_all('li')
+        
+        yield GameDevPubItem(
+            appid=appid,
+            developers=[d.text for d in dev],
+            publishers=[p.text for p in pub]
+        )
+
         price = soup.find_all('div',{'class':'price'})
         if len(price) == 0:
             yield GamePriceItem(
@@ -179,3 +197,16 @@ class GamesSpider(scrapy.Spider):
             yield OnlineItem(count=content['response']['player_count'], appid=appid)
         self.logger.info(f'[{str(appid):7s}]\tSucceed in parse_online.')
 
+
+    def parse_dev_pub(self, response):
+        appid = response.request.meta['appid']
+        soup =  BeautifulSoup(response.text, 'html.parser')
+        divs = soup.find('section',{'class':'app_banner'}).div.find_all('div')
+        dev = divs[0].find_all('li')
+        pub = divs[1].find_all('li')
+        
+        yield GameDevPubItem(
+            appid=appid,
+            developers=[d.text for d in dev],
+            publishers=[p.text for p in pub]
+        )

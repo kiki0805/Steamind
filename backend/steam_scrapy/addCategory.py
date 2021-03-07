@@ -20,7 +20,7 @@ def calcCategory( game, cat ):
         for tag in game['tags']:
             if tag in cat[i]['tags']:
                 nr_of_tags[i] += 1
-    print(nr_of_tags)
+    # print(nr_of_tags)
 
     return cat[argmax(nr_of_tags)]['category']
 

@@ -1,9 +1,12 @@
 from playhouse.shortcuts import model_to_dict
 from db import *
+from addCategory import calcCategory
 import json
 
+category = json.load(open('categories.json'))
+
 def dump_games():
-    games = Game.select().where(Game.name!="")
+    games = Game.select().where(Game.name!="", Game.developers==[])
     data = []
     games_id = []
     for game in games:
@@ -21,29 +24,92 @@ def dump_games():
         f.write(json.dumps(games_id))
     return data
 
-def dump_games_for_user(user):
-    games = Game.select().where(Game.name!="")
+def dump_games_for_user(games, user, limit=300):
     data = []
+    count = 0
     for game in games:
         single = model_to_dict(game, backrefs=True, max_depth=2)
         tags = [t['tag']['name'] for t in single.pop('tagged_set')]
-        if tags != []:
+        if tags != [] and user is not None:
             if not check_relevant(game, user):
                 continue
         single['tags'] = tags
+        single['category'] = calcCategory({'tags': tags}, category)
         single.pop('publishers')
         single.pop('review_set')
         genres = [g["genre"]['description'] for g in single.pop('genreprops_set')]
         single['genres'] = genres
         single.pop('playtime_set')
 
-        query = Playtime.select().where(Playtime.user==user, Playtime.game==game)
-        if query.exists():
-            single['playtime'] = query.first().time
+        if user is not None:
+            query = Playtime.select().where(Playtime.user==user, Playtime.game==game)
+            if query.exists():
+                single['playtime'] = query.first().time
+            else:
+                single['playtime'] = -1
         else:
             single['playtime'] = -1
         data.append(single)
-    return data
+        count += 1
+        if count > limit:
+            break
+    categorized = {}
+    for game in data:
+        cat = game['category']
+        if cat in categorized:
+            categorized[cat].append(game)
+        else:
+            categorized[cat] = [game, ]
+    categorized = [{"name": k, "children": categorized[k]} for k in categorized]
+    return categorized
+
+
+def filter_games(user=None, **kwargs):
+    games = Game.select().where(Game.name!="")
+    if user is not None:
+        owned = kwargs.get('owned', None)
+        if owned:
+            min_playtime = kwargs.get('min_playtime', 0)
+            max_playtime = kwargs.get('max_playtime', float('inf'))
+            games = filter(lambda game: Playtime.select().where(Playtime.user==user, Playtime.game==game, Playtime.time>=min_playtime, Playtime.time<=max_playtime).exists(), games)
+        elif owned is False:
+            games = filter(lambda game: not Playtime.select().where(Playtime.user==user, Playtime.game==game).exists(), games)
+
+    cat = kwargs.get('category', None)
+    min_popularity = kwargs.get('min_popularity', None)
+    min_price = kwargs.get('min_price', None)
+    max_price = kwargs.get('max_price', None)
+    tags = kwargs.get('tags', None)
+    genres = kwargs.get('genres', None)
+    min_prr = kwargs.get('min_positive_review_ratio', None)
+    max_prr = kwargs.get('max_positive_review_ratio' , None)
+    developer = kwargs.get('developer', None)
+
+    if cat is not None:
+        games = filter(lambda game: calcCategory({'tags': [tagged.tag.name for tagged in game.tagged_set]}, category) == cat, games)
+    if developer is not None:
+        games = filter(lambda game: developer in game.developers, games)
+
+    if min_popularity is not None:
+        games = filter(lambda game: game.current_online>min_popularity, games)
+
+    if tags is not None:
+        def including_tags(game):
+            game_tags = [tagged.tag.name for tagged in game.tagged_set]
+            return set(tags).issubset(set(game_tags))
+        games = filter(including_tags, games)
+    if genres is not None:
+        def including_genres(game):
+            game_genres = [genreprops.genre.description for genreprops in game.genreprops_set]
+            return set(game_genres).issubset(set(game_genres))
+        games = filter(including_genres, games)
+    
+    if min_price is not None or max_price is not None:
+        games = filter(lambda game: game.price >= (min_price if min_price is not None else -1) and game.price <= (max_price if max_price is not None else float('inf')), games)
+    if min_prr is not None or max_prr is not None:
+        games = filter(lambda game: game.positive_review_ratio >= (min_prr if min_prr is not None else -1) and game.positive_review_ratio <= (max_prr if max_prr is not None else float('inf')), games)
+
+    return dump_games_for_user(games, user, kwargs.get('limit', 300))
 
 
 def check_relevant(game, user):
@@ -61,7 +127,7 @@ def check_relevant(game, user):
 
 
 def dump_users():
-    users = User.select().where(User.personaname!="")
+    users = User.select().join(Playtime).where(Playtime.user.id==User.id).distinct()
     data = []
     for user in users:
         single = model_to_dict(user)
@@ -104,7 +170,7 @@ def dump_users():
 
 
 def games_played_by_users():
-    users = User.select().where(User.personaname!="")
+    users = User.select().join(Playtime).where(Playtime.user.id==User.id).distinct()
     games = []
     for user in users:
         games += [pt.game for pt in user.playtime_set]
@@ -201,20 +267,6 @@ def common_genres(game1, game2):
     genres2 = [genreprops.genre for genreprops in genreprops2]
     genres_common = list(set(genres1).intersection(genres2))
     return genres_common
-
-import requests
-def get_proxies():
-    response = requests.get("https://proxy.webshare.io/api/proxy/list/?page=1", headers={"Authorization": "Token bc85b045d7416e93dcb2c3e05f98df35ee01fb26"})
-    data = response.json()['results']
-    with open('proxies.txt', 'w') as f:
-        for proxy in data:
-            f.write(f"{proxy['proxy_address']}:{proxy['ports']['http']}\n")
-
-def refresh_proxies():
-    requests.post(
-        "https://proxy.webshare.io/api/proxy/replacement/info/refresh/",
-        headers={"Authorization": "Token bc85b045d7416e93dcb2c3e05f98df35ee01fb26"}
-    )
 
 
 def update_review_ratio():

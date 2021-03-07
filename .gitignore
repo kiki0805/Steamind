@@ -3,3 +3,4 @@ venv/
 .vscode/
 **/.scrapy/
 **/.DS_Store
+**/missingGames*.json

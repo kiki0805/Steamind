@@ -15,6 +15,16 @@ class GameDetailPipeline:
     collection_name = 'game_details'
 
     def process_item(self, item, spider):
+        if type(item) is GameDevPubItem:
+            query = Game.select().where(Game.appid==item['appid'])
+            if not query.exists():
+                return item
+            game = query.first()
+            game.developers = item['developers']
+            game.publishers = item['publishers']
+            game.save()
+            logger.info(f"Updated dev pub of {item['appid']}.")
+            return item
         if type(item) is GamePriceItem:
             query = Game.select().where(Game.appid==item['appid'])
             if not query.exists():

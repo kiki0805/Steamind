@@ -59,6 +59,8 @@ class SteamScrapySpiderMiddleware:
                 yield scrapy.Request(price_url, callback=spider.parse_price, meta={'appid': appid})
             elif type(i) is GamePriceItem:
                 yield i
+            elif type(i) is GameDevPubItem:
+                yield i
             elif type(i) is TagsItem:
                 yield i
                 appid = i["appid"]
@@ -90,8 +92,8 @@ class SteamScrapySpiderMiddleware:
                     if Game.select().where(Game.appid==appid, Game.name!="").exists():
                         continue
                     missing_games.append(appid)
-                with open('missingGames.json', 'w') as f:
-                    f.write(json.dumps(missing_games))
+                with open(f'missingGames_{i["steamid"]}.json', 'w') as f:
+                    f.write(json.dumps(missing_games[:50]))
                 if missing_games != []:
                     logger.info(f'Miss data of games. Try to fetch...')
             elif type(i) is RecommendedItem:

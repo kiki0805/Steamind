@@ -17,6 +17,12 @@ class GameDetailItem(scrapy.Item):
     genres = scrapy.Field()
 
 
+class GameDevPubItem(scrapy.Item):
+    appid = scrapy.Field()
+    developers = scrapy.Field()
+    publishers = scrapy.Field()
+
+
 class GamePriceItem(scrapy.Item):
     appid = scrapy.Field()
     price = scrapy.Field() # in dollars

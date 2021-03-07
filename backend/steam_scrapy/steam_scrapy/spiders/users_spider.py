@@ -7,13 +7,13 @@ from constants import STEAM_KEY, STEAMID, USER_REQUEST_DEPTH
 class UserSpider(scrapy.Spider):
     name = "users"
 
-    def start_requests(self):
-        url = f'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={STEAM_KEY}&steamids={STEAMID}'
-        yield scrapy.Request(url, callback=self.parse, meta={'depth': 0})
-        # yield scrapy.Request('https://api.my-ip.io/ip', callback=self.test_ip)
+    def __init__(self, steamid):
+        self.steamid = steamid
 
-    # def test_ip(self, response):
-    #     self.logger.info(response.text)
+    def start_requests(self):
+        self.logger.info(f'Crawling steamid {self.steamid}')
+        url = f'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={STEAM_KEY}&steamids={self.steamid}'
+        yield scrapy.Request(url, callback=self.parse, meta={'depth': 0})
 
     # yield UserItem
     def parse(self, response):
