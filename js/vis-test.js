@@ -1,6 +1,6 @@
-import { load_data } from './load_data.js';
+import { get_data } from './get_data.js';
 
-var graph = load_data();
+var graph = get_data();
 
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
@@ -33,12 +33,7 @@ setTimeout(function() {
         .selectAll("line")
         .data(graph.links)
         .enter().append("line")
-        .style('stroke-width', function(d) { return d.width })
-        .attr('display', function(d) {
-            if(d.target == 'Portal') {
-                return 'none'
-            }
-        });
+        .style('stroke-width', function(d) { return d.width });
 
     var node = svg.append("g")
         .attr("class", "nodes")
@@ -46,10 +41,13 @@ setTimeout(function() {
         .data(graph.nodes)
         .enter().append("g")
         .attr('class', function(d) {
-            if (d.type == 1) {
-                return 'user' // class cannot be ints
-            } else {
-                return 'game'
+            switch(d.type) {
+                case 1:
+                    return 'user';
+                case 2:
+                    return 'game';
+                case 3:
+                    return 'category';
             }
         })
         .call(d3.drag()
@@ -68,44 +66,38 @@ setTimeout(function() {
                 //d.fx = null;
                 //d.fy = null;
             })
-        )
-        .attr('display', function(d) {
-            if(d.name == 'Portal') {
-                return 'none'
-            }
-        });
+        );
 
+    
+    node.append("title")
+        .text(function(d) { return d.name; });
 
     d3.selectAll('.user').append('rect')
         .data(graph.nodes)
         .attr('width', function(d) { return d.size })
         .attr('height', function(d) { return d.size })
-        .attr('fill', function(d) { return color(d.type) })
-        .on('click', showprofile);
+        .attr('fill', function(d) { return color(d.type) });
+        //.on('click', showprofile);
 
     d3.selectAll('.game').append('circle')
         .data(graph.nodes)
-        .attr("r", function(d) { return d.size; })
+        .attr("r", function(d) { console.log(d.name, d.size); return d.size; })
         .attr("fill", function(d) { return color(d.type)});
 
+    d3.selectAll('.category').append('ellipse')
+        .attr('rx', 20)
+        .attr('ry', 10)
+        .attr('cx', 2)
+        .attr('cy', 2)
+        .attr('fill', 'lime');
 
+
+        /*
     //Tooltip creation and CSS
     var tooltip = d3.select('#viz').append('div')
         .attr('id', 'tooltip')
         .attr('all', 'unset')
         .attr('style', 'position: absolute; opacity: 0;')
-
-
-    //Cooltip is a static view for the steamuser 
-    var cooltip = d3.select('#viz').append('div')
-        .attr('id', 'cooltip')
-        .attr('all', 'unset')
-        .attr('style', 'position: absolute; opacity: 0;')
-        .html("<img width=100% height=50% src=https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/a7/a77b23aff2b6bc2290f42c0d3db3c60cdb23da2a_full.jpg>" +
-            "<p>" + "SteamUser: " + "nooooobkiiiiiz <br>" + "Games: 60" + "</p>"
-        );
-
-
 
     d3.selectAll('circle')
         .on('click', function(d) {
@@ -151,6 +143,7 @@ setTimeout(function() {
         d3.select('#tooltip').style('opacity', 0).style('display', 'none')
         d3.select('#cooltip').style('opacity', 0).style('display', 'none')
     });
+    */
 
     simulation.nodes(graph.nodes).on('tick', ticked);
 
@@ -172,6 +165,7 @@ setTimeout(function() {
     console.log('ok');
 }, 1000);
 
+/*
 function showprofile(d) {
     d3.select(this)
         .style('stroke', 'black');
@@ -182,3 +176,4 @@ function showprofile(d) {
         .style('left', this.getBoundingClientRect().x - 300 + 'px')
         .style('top', this.getBoundingClientRect().y - 60 + 'px')
 }
+*/

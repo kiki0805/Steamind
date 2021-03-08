@@ -10,9 +10,9 @@
     <title>Steamind</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="assets/css/main copy.css" />
     <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <link rel="stylesheet" href="style/style.css">
 </head>
 
 <body class="is-preload">
@@ -37,7 +37,40 @@
         <!-- Intro -->
         <section id="intro" class="wrapper style1 fullscreen fade-up">
             <div class="inner">
-                <div id="viz"><svg width="1280" height="720" class="svg"></svg></div>
+                <div id="viz">
+                    <div id="filter">
+                        <ul id="selection">Filters: </ul>
+                        <div id="price_filter">
+                            <h5>Max price: </h5>
+                        </div>
+                        <div id="pop_filter">
+                            <h5>Max popularity: </h5>
+                        </div>
+                        <div>
+                            <h5>Tags</h5>
+                            <select id="tags" class="filter">
+                                <option>Choose tag</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <h5>Categories</h5>
+                            <select id="categories" class="filter">
+                                <option>Choose category</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <h5>Developers</h5>
+                            <select id="developers" class="filter">
+                                <option>Choose developer</option>
+                            </select>
+                        </div>
+                        <button id="send_request">apply filters</button>
+                        <button id="send_request2">test</button>
+                    </div>
+                    <svg width="1280" height="720" class="svg"></svg> <!-- Visualization -->
+                </div>
             </div>
         </section>
 
@@ -217,6 +250,7 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/jquery.scrollex.min.js"></script>
     <script src="assets/js/jquery.scrolly.min.js"></script>
@@ -226,11 +260,10 @@
     <script src="assets/js/main.js"></script>
 
     <script src="d3/d3.js"></script>
-    <script type="module" src="js/vis-test.js"></script>
+    <script type="module" src="js/filter.js"></script>
     <!-- For testing purposes use script below -->
     <!--<script src="js/script.js"></script>-->
 
 </body>
 
 </html>
->>>>>>> master

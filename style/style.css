@@ -34,3 +34,23 @@ text {
     color: white;
     background-color: #312450;
 }
+
+/* CSS for the filter */
+.filter select{
+    background-color: blue;
+}
+
+#selection {
+    display: inline;
+    font-size: 12px;
+    list-style-type: none;
+}
+
+#selection li{
+    display: inline;
+    cursor: pointer;
+}
+
+h5 {
+    display: inline;
+}

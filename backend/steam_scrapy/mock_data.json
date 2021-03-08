@@ -1,0 +1,155 @@
+[
+    {
+        "name":"Strategy & Simulation Games",
+        "children":
+        [
+            {
+                "appid": 10,
+                "name": "Counter-Strike",
+                "header_img": "https://cdn.akamai.steamstatic.com/steam/apps/10/header.jpg?t=1602535893",
+                "developers": [],
+                "current_online": 14441,
+                "total_positive": 98990,
+                "total_negative": 3191,
+                "genres": [
+                    "Action"
+                ],
+                "tags": [
+                    "Action",
+                    "FPS",
+                    "Multiplayer",
+                    "Shooter",
+                    "Classic",
+                    "Team-Based",
+                    "First-Person",
+                    "Competitive",
+                    "Tactical",
+                    "1990's",
+                    "eSports",
+                    "PvP",
+                    "Old School",
+                    "Military",
+                    "Strategy",
+                    "Survival",
+                    "Score Attack",
+                    "1980s",
+                    "Assassin",
+                    "Violent"
+                ],
+                "playtime": 10,
+                "category": "Strategy & Simulation Games"
+            },
+            {
+                "appid": 20,
+                "name": "Team Fortress Classic",
+                "header_img": "https://cdn.akamai.steamstatic.com/steam/apps/20/header.jpg?t=1579634708",
+                "developers": [],
+                "current_online": 52,
+                "total_positive": 3224,
+                "total_negative": 625,
+                "genres": [
+                    "Action"
+                ],
+                "tags": [
+                    "Action",
+                    "FPS",
+                    "Multiplayer",
+                    "Classic",
+                    "Hero Shooter",
+                    "Shooter",
+                    "Team-Based",
+                    "Class-Based",
+                    "First-Person",
+                    "1990's",
+                    "Old School",
+                    "Co-op",
+                    "Competitive",
+                    "Fast-Paced",
+                    "Retro",
+                    "Online Co-Op",
+                    "Violent",
+                    "Mod",
+                    "Remake",
+                    "Funny"
+                ],
+                "playtime": -1,
+                "category": "Strategy & Simulation Games"
+            }
+        ]
+    },
+
+    {
+        "name":"Puzzle & Arcade Games",
+        "children":
+        [
+            {
+                "appid": 30,
+                "name": "Day of Defeat",
+                "header_img": "https://cdn.akamai.steamstatic.com/steam/apps/30/header.jpg?t=1512413490",
+                "developers": [],
+                "current_online": 103,
+                "total_positive": 2475,
+                "total_negative": 351,
+                "genres": [
+                    "Action"
+                ],
+                "tags": [
+                    "FPS",
+                    "World War II",
+                    "Multiplayer",
+                    "Shooter",
+                    "Action",
+                    "War",
+                    "Team-Based",
+                    "Classic",
+                    "First-Person",
+                    "Class-Based",
+                    "Military",
+                    "Historical",
+                    "Tactical",
+                    "Co-op",
+                    "Singleplayer",
+                    "Difficult",
+                    "Retro",
+                    "Strategy",
+                    "World War I",
+                    "Old School"
+                ],
+                "playtime": -1,
+                "category": "Puzzle & Arcade Games"
+            },
+            {
+                "appid": 40,
+                "name": "Deathmatch Classic",
+                "header_img": "https://cdn.akamai.steamstatic.com/steam/apps/40/header.jpg?t=1568752159",
+                "developers": [],
+                "current_online": 2,
+                "total_positive": 1053,
+                "total_negative": 264,
+                "genres": [
+                    "Action"
+                ],
+                "tags": [
+                    "Action",
+                    "FPS",
+                    "Classic",
+                    "Multiplayer",
+                    "Shooter",
+                    "First-Person",
+                    "Arena Shooter",
+                    "Sci-fi",
+                    "Old School",
+                    "Competitive",
+                    "Fast-Paced",
+                    "Co-op",
+                    "Retro",
+                    "Gore",
+                    "Difficult",
+                    "1990's"
+                ],
+                "playtime": -1,
+                "category": "Puzzle & Arcade Games"
+            }
+        ]
+    }
+]
