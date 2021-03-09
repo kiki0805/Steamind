@@ -1,3 +1,5 @@
+import {get_data} from './get_data.js'
+
 /*** VARIABLES ***/
 var price = 100;
 var price_filter = d3.select('#price_filter');
@@ -9,8 +11,8 @@ var pop_filter = d3.select('#pop_filter');
 var selection_div = d3.select("#selection");
 var selection = {
     'tags':[],
-    'categories':"",
-    'developers':"Valve", // don't seem to have a default
+    'categories':[],
+    'developers':[], // don't seem to have a default
     'price':price,
     'popularity':pop
 };
@@ -54,41 +56,40 @@ pop_filter.append('input')
 
 /*** DROP-DOWN FILTERS ***/
 /* Filter options */
-var tagL = ["Action", "FPS", "Shooter", "Old School"];
-var catL = ["Strategy & Simulation Games", "RPG Games", "Shooter Games", "Software", "Puzzle & Arcade Games"]
-var devL = ["Valve"]
-
-/* Adding values for each filter drop down */
-var tag_dropdown = d3.select('#tags');
-tagL.forEach(tag => {
-    tag_dropdown.append('option')
-        .attr('value', () => { return tag })
-        .text(tag)
+var vis, resetVis;
+var tagL, devL;
+d3.json('backend/steam_scrapy/mock_data.json') // replace this with actual fetched data
+    .then(function(data) {
+        devL = data.developers;
+        tagL = data.tags;
+        vis = resetVis = data.games;
+        create_filter_options();
 });
 
-var cat_dropdown = d3.select('#categories');
-catL.forEach(category => {
-    cat_dropdown.append('option')
-        .attr('value', () => { return category })
-        .text(category)
-});
+function create_filter_options() {
+    /* Adding values for each filter drop down */
+    var tag_dropdown = d3.select('#tags');
+    tagL.forEach(tag => {
+        tag_dropdown.append('option')
+            .attr('value', () => { return tag })
+            .text(tag)
+    });
 
-var dev_dropdown = d3.select('#developers');
-devL.forEach(developer => {
-    dev_dropdown.append('option')
-        .attr('value', () => { return developer })
-        .text(developer)
-});
+    var dev_dropdown = d3.select('#developers');
+    devL.forEach(developer => {
+        dev_dropdown.append('option')
+            .attr('value', () => { return developer })
+            .text(developer)
+    });
 
-$('.filter').on('change', function() { addSelection(this.id, this.value) });
+    $('.filter').on('change', function() { addSelection(this.id, this.value) });
+}
 
 /*** FUNCTIONS ***/
 /* Add attribute to selection list and as a list item on the page */
 function addSelection(type, value) {
-    if( selection[type].includes(value) ) { // check if item already in filter
-        // do nothing
-    }else {
-        if(type == 'tags') {
+    if(value != -1) {
+        if(!selection[type].includes(value)) { // check if item already in filter
             selection[type].push(value);
             selection_div.append('li')
                 .attr('id', function() {
@@ -96,63 +97,65 @@ function addSelection(type, value) {
                 })
                 .text('✕ '+value)
                 .on('click', function() { removeSelection(type, value) })
-        }else {
-            if(selection[type] == "") {
-                selection[type] = value;
-
-                selection_div.append('li')
-                    .attr('id', function() {
-                        return value.toLowerCase().replace(/^[^a-z]+|[^\w:.-]+/gi, "");
-                    })
-                    .text('✕ '+value)
-                    .on('click', function() { removeSelection(type, value) })
-            }
         }
+        updateVis();
     }
     console.log(selection)
 }
 
 /* Remove attribute from selection list and its html element */
 function removeSelection(type, value) {
-    if(type == 'tags') {
-        var index = (selection[type]).indexOf(value);
-        if(index != -1) {
-            (selection[type]).splice(index, 1);
-        }
-    }else {
-        selection[type] = "";
+    var index = (selection[type]).indexOf(value);
+    if(index != -1) {
+        (selection[type]).splice(index, 1);
     }
     var tmp = '#'+value.toLowerCase().replace(/^[^a-z]+|[^\w:.-]+/gi, "");
     d3.select(tmp).remove();
+    
+    updateVis();
     console.log(selection)
 }
 
 /* Update attribute in selection */
 function updateFilterSlider(type, value) {
     selection[type] = parseInt(value);
+    updateVis();
 }
 
-// need a button that actually sends the request
-
-/*** API REQUEST ***/
 $.ajaxSetup({
     contentType: "application/json; charset=utf-8"
   });
 
-$("#send_request").click(function(){
-    $.post("http://3.129.66.238:8000/filter_games", 
+function updateVis() {
+    $.post("http://3.129.66.238:8000/filter_games/76561197963264495?limit=300", 
     JSON.stringify({
-        "category": selection.categories, // optional
+        "categories": selection.categories, // optional
         "max_price": selection.price, // optional, in dollars
         "tags": selection.tags, // optional, array of tags
         "max_positive_review_ratio": selection.popularity, // optional, maximum of ratio of positive review
-        "developer": selection.developers, // optional
+        "developers": selection.developers, // optional
     }),
     function(data, status){
-      console.log('ok', data)
+      console.log(data.games);
+    });
+}
+
+$("#send_request").click(function(){
+    console.log('sending!');
+    $.post("http://3.129.66.238:8000/filter_games/76561197963264495?limit=300", 
+    JSON.stringify({
+        "categories": selection.categories, // optional
+        "max_price": selection.price, // optional, in dollars
+        "tags": selection.tags, // optional, array of tags
+        "max_positive_review_ratio": selection.popularity, // optional, maximum of ratio of positive review
+        "developers": selection.developers, // optional
+    }),
+    function(data, status){
+      console.log('ok', data);
     });
 });
 
+/*
 $("#send_request2").click(function(){
     $.post("http://3.129.66.238:8000/filter_games", 
     JSON.stringify({
@@ -166,7 +169,7 @@ $("#send_request2").click(function(){
       console.log('ok', data)
     });
 });
-
+*/
 /*
 function addToFilter(type, value) {
 console.log('hej');
