@@ -24,15 +24,16 @@ def dump_games():
         f.write(json.dumps(games_id))
     return data
 
-def dump_games_for_user(games, user, limit=300):
+def dump_games_for_user(owned_games, user, limit=300):
     data = []
     count = 0
-    for game in games:
+
+    all_tags = set()
+    all_developers = set()
+    def process_game(game):
         single = model_to_dict(game, backrefs=True, max_depth=2)
         tags = [t['tag']['name'] for t in single.pop('tagged_set')]
-        if tags != [] and user is not None:
-            if not check_relevant(game, user):
-                continue
+        all_tags.update(set(tags))
         single['tags'] = tags
         single['category'] = calcCategory({'tags': tags}, category)
         single.pop('publishers')
@@ -40,19 +41,30 @@ def dump_games_for_user(games, user, limit=300):
         genres = [g["genre"]['description'] for g in single.pop('genreprops_set')]
         single['genres'] = genres
         single.pop('playtime_set')
+        single['developers'] = [dev.strip() for dev in single['developers']]
+        all_developers.update(set(single['developers']))
+        return single
 
-        if user is not None:
-            query = Playtime.select().where(Playtime.user==user, Playtime.game==game)
-            if query.exists():
-                single['playtime'] = query.first().time
-            else:
-                single['playtime'] = -1
-        else:
-            single['playtime'] = -1
+    for game in owned_games:
+        single = process_game(game)
+        single['playtime'] = Playtime.select().where(Playtime.user==user, Playtime.game==game).first().time
         data.append(single)
         count += 1
         if count > limit:
             break
+    amount = count
+    
+    games = Game.select().where(Game.name!="")
+    for game in games:
+        if Playtime.select().where(Playtime.user==user, Playtime.game==game).exists():
+            continue
+        single = process_game(game)
+        single['playtime'] = -1
+        data.append(single)
+        count += 1
+        if count > limit:
+            break
+
     categorized = {}
     for game in data:
         cat = game['category']
@@ -61,7 +73,16 @@ def dump_games_for_user(games, user, limit=300):
         else:
             categorized[cat] = [game, ]
     categorized = [{"name": k, "children": categorized[k]} for k in categorized]
-    return categorized
+    returned_data = {
+        'user_info': {
+            "amount_of_games": amount,
+            **model_to_dict(user),
+        },
+        "tags": list(all_tags),
+        "developers": list(all_developers),
+        "games": categorized
+    }
+    return returned_data
 
 
 def filter_games(user=None, **kwargs):
@@ -112,11 +133,8 @@ def filter_games(user=None, **kwargs):
     return dump_games_for_user(games, user, kwargs.get('limit', 300))
 
 
-def check_relevant(game, user):
-    recommended = Recommended.select().where(Recommended.user==user)
-    recommended = [r.tag.id for r in recommended]
-    tagged = Tagged.select().where(Tagged.game==game)
-    tags = [tag.tag.id for tag in tagged]
+def check_relevant(tags):
+    recommended = ['Pinball', 'Hack and Slash', 'Action RPG', 'Online Co-Op', 'Third Person', 'Difficult', 'Free to Play', 'Open World', 'Co-op', 'Great Soundtrack', 'Fantasy', 'RPG', 'Story Rich', 'Atmospheric', 'Adventure', 'Multiplayer', 'Indie', 'Strategy', 'Action', 'Singleplayer']
     num_in_recommended = 0
     for tag in tags:
         if tag in recommended:

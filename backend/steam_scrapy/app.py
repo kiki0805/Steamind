@@ -18,6 +18,7 @@ def crawl_new_user(steamid, timeout=None):
         user_p.wait()
         game_p.wait()
 
+from flask_cors import CORS
 DEBUG = True
 config = {
     "DEBUG": DEBUG,          # some Flask specific configs
@@ -26,6 +27,7 @@ config = {
 }
 cache = Cache(config=config)
 app = Flask(__name__)
+CORS(app)
 cache.init_app(app)
 
 @app.route('/prefetched_users')
@@ -56,13 +58,14 @@ def get_games_api(steamid):
         abort(400) 
     
     user = user.first()
-    games = Game.select().where(Game.name!="")
+    pts = Playtime.select().where(Playtime.user==user)
+    games = [pt.game for pt in pts]
     data = dump_games_for_user(games, user, limit)
     cache.set(f'games_{steamid}_{limit}', data)
     return jsonify(data)
 
-@app.route('/filter_games', methods=['POST'])
-def filter_games_api():
+@app.route('/filter_games/<steamid>', methods=['POST'])
+def filter_games_api(steamid):
     content = request.json
     steamid = content.get('steamid', None)
     if steamid is None:
