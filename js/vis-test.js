@@ -8,6 +8,7 @@ var svg = d3.select("svg"),
 
 var color = d3.scaleOrdinal(d3.schemeTableau10);
 
+
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(250).strength(0.1))
     .force("charge", d3.forceManyBody())
@@ -170,6 +171,65 @@ setTimeout(function() {
             .attr('y2', function(d) { return d.target.y; });
     };
     console.log('ok');
+
+    //legend
+    // var legend = svg.selectAll(".legend")
+    //             .data(color.domain())
+    //             .enter().append("g")
+    //             .attr("class","legend")
+    //             .attr("transform",function(d,i){return "translate(0" + i*50 + ")";})
+
+    // legend.append("circle")
+    //     .attr("x",width-300)
+    //     .attr("y",100)
+    //     .attr("width",18)
+    //     .attr("height",18)
+    //     .style("fill",color)
+
+    // legend.append("text")
+    //     .attr("x",width-260)    
+    //     .attr("y",110)
+    //     .attr("dy",".35em")
+    //     .style("text-anchor","end")
+    //     .text(function(d){
+    //         if (d == 1) {
+    //             return 'user' 
+    //         } else {
+    //             return 'game'
+    //         }
+    //     })
+    console.log(color.domain());
+    svg.append("rect")
+        .data(color.domain())
+        .attr("x",width-300)
+        .attr("y",100)
+        .attr("width",20)
+        .attr("height",20)
+        .style("fill",function(d) { return color(d) })
+
+    svg.append("circle")
+        .data(color.domain())
+        .attr("cx",width-290)
+        .attr("cy",140)
+        .attr("r", 10)
+        .style("fill",function(d) { return color(d+1) })
+
+    svg.append("text")
+        .attr("x",width-270)
+        .attr("y",110)
+        .text("user")
+        .style("font-size","15px")
+        .attr("alignment-baseline","middle")
+
+    svg.append("text")
+        .attr("x",width-270)
+        .attr("y",140)
+        .text("game")
+        .style("font-size","15px")
+        .attr("alignment-baseline","middle")
+    
+
+
 }, 1000);
 
 function showprofile(d) {
