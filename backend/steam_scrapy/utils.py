@@ -80,21 +80,21 @@ def dump_games_for_user(owned_games, user, limit=300):
         },
         "tags": list(all_tags),
         "developers": list(all_developers),
-        "games": categorized
+        "games": categorized,
+        "raw_games": data
     }
     return returned_data
 
 
-def filter_games(user=None, **kwargs):
-    games = Game.select().where(Game.name!="")
-    if user is not None:
-        owned = kwargs.get('owned', None)
-        if owned:
-            min_playtime = kwargs.get('min_playtime', 0)
-            max_playtime = kwargs.get('max_playtime', float('inf'))
-            games = filter(lambda game: Playtime.select().where(Playtime.user==user, Playtime.game==game, Playtime.time>=min_playtime, Playtime.time<=max_playtime).exists(), games)
-        elif owned is False:
-            games = filter(lambda game: not Playtime.select().where(Playtime.user==user, Playtime.game==game).exists(), games)
+def filter_games(raw_data, **kwargs):
+    games = raw_data.pop('raw_games')
+    owned = kwargs.get('owned', None)
+    if owned:
+        min_playtime = kwargs.get('min_playtime', 0)
+        max_playtime = kwargs.get('max_playtime', float('inf'))
+        games = filter(lambda game: game['playtime']>=min_playtime and game['playtime']<=max_playtime, games)
+    elif owned is False:
+        games = filter(lambda game: game['playtime'] == -1, games)
 
     cat = kwargs.get('category', None)
     min_popularity = kwargs.get('min_popularity', None)
@@ -107,30 +107,39 @@ def filter_games(user=None, **kwargs):
     developer = kwargs.get('developer', None)
 
     if cat is not None:
-        games = filter(lambda game: calcCategory({'tags': [tagged.tag.name for tagged in game.tagged_set]}, category) == cat, games)
+        games = filter(lambda game: game['category'] == cat, games)
     if developer is not None:
-        games = filter(lambda game: developer in game.developers, games)
+        games = filter(lambda game: developer in game['developers'], games)
 
     if min_popularity is not None:
-        games = filter(lambda game: game.current_online>min_popularity, games)
+        games = filter(lambda game: game['current_online'] > min_popularity, games)
 
     if tags is not None:
         def including_tags(game):
-            game_tags = [tagged.tag.name for tagged in game.tagged_set]
-            return set(tags).issubset(set(game_tags))
+            return set(tags).issubset(set(game['tags']))
         games = filter(including_tags, games)
     if genres is not None:
         def including_genres(game):
-            game_genres = [genreprops.genre.description for genreprops in game.genreprops_set]
-            return set(game_genres).issubset(set(game_genres))
+            return set(genres).issubset(set(game['genres']))
         games = filter(including_genres, games)
     
     if min_price is not None or max_price is not None:
-        games = filter(lambda game: game.price >= (min_price if min_price is not None else -1) and game.price <= (max_price if max_price is not None else float('inf')), games)
+        games = filter(lambda game: game['price'] >= (min_price if min_price is not None else -1) and game['price'] <= (max_price if max_price is not None else float('inf')), games)
     if min_prr is not None or max_prr is not None:
-        games = filter(lambda game: game.positive_review_ratio >= (min_prr if min_prr is not None else -1) and game.positive_review_ratio <= (max_prr if max_prr is not None else float('inf')), games)
+        games = filter(lambda game: game['positive_review_ratio'] >= (min_prr if min_prr is not None else -1) and game['positive_review_ratio'] <= (max_prr if max_prr is not None else float('inf')), games)
 
-    return dump_games_for_user(games, user, kwargs.get('limit', 300))
+    categorized = {}
+    for game in games:
+        cat = game['category']
+        if cat in categorized:
+            categorized[cat].append(game)
+        else:
+            categorized[cat] = [game, ]
+    categorized = [{"name": k, "children": categorized[k]} for k in categorized]
+    return {
+        **raw_data,
+        'games': categorized,
+    }
 
 
 def check_relevant(tags):

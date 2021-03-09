@@ -2,6 +2,8 @@ import subprocess
 from flask_caching import Cache
 from flask import Flask, jsonify, abort, request
 from db import *
+import hashlib
+import json
 from utils import dump_games_for_user, filter_games
 
 def crawl_new_user(steamid, timeout=None):
@@ -38,16 +40,10 @@ def prefetched_users():
     users = [user.steamid for user in users]
     return jsonify(users)
 
-@app.route('/games/<steamid>')
-def get_games_api(steamid):
-    limit = request.args.get('limit')
-    try:
-        limit = int(limit)
-    except:
-        limit = 300
+def get_date_of_user(steamid, limit):
     data = cache.get(f'games_{steamid}_{limit}')
     if data is not None:
-        return jsonify(data)
+        return data
     
     print(f'fetch games for {steamid}')
     user = User.select().where(User.steamid==steamid)
@@ -62,24 +58,40 @@ def get_games_api(steamid):
     games = [pt.game for pt in pts]
     data = dump_games_for_user(games, user, limit)
     cache.set(f'games_{steamid}_{limit}', data)
+    return data
+
+
+@app.route('/games/<steamid>')
+def get_games_api(steamid):
+    limit = request.args.get('limit')
+    try:
+        limit = int(limit)
+    except:
+        limit = 300
+    data = get_date_of_user(steamid, limit)
+    data.pop('raw_games')
     return jsonify(data)
+
 
 @app.route('/filter_games/<steamid>', methods=['POST'])
 def filter_games_api(steamid):
     content = request.json
-    steamid = content.get('steamid', None)
-    if steamid is None:
-        data = filter_games(None, **content)
+    limit = request.args.get('limit')
+    try:
+        limit = int(limit)
+    except:
+        limit = 300
+    hash_ = hashlib.md5(json.dumps(content).encode('utf-8')).digest()
+    data = cache.get(f'{steamid}_{limit}_{hash_}')
+    if data is not None:
         return jsonify(data)
 
-    user = User.select().where(User.steamid==steamid)
-    if (not user.exists()) or not Playtime.select().where(Playtime.user==user).exists():
-        crawl_new_user(steamid, 15)
-        user = User.select().where(User.steamid==steamid)
-    if not user.exists():
-        abort(400)
-    user = user.first()
-    data = filter_games(user, **content)
+    print(f'filter games for {steamid} with parameters {content}')
+
+    raw_data = get_date_of_user(steamid, limit)
+    data = filter_games(raw_data, **content)
+
+    cache.set(f'{steamid}_{limit}_{hash_}', data)
     return jsonify(data)
 
 if __name__ == '__main__':
