@@ -96,7 +96,7 @@ def filter_games(raw_data, **kwargs):
     elif owned is False:
         games = filter(lambda game: game['playtime'] == -1, games)
 
-    cat = kwargs.get('category', None)
+    cats = kwargs.get('categories', None)
     min_popularity = kwargs.get('min_popularity', None)
     min_price = kwargs.get('min_price', None)
     max_price = kwargs.get('max_price', None)
@@ -104,12 +104,14 @@ def filter_games(raw_data, **kwargs):
     genres = kwargs.get('genres', None)
     min_prr = kwargs.get('min_positive_review_ratio', None)
     max_prr = kwargs.get('max_positive_review_ratio' , None)
-    developer = kwargs.get('developer', None)
+    developers = kwargs.get('developers', None)
 
-    if cat is not None:
-        games = filter(lambda game: game['category'] == cat, games)
-    if developer is not None:
-        games = filter(lambda game: developer in game['developers'], games)
+    if cats is not None:
+        games = filter(lambda game: game['category'] in cats, games)
+    if developers is not None:
+        def including_developers(game):
+            return set(developers).issubset(set(game['developers']))
+        games = filter(including_developers, games)
 
     if min_popularity is not None:
         games = filter(lambda game: game['current_online'] > min_popularity, games)
