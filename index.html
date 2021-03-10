@@ -45,45 +45,38 @@
         <section id="intro" class="wrapper style1 fullscreen fade-up">
         <div class="inner">
             <i class="fas fa-info-circle fa-2x" data-toggle="tooltip" data-placement="left"></i>
-            <div id="viz"></div>
-            <!-- Close div here so that it does not interfere with filter -->
             <div id="filter">
                 <ul id="selection">Filters: </ul>
-                <div id="price_filter">
-                    <h5>Max price: </h5>
-                </div>
-                <div id="pop_filter">
-                    <h5>Max popularity: </h5>
-                </div>
-                <div>
-                    <h5>Tags</h5>
-                    <select id="tags" class="filter">
-                            <option value=-1>Choose tag</option>
+                <div id="filter-wrap">
+                    <div>
+                        <h5>Tags</h5>
+                        <select id="tags" class="filter">
+                                <option value=-1>Choose tag</option>
                         </select>
-                </div>
-
-                <div>
-                    <h5>Categories</h5>
-                    <select id="categories" class="filter">
-                            <option value=-1>Choose category</option>
-                            <option value="Strategy & Simulation Games">Strategy & Simulation Games</option>
-                            <option value="Shooter Games">Shooter Games</option>
-                            <option value="RPG Games">RPG Games</option>
-                            <option value="Puzzle & Arcade Games">Puzzle & Arcade Games</option>
+                    </div>
+                    <div>
+                        <h5>Categories</h5>
+                        <select id="categories" class="filter">
+                                <option value=-1>Choose category</option>
+                                <option value="Strategy & Simulation Games">Strategy & Simulation Games</option>
+                                <option value="Shooter Games">Shooter Games</option>
+                                <option value="RPG Games">RPG Games</option>
+                                <option value="Puzzle & Arcade Games">Puzzle & Arcade Games</option>
                         </select>
-                </div>
-
-                <div>
-                    <h5>Developers</h5>
-                    <select id="developers" class="filter">
-                            <option value=-1>Choose developer</option>
+                    </div>
+                    <div>
+                        <h5>Developers</h5>
+                        <select id="developers" class="filter">
+                                <option value=-1>Choose developer</option>
                         </select>
+                    </div>
+                    <div id="price_filter"></div>
+                    <div id="pop_filter"></div>
                 </div>
-                <button id="send_request">apply filters</button>
-                <button id="send_request2">test</button>
+                <!--<button id="send_request">apply filters</button>-->
             </div>
-            
-            
+            <!-- Close div here so that it does not interfere with filter -->
+            <div id="viz"></div>
         </section>
 
         <!-- One -->
