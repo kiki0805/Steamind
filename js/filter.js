@@ -83,7 +83,7 @@ function create_filter_options() {
     });
 
     $('.filter').on('change', function() { addSelection(this.id, this.value) });
-}
+};
 
 /*** FUNCTIONS ***/
 /* Add attribute to selection list and as a list item on the page */
@@ -93,15 +93,15 @@ function addSelection(type, value) {
             selection[type].push(value);
             selection_div.append('li')
                 .attr('id', function() {
-                    return value.toLowerCase().replace(/^[^a-z]+|[^\w:.-]+/gi, "");
+                    return value.toLowerCase().replace(/[^a-zA-Z+]+/gi, "");
                 })
                 .text('✕ '+value)
                 .on('click', function() { removeSelection(type, value) })
         }
+        //console.log('updated selection: ', selection);
         updateVis();
     }
-    console.log(selection)
-}
+};
 
 /* Remove attribute from selection list and its html element */
 function removeSelection(type, value) {
@@ -109,25 +109,35 @@ function removeSelection(type, value) {
     if(index != -1) {
         (selection[type]).splice(index, 1);
     }
-    var tmp = '#'+value.toLowerCase().replace(/^[^a-z]+|[^\w:.-]+/gi, "");
+    var tmp = '#'+value.toLowerCase().replace(/[^a-zA-Z+]+/gi, "");
+    // regex from stack overflow /^[^a-z]+|[^\w:.-]+/gi
     d3.select(tmp).remove();
     
-    updateVis();
-    console.log(selection)
-}
+    //console.log('updated selection: ', selection);
+    updateVis(); 
+};
 
 /* Update attribute in selection */
 function updateFilterSlider(type, value) {
     selection[type] = parseInt(value);
     updateVis();
-}
+};
 
 $.ajaxSetup({
     contentType: "application/json; charset=utf-8"
   });
 
 function updateVis() {
-    $.post("http://3.129.66.238:8000/filter_games/76561197963264495?limit=300", 
+    if((selection.categories).length != 0) {
+        sendRequestCat();
+    }else {
+        sendRequestNoCat();
+    }
+};
+
+/* Send request with categories */
+function sendRequestCat() {
+    $.post("http://3.129.66.238:8000/filter_games/76561197963264495?limit=300",
     JSON.stringify({
         "categories": selection.categories, // optional
         "max_price": selection.price, // optional, in dollars
@@ -136,23 +146,29 @@ function updateVis() {
         "developers": selection.developers, // optional
     }),
     function(data, status){
-      console.log(data.games);
+        console.log('ok',data.games);
+    });
+};
+
+function sendRequestNoCat() {
+    $.post("http://3.129.66.238:8000/filter_games/76561197963264495?limit=300",
+    JSON.stringify({
+        "max_price": selection.price, // optional, in dollars
+        "tags": selection.tags, // optional, array of tags
+        "max_positive_review_ratio": selection.popularity, // optional, maximum of ratio of positive review
+        "developers": selection.developers, // optional
+    }),
+    function(data, status){
+        console.log('ok',data.games);
     });
 }
 
 $("#send_request").click(function(){
-    console.log('sending!');
-    $.post("http://3.129.66.238:8000/filter_games/76561197963264495?limit=300", 
-    JSON.stringify({
-        "categories": selection.categories, // optional
-        "max_price": selection.price, // optional, in dollars
-        "tags": selection.tags, // optional, array of tags
-        "max_positive_review_ratio": selection.popularity, // optional, maximum of ratio of positive review
-        "developers": selection.developers, // optional
-    }),
-    function(data, status){
-      console.log('ok', data);
-    });
+    if((selection.categories).length != 0) {
+        sendRequestCat();
+    }else {
+        sendRequestNoCat();
+    }
 });
 
 /*
