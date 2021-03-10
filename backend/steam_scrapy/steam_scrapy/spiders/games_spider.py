@@ -207,6 +207,6 @@ class GamesSpider(scrapy.Spider):
         
         yield GameDevPubItem(
             appid=appid,
-            developers=[d.text for d in dev],
-            publishers=[p.text for p in pub]
+            developers=[d.text.strip() for d in dev],
+            publishers=[p.text.strip() for p in pub]
         )

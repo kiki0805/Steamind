@@ -46,7 +46,7 @@ class GameDetailPipeline:
                 name=item['name'],
                 appid=item['appid'],
                 header_img=item['header_image'],
-                developers=item['developers'],
+                developers=[],
                 publishers=item['publishers'],
                 price=0 if item['is_free'] else item['price_overview']['initial'], # EUR
             )

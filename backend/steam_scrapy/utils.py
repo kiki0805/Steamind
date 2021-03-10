@@ -24,15 +24,16 @@ def dump_games():
         f.write(json.dumps(games_id))
     return data
 
-def dump_games_for_user(games, user, limit=300):
+def dump_games_for_user(owned_games, user, limit=300):
     data = []
     count = 0
-    for game in games:
+
+    all_tags = set()
+    all_developers = set()
+    def process_game(game):
         single = model_to_dict(game, backrefs=True, max_depth=2)
         tags = [t['tag']['name'] for t in single.pop('tagged_set')]
-        if tags != [] and user is not None:
-            if not check_relevant(game, user):
-                continue
+        all_tags.update(set(tags))
         single['tags'] = tags
         single['category'] = calcCategory({'tags': tags}, category)
         single.pop('publishers')
@@ -40,19 +41,30 @@ def dump_games_for_user(games, user, limit=300):
         genres = [g["genre"]['description'] for g in single.pop('genreprops_set')]
         single['genres'] = genres
         single.pop('playtime_set')
+        single['developers'] = [dev.strip() for dev in single['developers']]
+        all_developers.update(set(single['developers']))
+        return single
 
-        if user is not None:
-            query = Playtime.select().where(Playtime.user==user, Playtime.game==game)
-            if query.exists():
-                single['playtime'] = query.first().time
-            else:
-                single['playtime'] = -1
-        else:
-            single['playtime'] = -1
+    for game in owned_games:
+        single = process_game(game)
+        single['playtime'] = Playtime.select().where(Playtime.user==user, Playtime.game==game).first().time
         data.append(single)
         count += 1
         if count > limit:
             break
+    amount = count
+    
+    games = Game.select().where(Game.name!="")
+    for game in games:
+        if Playtime.select().where(Playtime.user==user, Playtime.game==game).exists():
+            continue
+        single = process_game(game)
+        single['playtime'] = -1
+        data.append(single)
+        count += 1
+        if count > limit:
+            break
+
     categorized = {}
     for game in data:
         cat = game['category']
@@ -61,21 +73,30 @@ def dump_games_for_user(games, user, limit=300):
         else:
             categorized[cat] = [game, ]
     categorized = [{"name": k, "children": categorized[k]} for k in categorized]
-    return categorized
+    returned_data = {
+        'user_info': {
+            "amount_of_games": amount,
+            **model_to_dict(user),
+        },
+        "tags": list(all_tags),
+        "developers": list(all_developers),
+        "games": categorized,
+        "raw_games": data
+    }
+    return returned_data
 
 
-def filter_games(user=None, **kwargs):
-    games = Game.select().where(Game.name!="")
-    if user is not None:
-        owned = kwargs.get('owned', None)
-        if owned:
-            min_playtime = kwargs.get('min_playtime', 0)
-            max_playtime = kwargs.get('max_playtime', float('inf'))
-            games = filter(lambda game: Playtime.select().where(Playtime.user==user, Playtime.game==game, Playtime.time>=min_playtime, Playtime.time<=max_playtime).exists(), games)
-        elif owned is False:
-            games = filter(lambda game: not Playtime.select().where(Playtime.user==user, Playtime.game==game).exists(), games)
+def filter_games(raw_data, **kwargs):
+    games = raw_data.pop('raw_games')
+    owned = kwargs.get('owned', None)
+    if owned:
+        min_playtime = kwargs.get('min_playtime', 0)
+        max_playtime = kwargs.get('max_playtime', float('inf'))
+        games = filter(lambda game: game['playtime']>=min_playtime and game['playtime']<=max_playtime, games)
+    elif owned is False:
+        games = filter(lambda game: game['playtime'] == -1, games)
 
-    cat = kwargs.get('category', None)
+    cats = kwargs.get('categories', None)
     min_popularity = kwargs.get('min_popularity', None)
     min_price = kwargs.get('min_price', None)
     max_price = kwargs.get('max_price', None)
@@ -83,40 +104,48 @@ def filter_games(user=None, **kwargs):
     genres = kwargs.get('genres', None)
     min_prr = kwargs.get('min_positive_review_ratio', None)
     max_prr = kwargs.get('max_positive_review_ratio' , None)
-    developer = kwargs.get('developer', None)
+    developers = kwargs.get('developers', None)
 
-    if cat is not None:
-        games = filter(lambda game: calcCategory({'tags': [tagged.tag.name for tagged in game.tagged_set]}, category) == cat, games)
-    if developer is not None:
-        games = filter(lambda game: developer in game.developers, games)
+    if cats is not None:
+        games = filter(lambda game: game['category'] in cats, games)
+    if developers is not None:
+        def including_developers(game):
+            return set(developers).issubset(set(game['developers']))
+        games = filter(including_developers, games)
 
     if min_popularity is not None:
-        games = filter(lambda game: game.current_online>min_popularity, games)
+        games = filter(lambda game: game['current_online'] > min_popularity, games)
 
     if tags is not None:
         def including_tags(game):
-            game_tags = [tagged.tag.name for tagged in game.tagged_set]
-            return set(tags).issubset(set(game_tags))
+            return set(tags).issubset(set(game['tags']))
         games = filter(including_tags, games)
     if genres is not None:
         def including_genres(game):
-            game_genres = [genreprops.genre.description for genreprops in game.genreprops_set]
-            return set(game_genres).issubset(set(game_genres))
+            return set(genres).issubset(set(game['genres']))
         games = filter(including_genres, games)
     
     if min_price is not None or max_price is not None:
-        games = filter(lambda game: game.price >= (min_price if min_price is not None else -1) and game.price <= (max_price if max_price is not None else float('inf')), games)
+        games = filter(lambda game: game['price'] >= (min_price if min_price is not None else -1) and game['price'] <= (max_price if max_price is not None else float('inf')), games)
     if min_prr is not None or max_prr is not None:
-        games = filter(lambda game: game.positive_review_ratio >= (min_prr if min_prr is not None else -1) and game.positive_review_ratio <= (max_prr if max_prr is not None else float('inf')), games)
+        games = filter(lambda game: game['positive_review_ratio'] >= (min_prr if min_prr is not None else -1) and game['positive_review_ratio'] <= (max_prr if max_prr is not None else float('inf')), games)
 
-    return dump_games_for_user(games, user, kwargs.get('limit', 300))
+    categorized = {}
+    for game in games:
+        cat = game['category']
+        if cat in categorized:
+            categorized[cat].append(game)
+        else:
+            categorized[cat] = [game, ]
+    categorized = [{"name": k, "children": categorized[k]} for k in categorized]
+    return {
+        **raw_data,
+        'games': categorized,
+    }
 
 
-def check_relevant(game, user):
-    recommended = Recommended.select().where(Recommended.user==user)
-    recommended = [r.tag.id for r in recommended]
-    tagged = Tagged.select().where(Tagged.game==game)
-    tags = [tag.tag.id for tag in tagged]
+def check_relevant(tags):
+    recommended = ['Pinball', 'Hack and Slash', 'Action RPG', 'Online Co-Op', 'Third Person', 'Difficult', 'Free to Play', 'Open World', 'Co-op', 'Great Soundtrack', 'Fantasy', 'RPG', 'Story Rich', 'Atmospheric', 'Adventure', 'Multiplayer', 'Indie', 'Strategy', 'Action', 'Singleplayer']
     num_in_recommended = 0
     for tag in tags:
         if tag in recommended:
