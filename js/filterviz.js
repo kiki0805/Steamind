@@ -207,7 +207,7 @@ function flatten(root) {
 var price = 100;
 var price_filter = d3.select('#price_filter');
 
-var pop = 1;
+var pop = 0;
 var pop_filter = d3.select('#pop_filter');
 
 // Keeps track of current filters
@@ -242,18 +242,18 @@ price_filter.append('input')
 // popularity filter
 pop_filter.append('h5')
     .attr('id', 'pop_val')
-    .text(('Max popularity: '+pop)); // default value
+    .text(('Min popularity: '+pop+'%')); // default value
 
 pop_filter.append('input')
     .attr('type', 'range')
     .attr('min', 0)
-    .attr('max', 1)
+    .attr('max', 100)
     .attr('value', pop)
-    .attr('step', 0.1)
+    .attr('step', 1)
     .attr('id', 'pop_slider')
     .on('input', function() {
         pop = +this.value;
-        d3.select('#pop_val').text(('Max popularity: '+pop));
+        d3.select('#pop_val').text(('Min popularity: '+pop+'%'));
     })
     .on('change', function() { updateFilterSlider('popularity', this.value) });
 
@@ -347,7 +347,7 @@ function sendRequestCat() {
             "categories": selection.categories, // optional
             "max_price": selection.price, // optional, in dollars
             "tags": selection.tags, // optional, array of tags
-            "max_positive_review_ratio": selection.popularity, // optional, maximum of ratio of positive review
+            "min_positive_review_ratio": (selection.popularity/100), // optional, maximum of ratio of positive review
             "developers": selection.developers, // optional
         }),
         //update steamtree
@@ -368,7 +368,7 @@ function sendRequestNoCat() {
         JSON.stringify({
             "max_price": selection.price, // optional, in dollars
             "tags": selection.tags, // optional, array of tags
-            "max_positive_review_ratio": selection.popularity, // optional, maximum of ratio of positive review
+            "min_positive_review_ratio": (selection.popularity/100), // optional, maximum of ratio of positive review
             "developers": selection.developers, // optional
         }),
         //update steamtree
