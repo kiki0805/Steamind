@@ -1,4 +1,3 @@
-//import {get_data} from './get_data.js'
 var steamtree = [];
 
 var width = 1280,
@@ -8,7 +7,6 @@ var width = 1280,
 
 //Fetch user games for viz 
 var fetchusergames = "http://3.129.66.238:8000/games/76561197963264495?limit=300";
-
 
 async function fetchGames() {
     const response = await fetch(fetchusergames);
@@ -25,190 +23,219 @@ fetchGames().then(post => {
     steamtree.push({ "name": "Steamuser", "children": post.games });
     steamtree = JSON.stringify(Object.assign({}, steamtree));
     steamtree = JSON.parse(steamtree);
+    viz(steamtree[0]);
 
-    root = steamtree[0];
-    update();
 });
 
-//Force for nodes 
-var force = d3.layout.force()
-    .linkDistance(50)
-    .charge(-60)
-    .gravity(.05)
-    .size([width, height])
-    .on("tick", tick);
-
-//Appending the svg to the #viz-div 
 var svg = d3.select("#viz").append("svg")
+    .attr("id", "svgViz")
     .attr("width", width)
     .attr("height", height);
 
-var link = svg.selectAll(".link"),
-    node = svg.selectAll(".node");
+function viz(tree) {
+    d3.selectAll("#svgViz").remove();
 
-//Updates the current nodes 
-function update() {
+    svg = d3.select("#viz").append("svg")
+        .attr("id", "svgViz")
+        .attr("width", width)
+        .attr("height", height);
 
-    var nodes = flatten(root),
-        links = d3.layout.tree().links(nodes);
+    var link = svg.selectAll(".link"),
+        node = svg.selectAll(".node");
 
-    // Restart the force layout.
-    force
-        .nodes(nodes)
-        .links(links)
-        .start();
-
-    // Update links.
-    link = link.data(links, function(d) { return d.target.id; });
-
-    link.exit().remove();
-
-    link.enter().insert("line", ".node")
-        .attr("class", "link");
-
-    // Update nodes.
-    node = node.data(nodes, function(d) { return d.id; });
-
-    node.exit().remove();
-
-    node.enter().append("g")
-        .attr("class", function(d) {
-            //User get the class user
-            if (d.name == "Steamuser") {
-                return "user"
-            } //Categories get the class category 
-            else if (d.name == "Strategy & Simulation Games" || d.name == "Shooter Games" || d.name == "RPG Games" || d.name == "Puzzle & Arcade Games") {
-                return "category"
-            } else { return "node" }
-        })
-        .style("fill", color)
-        .style("stroke", '#fff')
-        .style("stroke-width", "1,5px")
-        .call(force.drag);
-
-    //Append circle to games
-    d3.selectAll('.node').append("circle")
-        .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 7; })
-        .style("stroke", '#fff')
-        .style("stroke-width", "1,5px")
-        .on("click", gameclick);
-
-    //Append rect to user
-    d3.selectAll('.user').append("rect")
-        .attr('width', 50)
-        .attr('height', 50)
-        .style("fill", "rgb(78, 121, 167)")
-        .style("stroke", '#fff')
-        .style("stroke-width", "1,5px")
-        .on("click", click);
-
-    //Append circle to category
-    d3.selectAll('.category').append("circle")
-        .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 7; })
-        .style("stroke", '#fff')
-        .style("stroke-width", "1,5px")
-        .style("fill", "black") //example 
-        .on("click", click);
-
-    //If we want text, looks horrible 
-    //nodeEnter.append("text")
-    //  .attr("dy", ".35em")
-    //  .text(function(d) { return d.name; });
-}
-
-//Tooltip 
-var tooltip = d3.select('#viz').append('div')
-    .attr('id', 'tooltip')
-    .attr('all', 'unset')
-    .attr('style', 'position: absolute; opacity: 0;');
-
-d3.select('body').on('click', function(e) {
-    d3.select('#tooltip').style('opacity', 0).style('display', 'none')
-});
+    //Force for nodes 
+    var force = d3.layout.force()
+        .linkDistance(50)
+        .charge(-60)
+        .gravity(.05)
+        .size([width, height])
+        .on("tick", tick);
 
 
-function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-    svg.selectAll("g").attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-}
+    //Appending the svg to the #viz-div 
 
-function color(d) {
-    return d._children ? "#3182bd" // collapsed package
-        :
-        d.children ? "#c6dbef" // expanded package
-        :
-        "#fd8d3c"; // leaf node
-}
-
-
-//When user clicks on a game 
-function gameclick(d) {
-
-    svg.selectAll('.node')
-        .style("stroke", "#fff")
-        .style("stroke-width", "1.5px");
-
-    d3.select(this)
-        .style('stroke', 'black');
-
-    if (d.header_img) {
-        d3.select('#tooltip')
-            .html("<img width=100% height=45% src=" + d.header_img + '>' +
-                "<p><b>" + d.name + "</b><br>" + "Genres: " + d.genres + "<br>" +
-                "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" + "<br>" + "</p>")
-            .transition().duration(300)
-            .style('opacity', 1)
-            .style('display', 'block')
-            .style('left', this.getBoundingClientRect().x - 300 + 'px')
-            .style('top', this.getBoundingClientRect().y - 60 + 'px');
-    } else {
-        d3.select('#tooltip')
-            .html("No info")
-            .transition().duration(300)
-            .style('opacity', 1)
-            .style('display', 'block')
-            .style('left', this.getBoundingClientRect().x - 300 + 'px')
-            .style('top', this.getBoundingClientRect().y - 60 + 'px');
-        console.log(d);
-    }
-}
-
-// Toggle children on click. For parent nodes 
-function click(d) {
-    if (d3.event.defaultPrevented) return; // ignore drag
-    if (d.children) {
-        d._children = d.children;
-        d.children = null;
-    } else {
-        d.children = d._children;
-        d._children = null;
-    }
+    root = tree
     update();
-}
+    //Updates the current nodes 
+    function update() {
 
-// Returns a list of all nodes under the root.
-function flatten(root) {
-    var nodes = [],
-        i = 0;
+        var nodes = flatten(root),
+            links = d3.layout.tree().links(nodes);
 
-    function recurse(node) {
-        if (node.children) node.children.forEach(recurse);
-        if (!node.id) node.id = ++i;
-        nodes.push(node);
+        // Restart the force layout.
+        force
+            .nodes(nodes)
+            .links(links)
+            .start();
+
+        // Update links.
+        link = link.data(links, function(d) { return d.target.id; });
+
+        link.exit().remove();
+
+        link.enter().insert("line", ".node")
+            .attr("class", "link");
+
+        // Update nodes.
+        node = node.data(nodes, function(d) { return d.id; });
+
+        node.exit().remove();
+
+        node.enter().append("g")
+            .attr("class", function(d) {
+                //User get the class user
+                if (d.name == "Steamuser") {
+                    return "user"
+                } //Categories get the class category 
+                else if (d.name == "Strategy & Simulation Games" || d.name == "Shooter Games" || d.name == "RPG Games" || d.name == "Puzzle & Arcade Games") {
+                    return "category"
+                } else if (d.name == "") {
+                    return "empty";
+                } else { return "node" }
+            })
+            .style("fill", color)
+            .style("stroke", '#fff')
+            .style("stroke-width", "1,5px")
+            .call(force.drag);
+
+        //Append circle to games
+        d3.selectAll('.node').append("circle")
+            .attr("r", function(d) {
+
+                if (d.playtime > 100) {
+                    return (d.playtime / 1000)
+                } else {
+                    return 7;
+                }
+
+            })
+            .style("stroke", '#fff')
+            .style("stroke-width", "1,5px")
+            .on("click", gameclick);
+
+        //Append rect to user
+        d3.selectAll('.user').append("rect")
+            .attr('width', 50)
+            .attr('height', 50)
+            .style("fill", "rgb(78, 121, 167)")
+            .style("stroke", '#fff')
+            .style("stroke-width", "1,5px")
+            .on("click", click);
+
+        //Append circle to category
+        d3.selectAll('.category').append("circle")
+            .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 7; })
+            .style("stroke", '#fff')
+            .style("stroke-width", "1,5px")
+            .style("fill", "black") //example 
+            .on("click", click);
+
+        //If we want text, looks horrible 
+        //nodeEnter.append("text")
+        //  .attr("dy", ".35em")
+        //  .text(function(d) { return d.name; });
     }
 
-    recurse(root);
-    return nodes;
-}
+    //Tooltip 
+    var tooltip = d3.select('#viz').append('div')
+        .attr('id', 'tooltip')
+        .attr('all', 'unset')
+        .attr('style', 'position: absolute; opacity: 0;');
 
+    d3.select('body').on('click', function(e) {
+        d3.select('#tooltip').style('opacity', 0).style('display', 'none')
+    });
+
+
+    function tick() {
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+        svg.selectAll("g").attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    }
+
+    function color(d) {
+
+        if (d.playtime > -1) {
+            return "rgb(78, 121, 167)";
+        }
+
+        return d._children ? "#3182bd" // collapsed package
+            :
+            d.children ? "#c6dbef" // expanded package
+            :
+            "#fd8d3c"; // leaf node
+    }
+
+
+    //When user clicks on a game 
+    function gameclick(d) {
+
+        svg.selectAll('.node')
+            .style("stroke", "#fff")
+            .style("stroke-width", "1.5px");
+
+        d3.select(this)
+            .style('stroke', 'black');
+
+        if (d.header_img) {
+            d3.select('#tooltip')
+                .html("<img width=100% height=45% src=" + d.header_img + '>' +
+                    "<p><b>" + d.name + "</b><br>" + "Genres: " + d.genres + "<br>" +
+                    "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" + "<br>" + "</p>")
+                .transition().duration(300)
+                .style('opacity', 1)
+                .style('display', 'block')
+                .style('left', this.getBoundingClientRect().x - 300 + 'px')
+                .style('top', this.getBoundingClientRect().y - 60 + 'px');
+        } else {
+            d3.select('#tooltip')
+                .html("No info")
+                .transition().duration(300)
+                .style('opacity', 1)
+                .style('display', 'block')
+                .style('left', this.getBoundingClientRect().x - 300 + 'px')
+                .style('top', this.getBoundingClientRect().y - 60 + 'px');
+            console.log(d);
+        }
+    }
+
+    // Toggle children on click. For parent nodes 
+    function click(d) {
+        if (d3.event.defaultPrevented) return; // ignore drag
+        if (d.children) {
+            d._children = d.children;
+            d.children = null;
+        } else {
+            d.children = d._children;
+            d._children = null;
+        }
+        update();
+    }
+
+    // Returns a list of all nodes under the root.
+    function flatten(root) {
+        var nodes = [],
+            i = 0;
+
+        function recurse(node) {
+            if (node.children) node.children.forEach(recurse);
+            if (!node.id) node.id = ++i;
+            nodes.push(node);
+        }
+
+        recurse(root);
+        return nodes;
+    }
+
+}
+/****** FILTER *******/
 /*** VARIABLES ***/
 var price = 100;
 var price_filter = d3.select('#price_filter');
 
-var pop = 1;
+var pop = 0;
 var pop_filter = d3.select('#pop_filter');
 
 // Keeps track of current filters
@@ -223,9 +250,9 @@ var selection = {
 
 /*** SLIDER FILTERS ***/
 // price filter
-price_filter.append('span')
+price_filter.append('h5')
     .attr('id', 'price_val')
-    .text(price); // default value
+    .text(('Max price: '+price)); // default value
 
 price_filter.append('input')
     .attr('type', 'range')
@@ -236,25 +263,25 @@ price_filter.append('input')
     .attr('id', 'price_slider')
     .on('input', function() {
         price = +this.value;
-        d3.select('#price_val').text(price);
+        d3.select('#price_val').text(('Max price: '+price));
     })
     .on('change', function() { updateFilterSlider('price', this.value) });
 
 // popularity filter
-pop_filter.append('span')
+pop_filter.append('h5')
     .attr('id', 'pop_val')
-    .text(pop); // default value
+    .text(('Min popularity: '+pop+'%')); // default value
 
 pop_filter.append('input')
     .attr('type', 'range')
     .attr('min', 0)
-    .attr('max', 1)
+    .attr('max', 100)
     .attr('value', pop)
-    .attr('step', 0.1)
+    .attr('step', 1)
     .attr('id', 'pop_slider')
     .on('input', function() {
         pop = +this.value;
-        d3.select('#pop_val').text(pop);
+        d3.select('#pop_val').text(('Min popularity: '+pop+'%'));
     })
     .on('change', function() { updateFilterSlider('popularity', this.value) });
 
@@ -348,19 +375,17 @@ function sendRequestCat() {
             "categories": selection.categories, // optional
             "max_price": selection.price, // optional, in dollars
             "tags": selection.tags, // optional, array of tags
-            "max_positive_review_ratio": selection.popularity, // optional, maximum of ratio of positive review
+            "min_positive_review_ratio": (selection.popularity/100), // optional, maximum of ratio of positive review
             "developers": selection.developers, // optional
         }),
         //update steamtree
         function(data, status) {
             console.log('ok', data.games);
-            steamtree = [];
-            steamtree.push({ "name": "Steamuser", "children": data.games });
-            steamtree = JSON.stringify(Object.assign({}, steamtree));
-            steamtree = JSON.parse(steamtree);
-
-            root = steamtree[0];
-            update();
+            var tree = [];
+            tree.push({ "name": "Steamuser", "children": data.games });
+            tree = JSON.stringify(Object.assign({}, tree));
+            tree = JSON.parse(tree);
+            viz(tree[0]);
         });
 };
 
@@ -369,19 +394,17 @@ function sendRequestNoCat() {
         JSON.stringify({
             "max_price": selection.price, // optional, in dollars
             "tags": selection.tags, // optional, array of tags
-            "max_positive_review_ratio": selection.popularity, // optional, maximum of ratio of positive review
+            "min_positive_review_ratio": (selection.popularity/100), // optional, maximum of ratio of positive review
             "developers": selection.developers, // optional
         }),
         //update steamtree
         function(data, status) {
             console.log('ok', data.games);
-            steamtree = [];
-            steamtree.push({ "name": "Steamuser", "children": data.games });
-            steamtree = JSON.stringify(Object.assign({}, steamtree));
-            steamtree = JSON.parse(steamtree);
-
-            root = steamtree[0];
-            update();
+            var tree = [];
+            tree.push({ "name": "Steamuser", "children": data.games });
+            tree = JSON.stringify(Object.assign({}, tree));
+            tree = JSON.parse(tree);
+            viz(tree[0]);
         });
 }
 
@@ -392,49 +415,3 @@ $("#send_request").click(function() {
         sendRequestNoCat();
     }
 });
-
-/*
-$("#send_request2").click(function(){
-    $.post("http://3.129.66.238:8000/filter_games", 
-    JSON.stringify({
-        "category": "Shooter Games", // optional
-        "max_price": 100, // optional, in dollars
-        "tags": ["Shooter"], // optional, array of tags
-        "max_positive_review_ratio": 1, // optional, maximum of ratio of positive review
-        "developer": "Valve", // optional
-    }),
-    function(data, status){
-      console.log('ok', data)
-    });
-});
-*/
-/*
-function addToFilter(type, value) {
-console.log('hej');
-
-if(selection.includes( $(this).val() )) {   // check if item already in filter
-    // do nothing
-}else {
-    console.log
-    //selection.tags.push( $(this).val() );
-    selection_div.append('li')              // add to list of filtered items
-    .attr('id', () => {
-        var val = $(this).val();
-        val.toLowerCase().replace(/^[^a-z]+|[^\w:.-]+/gi, "");
-    })
-    .attr('class', 'a')
-    .text( '✕ '+$(this).val() )
-    //.on('click', () => { removeFromFilter($(this)) });
-}
-$('.a').click(removeFromFilter);
-
-}
-
-function removeFromFilter() {
-    var index = selection.tags.indexOf( $(this).text() );
-    if(index != -1) {
-        selection.tags.splice(index, 1);
-    }
-    $(this).remove();
-}
-*/
