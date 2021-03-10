@@ -35,6 +35,7 @@ text {
     background-color: #312450;
 }
 
+<<<<<<< HEAD
 
 
 .fa-info-circle {
@@ -43,3 +44,24 @@ text {
     right: 20px;
 }
 
+=======
+/* CSS for the filter */
+.filter select{
+    background-color: blue;
+}
+
+#selection {
+    display: inline;
+    font-size: 12px;
+    list-style-type: none;
+}
+
+#selection li{
+    display: inline;
+    cursor: pointer;
+}
+
+h5 {
+    display: inline;
+}
+>>>>>>> filter
