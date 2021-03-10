@@ -46,6 +46,8 @@ def dump_games_for_user(owned_games, user, limit=300):
         return single
 
     for game in owned_games:
+        if game.name == '':
+            continue
         single = process_game(game)
         single['playtime'] = Playtime.select().where(Playtime.user==user, Playtime.game==game).first().time
         data.append(single)
