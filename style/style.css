@@ -1,4 +1,9 @@
-.links line {
+/*.links line {
+    stroke: #fff;
+    stroke-opacity: 0.6;
+}*/
+
+line.link {
     stroke: #fff;
     stroke-opacity: 0.6;
 }
@@ -35,18 +40,15 @@ text {
     background-color: #312450;
 }
 
-<<<<<<< HEAD
-
-
 .fa-info-circle {
     position: absolute;
     top: 15px;
     right: 20px;
 }
 
-=======
 /* CSS for the filter */
-.filter select{
+
+.filter select {
     background-color: blue;
 }
 
@@ -56,7 +58,7 @@ text {
     list-style-type: none;
 }
 
-#selection li{
+#selection li {
     display: inline;
     cursor: pointer;
 }
@@ -64,4 +66,3 @@ text {
 h5 {
     display: inline;
 }
->>>>>>> filter
