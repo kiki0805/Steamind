@@ -98,7 +98,7 @@ input, textarea {
 	}
 
 	body {
-		background: url(/assets/css/images/colored_body_top2.png?v=2) center top no-repeat #1b2838;
+		background: url(https://store.cloudflare.steamstatic.com/public/images/v6/colored_body_top2.png?v=2) center top no-repeat #1b2838;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
