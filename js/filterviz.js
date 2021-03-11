@@ -172,12 +172,6 @@ function viz(tree) {
 
     //When user clicks on a game 
     function gameclick(d) {
-        console.log(d);
-
-
-        svg.selectAll('g')
-            .style("stroke", "#fff")
-            .style("stroke-width", "1.5px");
 
         d3.select(this)
             .style('stroke', 'black');
@@ -240,7 +234,6 @@ function viz(tree) {
                 .style('display', 'block')
                 .style('left', this.getBoundingClientRect().x - 300 + 'px')
                 .style('top', this.getBoundingClientRect().y - 60 + 'px');
-            console.log(d);
         }
     }
 
