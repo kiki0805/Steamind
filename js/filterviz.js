@@ -161,12 +161,35 @@ function viz(tree) {
             return "rgb(78, 121, 167)";
         }
 
-        return d._children ? "#3182bd" // collapsed package
-            :
-            d.children ? "#c6dbef" // expanded package
-            :
-            "#fd8d3c"; // leaf node
-    }
+        // return d._children ? "#3182bd" // collapsed package
+        //     :
+        //     d.children ? "#c6dbef" // expanded package
+        //     :
+        //     "#fd8d3c"; // leaf node
+  
+        console.log(d)
+        var color
+        
+        if (d.category == "Strategy & Simulation Games") {
+            color = d3.hsl(0,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
+        }
+        else if (d.category == "Shooter Games") {
+            color = d3.hsl(90,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
+        }
+        else if (d.category == "RPG Games") {
+            color  = d3.hsl(35,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
+        }
+        else if (d.category == "Puzzle & Arcade Games") {
+            color = d3.hsl(300,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
+        }
+        else {
+            color = "#000000"
+        };
+    
+    
+        return color
+            
+    }   
 
 
     //When user clicks on a game 
