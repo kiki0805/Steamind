@@ -183,7 +183,10 @@ function viz(tree) {
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; });
-        svg.selectAll("g").attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            
+        svg.selectAll("g").attr("transform", function(d) { return "translate(" + 
+                                                            Math.max(7, Math.min(width - 7, d.x)) + "," +
+                                                            Math.max(7, Math.min(height - 7, d.y)) + ")"; });
     }
 
     function color(d) {
