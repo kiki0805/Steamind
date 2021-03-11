@@ -133,9 +133,9 @@ function viz(tree) {
             .attr("r", function(d) {
 
                 if (d.playtime > 0) {
-                    return 7 + (Math.log(d.playtime));
+                    return 8 + Math.min(6, d.playtime/60) + Math.min(3, d.playtime/1000) + Math.min(15, d.playtime/10000);
                 } else {
-                    return 7;
+                    return 8;
                 }
 
             })
@@ -392,13 +392,13 @@ function viz(tree) {
         if( typeof rating == 'undefined' || rating < 0.0) {rating = 0.0}
 
         if (d.category == "Strategy & Simulation Games") {
-            color = d3.hsl(0, Math.max(0.5,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(0, Math.max(0.3,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Shooter Games") {
-            color = d3.hsl(90, Math.max(0.5,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(90, Math.max(0.3,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "RPG Games") {
-            color = d3.hsl(35, Math.max(0.5,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(35, Math.max(0.3,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Puzzle & Arcade Games") {
-            color = d3.hsl(300, Math.max(0.5,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(300, Math.max(0.3,rating), 0.15 + 0.35 * rating)
         } else {
             color = "#000000"
         };
