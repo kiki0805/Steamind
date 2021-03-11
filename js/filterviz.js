@@ -123,8 +123,8 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .on('mouseover', function(d) { nodeHover(d,1); });
-            //.on("click", userclick);
+            .on('mouseover', function(d) { nodeHover(d,1); })
+            .on("click", resetviz);
 
         //Append circle to category
         d3.selectAll('.category').append('polygon')
@@ -309,10 +309,20 @@ function viz(tree) {
 
         if (d == currentfilter) {
             currentfilter = "";
-            viz(steamtree[0]);
+
+            // remove that category from selection
+            var i = (selection.categories).indexOf(currentfilter.name);
+            (selection.categories).splice(i,1);
+            console.log(selection);
+            updateVis();
         } else {
             currentfilter = d;
+
+            // add that category to selection
+            (selection.categories).push(currentfilter.name);
+            console.log(selection);
             viz(d);
+            
         }
     }
     //Tooltip 
@@ -387,6 +397,7 @@ function viz(tree) {
         }else {
             txt = d.name;
         }
+
         d3.select('#tooltip_hover')
             .html('<p>' + txt + '</p>')
             .transition().duration(400)
@@ -436,7 +447,7 @@ function viz(tree) {
                     .html("<img width=100% height=45% src=" + d.header_img + '>' +
                         "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
                         "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
-                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + d.playtime + " Minutes" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
+                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + (d.playtime/60) + " hrs" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
                         "<b>This game is owned by you.</b></p>")
                     .transition().duration(300)
                     .style('opacity', 1)
@@ -632,9 +643,15 @@ function updateFilterSlider(type, value) {
     updateVis();
 };
 
-$.ajaxSetup({
-    contentType: "application/json; charset=utf-8"
-});
+/* Reset visualization */
+function resetviz() {
+    selection.categories = [];
+    selection.tags = [];
+    selection.developers = [];
+    selection.price = 100;
+    selection.popularity = 0;
+    updateVis();
+}
 
 function updateVis() {
     if ((selection.categories).length != 0) {
@@ -643,6 +660,10 @@ function updateVis() {
         sendRequestNoCat();
     }
 };
+
+$.ajaxSetup({
+    contentType: "application/json; charset=utf-8"
+});
 
 /* Send request with categories */
 function sendRequestCat() {
@@ -656,7 +677,7 @@ function sendRequestCat() {
         }),
         //update steamtree
         function(data, status) {
-            console.log('ok', data.games);
+            //console.log('ok', data.games);
             steamtree = [];
             steamtree.push({ "name": "Steamuser", "children": data.games });
             steamtree = JSON.stringify(Object.assign({}, steamtree));
@@ -675,7 +696,7 @@ function sendRequestNoCat() {
         }),
         //update steamtree
         function(data, status) {
-            console.log('ok', data.games);
+            //console.log('ok', data.games);
             steamtree = [];
             steamtree.push({ "name": "Steamuser", "children": data.games });
             steamtree = JSON.stringify(Object.assign({}, steamtree));
