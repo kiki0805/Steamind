@@ -1,4 +1,5 @@
 var steamtree = [];
+var currentfilter;
 
 var width = 1280,
     height = 720,
@@ -103,18 +104,18 @@ function viz(tree) {
         d3.selectAll('.node').append("circle")
             .attr("r", function(d) {
 
-                if(d.playtime != -1) {
+                if (d.playtime != -1) {
                     return 7 + (Math.log(d.playtime));
-                }else {
+                } else {
                     return 7;
                 }
-/*
-                if (d.playtime > 100) {
-                    return (d.playtime / 1000)
-                } else {
-                    
-                }
-*/
+                /*
+                                if (d.playtime > 100) {
+                                    return (d.playtime / 1000)
+                                } else {
+                                    
+                                }
+                */
             })
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
@@ -135,16 +136,25 @@ function viz(tree) {
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
             .style('fill', 'black') // change this later so it depends on category
-            .on('click', click);
+            .on('click', filtercategory);
 
         //If we want text, looks horrible 
         //nodeEnter.append("text")
         //  .attr("dy", ".35em")
         //  .text(function(d) { return d.name; });
 
-    
+
     }
 
+    function filtercategory(d) {
+
+        if (d == currentfilter) {
+            viz(steamtree[0]);
+        } else {
+            currentfilter = d;
+            viz(d);
+        }
+    }
     //Tooltip 
     var tooltip = d3.select('#viz').append('div')
         .attr('id', 'tooltip')
@@ -175,30 +185,26 @@ function viz(tree) {
         //     d.children ? "#c6dbef" // expanded package
         //     :
         //     "#fd8d3c"; // leaf node
-  
+
         console.log(d)
         var color
-        
+
         if (d.category == "Strategy & Simulation Games") {
-            color = d3.hsl(0,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
-        }
-        else if (d.category == "Shooter Games") {
-            color = d3.hsl(90,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
-        }
-        else if (d.category == "RPG Games") {
-            color  = d3.hsl(35,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
-        }
-        else if (d.category == "Puzzle & Arcade Games") {
-            color = d3.hsl(300,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
-        }
-        else {
+            color = d3.hsl(0, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+        } else if (d.category == "Shooter Games") {
+            color = d3.hsl(90, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+        } else if (d.category == "RPG Games") {
+            color = d3.hsl(35, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+        } else if (d.category == "Puzzle & Arcade Games") {
+            color = d3.hsl(300, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+        } else {
             color = "#000000"
         };
-    
-    
+
+
         return color
-            
-    }   
+
+    }
 
 
     //When user clicks on a game 
@@ -448,11 +454,11 @@ function sendRequestCat() {
         //update steamtree
         function(data, status) {
             console.log('ok', data.games);
-            var tree = [];
-            tree.push({ "name": "Steamuser", "children": data.games });
-            tree = JSON.stringify(Object.assign({}, tree));
-            tree = JSON.parse(tree);
-            viz(tree[0]);
+            steamtree = [];
+            steamtree.push({ "name": "Steamuser", "children": data.games });
+            steamtree = JSON.stringify(Object.assign({}, steamtree));
+            steamtree = JSON.parse(steamtree);
+            viz(steamtree[0]);
         });
 };
 
@@ -467,11 +473,11 @@ function sendRequestNoCat() {
         //update steamtree
         function(data, status) {
             console.log('ok', data.games);
-            var tree = [];
-            tree.push({ "name": "Steamuser", "children": data.games });
-            tree = JSON.stringify(Object.assign({}, tree));
-            tree = JSON.parse(tree);
-            viz(tree[0]);
+            steamtree = [];
+            steamtree.push({ "name": "Steamuser", "children": data.games });
+            steamtree = JSON.stringify(Object.assign({}, steamtree));
+            steamtree = JSON.parse(steamtree);
+            viz(steamtree[0]);
         });
 }
 
