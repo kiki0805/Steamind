@@ -40,6 +40,17 @@ text {
     background-color: #66c0f4;
 }
 
+#tooltip_hover {
+    height: 22px;
+    border-radius: 10px;
+    font-size: 10px;
+    margin: 0;
+    padding: 0 10px 0 10px;
+    color: black;
+    background-color: #66c0f4;
+}
+
+
 .fa-info-circle {
     position: absolute;
     top: 15px;

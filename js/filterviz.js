@@ -135,7 +135,10 @@ function viz(tree) {
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
             .style('fill', 'black') // change this later so it depends on category
-            .on('click', click);
+            .on('click', click)
+            .on('mouseover', function(d) {
+                nodeHover(d);
+            });
 
         //If we want text, looks horrible 
         //nodeEnter.append("text")
@@ -153,7 +156,16 @@ function viz(tree) {
 
     d3.select('body').on('click', function(e) {
         d3.select('#tooltip').style('opacity', 0).style('display', 'none')
+    })
+    .on('mouseover', function(e) {
+        d3.select('#tooltip_hover').style('opacity', 0).style('display', 'none');
     });
+
+    //Tooltip but only for hovering
+    var tooltip_hover = d3.select('#viz').append('div')
+        .attr('id', 'tooltip_hover')
+        .attr('all', 'unset')
+        .attr('style', 'position: absolute; opacity: 0;');
 
 
     function tick() {
@@ -176,7 +188,7 @@ function viz(tree) {
         //     :
         //     "#fd8d3c"; // leaf node
   
-        console.log(d)
+        //console.log(d)
         var color
         
         if (d.category == "Strategy & Simulation Games") {
@@ -199,6 +211,16 @@ function viz(tree) {
         return color
             
     }   
+
+    function nodeHover(d) {
+        d3.select('#tooltip_hover')
+            .html('<p>' + d.name + '</p>')
+            .transition().duration(400)
+            .style('opacity', 1)
+            .style('display', 'block')
+            .style('left', (d3.event.pageX - 100) + "px")
+            .style('top', (d3.event.pageY - 60) + "px");
+    }
 
 
     //When user clicks on a game 
@@ -447,7 +469,7 @@ function sendRequestCat() {
         }),
         //update steamtree
         function(data, status) {
-            console.log('ok', data.games);
+            //console.log('ok', data.games);
             var tree = [];
             tree.push({ "name": "Steamuser", "children": data.games });
             tree = JSON.stringify(Object.assign({}, tree));
@@ -466,7 +488,7 @@ function sendRequestNoCat() {
         }),
         //update steamtree
         function(data, status) {
-            console.log('ok', data.games);
+            //console.log('ok', data.games);
             var tree = [];
             tree.push({ "name": "Steamuser", "children": data.games });
             tree = JSON.stringify(Object.assign({}, tree));
