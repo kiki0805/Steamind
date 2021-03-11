@@ -6,7 +6,8 @@ var width = 1280,
 
 
 //Fetch user games for viz 
-var fetchusergames = "http://3.129.66.238:8000/games/76561197963264495?limit=300";
+//Old link "http://3.129.66.238:8000/games/76561197963264495?limit=300";
+var fetchusergames = "https://cryptic-river-41340.herokuapp.com/games/76561197963264495?limit=300";
 
 async function fetchGames() {
     const response = await fetch(fetchusergames);
@@ -163,34 +164,93 @@ function viz(tree) {
             return "rgb(78, 121, 167)";
         }
 
-        return d._children ? "#3182bd" // collapsed package
-            :
-            d.children ? "#c6dbef" // expanded package
-            :
-            "#fd8d3c"; // leaf node
-    }
+        // return d._children ? "#3182bd" // collapsed package
+        //     :
+        //     d.children ? "#c6dbef" // expanded package
+        //     :
+        //     "#fd8d3c"; // leaf node
+  
+        console.log(d)
+        var color
+        
+        if (d.category == "Strategy & Simulation Games") {
+            color = d3.hsl(0,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
+        }
+        else if (d.category == "Shooter Games") {
+            color = d3.hsl(90,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
+        }
+        else if (d.category == "RPG Games") {
+            color  = d3.hsl(35,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
+        }
+        else if (d.category == "Puzzle & Arcade Games") {
+            color = d3.hsl(300,d.positive_review_ratio,0.4 + 0.2*d.positive_review_ratio)
+        }
+        else {
+            color = "#000000"
+        };
+    
+    
+        return color
+            
+    }   
 
 
     //When user clicks on a game 
     function gameclick(d) {
 
-        svg.selectAll('.node')
-            .style("stroke", "#fff")
-            .style("stroke-width", "1.5px");
-
         d3.select(this)
             .style('stroke', 'black');
 
         if (d.header_img) {
-            d3.select('#tooltip')
-                .html("<img width=100% height=45% src=" + d.header_img + '>' +
-                    "<p><b>" + d.name + "</b><br>" + "Genres: " + d.genres + "<br>" +
-                    "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" + "<br>" + "</p>")
-                .transition().duration(300)
-                .style('opacity', 1)
-                .style('display', 'block')
-                .style('left', this.getBoundingClientRect().x - 300 + 'px')
-                .style('top', this.getBoundingClientRect().y - 60 + 'px');
+            //This creates the buylink
+            var buylink = "<input type=button value=Buy name onclick=window.open('" + "https://store.steampowered.com/app/" + d.appid + "') />";
+
+            function dropdown() {
+                //This creates the dropdown menu for the tags 
+                var tag;
+                for (var i = 0; i < d.tags.length; i++) {
+                    tag += '<option>' + d.tags[i] + '</option>'
+                }
+                return tag;
+            }
+
+            var tags = dropdown();
+            if (d.playtime > -1) {
+                //Goes here if the game is owned 
+                d3.select('#tooltip')
+                    .html("<img width=100% height=45% src=" + d.header_img + '>' +
+                        "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
+                        "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
+                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + d.playtime + " Minutes" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select>" +
+                        "</p>")
+                    .transition().duration(300)
+                    .style('opacity', 1)
+                    .style('display', 'block')
+                    .style('left', this.getBoundingClientRect().x - 300 + 'px')
+                    .style('top', this.getBoundingClientRect().y - 60 + 'px');
+            } else {
+                function dropdown() {
+                    var tag;
+                    for (var i = 0; i < d.tags.length; i++) {
+                        tag += '<option>' + d.tags[i] + '</option>'
+                    }
+                    return tag;
+                }
+                var tags = dropdown();
+                d3.select('#tooltip')
+                    .html("<img width=100% height=45% src=" + d.header_img + '>' +
+                        "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
+                        "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
+                        "<br>" + "Price: " + d.price + "$" + "<br>" +
+                        "<select id=selectNumber> <option>Tags</option>" + tags + "</select>" + "<br>" + buylink +
+                        "</p>")
+                    .transition().duration(300)
+                    .style('opacity', 1)
+                    .style('display', 'block')
+                    .style('left', this.getBoundingClientRect().x - 300 + 'px')
+                    .style('top', this.getBoundingClientRect().y - 60 + 'px');
+            }
+
         } else {
             d3.select('#tooltip')
                 .html("No info")
@@ -199,7 +259,6 @@ function viz(tree) {
                 .style('display', 'block')
                 .style('left', this.getBoundingClientRect().x - 300 + 'px')
                 .style('top', this.getBoundingClientRect().y - 60 + 'px');
-            console.log(d);
         }
     }
 
@@ -254,7 +313,7 @@ var selection = {
 // price filter
 price_filter.append('h5')
     .attr('id', 'price_val')
-    .text(('Max price: '+price)); // default value
+    .text(('Max price: ' + price)); // default value
 
 price_filter.append('input')
     .attr('type', 'range')
@@ -265,14 +324,14 @@ price_filter.append('input')
     .attr('id', 'price_slider')
     .on('input', function() {
         price = +this.value;
-        d3.select('#price_val').text(('Max price: '+price));
+        d3.select('#price_val').text(('Max price: ' + price));
     })
     .on('change', function() { updateFilterSlider('price', this.value) });
 
 // popularity filter
 pop_filter.append('h5')
     .attr('id', 'pop_val')
-    .text(('Min popularity: '+pop+'%')); // default value
+    .text(('Min popularity: ' + pop + '%')); // default value
 
 pop_filter.append('input')
     .attr('type', 'range')
@@ -283,7 +342,7 @@ pop_filter.append('input')
     .attr('id', 'pop_slider')
     .on('input', function() {
         pop = +this.value;
-        d3.select('#pop_val').text(('Min popularity: '+pop+'%'));
+        d3.select('#pop_val').text(('Min popularity: ' + pop + '%'));
     })
     .on('change', function() { updateFilterSlider('popularity', this.value) });
 
@@ -372,12 +431,12 @@ function updateVis() {
 
 /* Send request with categories */
 function sendRequestCat() {
-    $.post("http://3.129.66.238:8000/filter_games/76561197963264495?limit=300",
+    $.post("https://cryptic-river-41340.herokuapp.com/filter_games/76561197963264495?limit=300",
         JSON.stringify({
             "categories": selection.categories, // optional
             "max_price": selection.price, // optional, in dollars
             "tags": selection.tags, // optional, array of tags
-            "min_positive_review_ratio": (selection.popularity/100), // optional, maximum of ratio of positive review
+            "min_positive_review_ratio": (selection.popularity / 100), // optional, maximum of ratio of positive review
             "developers": selection.developers, // optional
         }),
         //update steamtree
@@ -392,11 +451,11 @@ function sendRequestCat() {
 };
 
 function sendRequestNoCat() {
-    $.post("http://3.129.66.238:8000/filter_games/76561197963264495?limit=300",
+    $.post("https://cryptic-river-41340.herokuapp.com/filter_games/76561197963264495?limit=300",
         JSON.stringify({
             "max_price": selection.price, // optional, in dollars
             "tags": selection.tags, // optional, array of tags
-            "min_positive_review_ratio": (selection.popularity/100), // optional, maximum of ratio of positive review
+            "min_positive_review_ratio": (selection.popularity / 100), // optional, maximum of ratio of positive review
             "developers": selection.developers, // optional
         }),
         //update steamtree
