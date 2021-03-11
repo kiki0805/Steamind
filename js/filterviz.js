@@ -103,12 +103,18 @@ function viz(tree) {
         d3.selectAll('.node').append("circle")
             .attr("r", function(d) {
 
+                if(d.playtime != -1) {
+                    return 7 + (Math.log(d.playtime));
+                }else {
+                    return 7;
+                }
+/*
                 if (d.playtime > 100) {
                     return (d.playtime / 1000)
                 } else {
-                    return 7;
+                    
                 }
-
+*/
             })
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
@@ -124,12 +130,12 @@ function viz(tree) {
             .on("click", click);
 
         //Append circle to category
-        d3.selectAll('.category').append("circle")
-            .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 7; })
-            .style("stroke", '#fff')
-            .style("stroke-width", "1,5px")
-            .style("fill", "black") //example 
-            .on("click", click);
+        d3.selectAll('.category').append('polygon')
+            .attr('points', '0,-25 -20,10 20,10')
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style('fill', 'black') // change this later so it depends on category
+            .on('click', click);
 
         //If we want text, looks horrible 
         //nodeEnter.append("text")
