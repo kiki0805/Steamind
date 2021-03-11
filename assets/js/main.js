@@ -207,3 +207,7 @@ function toggleSidebar(){
 		this.mini = true;
 	}
 }
+
+document.getElementById("sidebar").style.width = "230px";
+document.getElementById("wrapper").style.marginLeft = "230px";
+document.getElementById("footer").style.marginLeft = "230px";
