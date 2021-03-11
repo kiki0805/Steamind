@@ -46,7 +46,9 @@ text {
     right: 20px;
 }
 
+
 /* CSS for the filter */
+
 #filter-wrap {
     display: flex;
     flex-grow: 5;
@@ -87,11 +89,16 @@ text {
     font-size: 12px;
 }
 
+
 /***** FILTER SLIDER STYLING *****/
+
 input[type=range] {
-    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-    width: 100%; /* Specific width is required for Firefox. */
-    background: transparent; /* Otherwise white in Chrome */
+    -webkit-appearance: none;
+    /* Hides the slider so that custom slider can be made */
+    width: 100%;
+    /* Specific width is required for Firefox. */
+    background: transparent;
+    /* Otherwise white in Chrome */
 }
 
 input[type=range]::-webkit-slider-thumb {
@@ -99,15 +106,15 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 input[type=range]:focus {
-    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+    outline: none;
+    /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
 }
 
 input[type=range]::-ms-track {
     width: 100%;
     cursor: pointer;
-
-/* Hides the slider so custom styles can be added */
-    background: transparent; 
+    /* Hides the slider so custom styles can be added */
+    background: transparent;
     border-color: transparent;
     color: transparent;
 }
@@ -118,6 +125,7 @@ input[type=range] {
     width: 70%;
     background-color: transparent;
 }
+
 input[type=range]:focus {
     outline: none;
 }
@@ -142,9 +150,11 @@ input[type=range]::-webkit-slider-thumb {
     cursor: pointer;
     -webkit-appearance: none;
 }
+
 input[type=range]:focus::-webkit-slider-runnable-track {
     background: #dadada;
 }
+
 input[type=range]::-moz-range-track {
     background: #dadada;
     border: 0.1px solid #a1a1a1;
@@ -153,6 +163,7 @@ input[type=range]::-moz-range-track {
     height: 3px;
     cursor: pointer;
 }
+
 input[type=range]::-moz-range-thumb {
     width: 15px;
     height: 15px;
@@ -161,6 +172,7 @@ input[type=range]::-moz-range-thumb {
     border-radius: 50px;
     cursor: pointer;
 }
+
 input[type=range]::-ms-track {
     background: transparent;
     border-color: transparent;
@@ -170,16 +182,19 @@ input[type=range]::-ms-track {
     height: 3px;
     cursor: pointer;
 }
-  input[type=range]::-ms-fill-lower {
+
+input[type=range]::-ms-fill-lower {
     background: #d0d0d0;
     border: 0.1px solid #a1a1a1;
     border-radius: 50px;
 }
+
 input[type=range]::-ms-fill-upper {
     background: #dadada;
     border: 0.1px solid #a1a1a1;
     border-radius: 50px;
 }
+
 input[type=range]::-ms-thumb {
     width: 15px;
     height: 15px;
@@ -190,9 +205,11 @@ input[type=range]::-ms-thumb {
     margin-top: 0px;
     /*Needed to keep the Edge thumb centred*/
 }
+
 input[type=range]:focus::-ms-fill-lower {
     background: #dadada;
 }
-  input[type=range]:focus::-ms-fill-upper {
+
+input[type=range]:focus::-ms-fill-upper {
     background: #e4e4e4;
 }
