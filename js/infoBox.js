@@ -10,7 +10,7 @@ var tooltip2 = d3.select('#info')
                 .style("padding","10px")
                 .html("<p>content</p>")
 
-console.log("test")
+//console.log("test")
 
 d3.select("#info")
     .on("click",function(){return tooltip2.style("visibility","visible");})
