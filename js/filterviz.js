@@ -1,14 +1,42 @@
 var steamtree = [];
 var currentfilter;
+var currentSteamid = '76561197963264495';
 
 var width = 1280,
     height = 720,
     root;
 
+function fetchCustomSteamid() {
+    const steamid = document.getElementById("mySteamid").value;
+    currentSteamid = steamid;
+    updateVis();
+}
 
 //Fetch user games for viz 
 //Old link "http://3.129.66.238:8000/games/76561197963264495?limit=300";
-var fetchusergames = "https://cryptic-river-41340.herokuapp.com/games/76561197963264495?limit=300";
+var fetchusergames = `https://cryptic-river-41340.herokuapp.com/games/${currentSteamid}?limit=300`;
+
+async function fetchSteamids() {
+    const response = await fetch(`https://cryptic-river-41340.herokuapp.com/prefetched_users`);
+    const steamidL = await response.json();
+    var steamid_dropdown = d3.select('#selUser');
+    steamid_dropdown.append('option')
+            .attr('value', () => { return steamidL[0] })
+            .text(`Default: ${steamidL[0]}`);
+    steamidL.shift();
+    steamidL.forEach(steamid => {
+        steamid_dropdown.append('option')
+            .attr('value', () => { return steamid })
+            .text(steamid)
+    });
+    $('#selUser').on('change', function() { 
+        currentSteamid = this.value;
+        updateVis();
+    });
+}
+var element = document.getElementById("fetchCustomSteamid");
+element.addEventListener("click", fetchCustomSteamid);
+fetchSteamids();
 
 async function fetchGames() {
     const response = await fetch(fetchusergames);
@@ -105,9 +133,9 @@ function viz(tree) {
             .attr("r", function(d) {
 
                 if (d.playtime > 0) {
-                    return 7 + (Math.log(d.playtime));
+                    return 8 + Math.min(6, d.playtime/60) + Math.min(3, d.playtime/1000) + Math.min(15, d.playtime/10000);
                 } else {
-                    return 7;
+                    return 8;
                 }
 
             })
@@ -374,13 +402,13 @@ function viz(tree) {
         if( typeof rating == 'undefined' || rating < 0.0) {rating = 0.0}
 
         if (d.category == "Strategy & Simulation Games") {
-            color = d3.hsl(0, Math.max(0.5,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(0, Math.max(0.3,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Shooter Games") {
-            color = d3.hsl(90, Math.max(0.5,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(90, Math.max(0.3,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "RPG Games") {
-            color = d3.hsl(35, Math.max(0.5,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(35, Math.max(0.3,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Puzzle & Arcade Games") {
-            color = d3.hsl(300, Math.max(0.5,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(300, Math.max(0.3,rating), 0.15 + 0.35 * rating)
         } else {
             color = "#000000"
         };
@@ -654,6 +682,7 @@ function resetviz() {
 }
 
 function updateVis() {
+    $.LoadingOverlay('show');
     if ((selection.categories).length != 0) {
         sendRequestCat();
     } else {
@@ -667,7 +696,8 @@ $.ajaxSetup({
 
 /* Send request with categories */
 function sendRequestCat() {
-    $.post("https://cryptic-river-41340.herokuapp.com/filter_games/76561197963264495?limit=300",
+
+    $.post(`https://cryptic-river-41340.herokuapp.com/filter_games/${currentSteamid}?limit=300`,
         JSON.stringify({
             "categories": selection.categories, // optional
             "max_price": selection.price, // optional, in dollars
@@ -677,17 +707,22 @@ function sendRequestCat() {
         }),
         //update steamtree
         function(data, status) {
-            //console.log('ok', data.games);
+            if (status !== "success") {
+                alert('failed to fetch data');
+                return;
+            }
+            console.log('ok', data.games);
             steamtree = [];
             steamtree.push({ "name": "Steamuser", "children": data.games });
             steamtree = JSON.stringify(Object.assign({}, steamtree));
             steamtree = JSON.parse(steamtree);
             viz(steamtree[0]);
+            $.LoadingOverlay('hide');
         });
 };
 
 function sendRequestNoCat() {
-    $.post("https://cryptic-river-41340.herokuapp.com/filter_games/76561197963264495?limit=300",
+    $.post(`https://cryptic-river-41340.herokuapp.com/filter_games/${currentSteamid}?limit=300`,
         JSON.stringify({
             "max_price": selection.price, // optional, in dollars
             "tags": selection.tags, // optional, array of tags
@@ -696,12 +731,17 @@ function sendRequestNoCat() {
         }),
         //update steamtree
         function(data, status) {
-            //console.log('ok', data.games);
+            if (status !== "success") {
+                alert('failed to fetch data');
+                return;
+            }
+            console.log('ok', data.games);
             steamtree = [];
             steamtree.push({ "name": "Steamuser", "children": data.games });
             steamtree = JSON.stringify(Object.assign({}, steamtree));
             steamtree = JSON.parse(steamtree);
             viz(steamtree[0]);
+            $.LoadingOverlay('hide');
         });
 }
 
@@ -712,3 +752,4 @@ $("#send_request").click(function() {
         sendRequestNoCat();
     }
 });
+

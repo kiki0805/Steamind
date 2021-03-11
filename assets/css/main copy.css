@@ -98,7 +98,7 @@ input, textarea {
 	}
 
 	body {
-		background: url(/assets/images/colored_body_top2.png?v=2) center top no-repeat #1b2838;
+		background: url(/assets/css/images/colored_body_top2.png?v=2) center top no-repeat #1b2838;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
@@ -1820,6 +1820,7 @@ input, textarea {
 	input[type="button"],
 	button,
 	.button {
+		margin: 5px;
 		-moz-appearance: none;
 		-webkit-appearance: none;
 		-ms-appearance: none;
@@ -2345,7 +2346,10 @@ input, textarea {
 	input[type="password"],
 	input[type="email"],
 	select {
+		width: 200px;
+		margin: 5px;
 		height: 2.75em;
+		display: inline;
 	}
 
 	textarea {

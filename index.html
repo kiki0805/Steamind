@@ -76,10 +76,19 @@
                                 <option value=-1>Choose developer</option>
                         </select>
                     </div>
+                    <div>
+                        <h5>Prefetched steamid</h5>
+                        <select id='selUser' style='width: 70%;'></select>
+                    </div>
                     <div id="price_filter"></div>
                     <div id="pop_filter"></div>
                 </div>
                 <!--<button id="send_request">apply filters</button>-->
+                <div>
+                <input type='text' id='mySteamid' placeholder="My steamid">
+                <span style='display: inline;'>Find your steamid: <a target="_blank" href='https://steamidfinder.com/'>https://steamidfinder.com/</a></span>
+                </div>
+                <button id='fetchCustomSteamid'>Fetch my data</button>
             </div>
             <!-- Close div here so that it does not interfere with filter -->
             <div id="viz"></div>
@@ -265,6 +274,7 @@
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/jquery.scrollex.min.js"></script>
     <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/loadingoverlay.min.js" type="text/javascript"></script>
     <script src="assets/js/browser.min.js"></script>
     <script src="assets/js/breakpoints.min.js"></script>
     <script src="assets/js/util.js"></script>
