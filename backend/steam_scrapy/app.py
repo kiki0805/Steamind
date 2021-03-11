@@ -3,6 +3,7 @@ from flask_caching import Cache
 from flask import Flask, jsonify, abort, request
 from db import *
 import hashlib
+import requests
 import json
 from utils import dump_games_for_user, filter_games
 
@@ -21,7 +22,7 @@ def crawl_new_user(steamid, timeout=None):
         game_p.wait()
 
 from flask_cors import CORS
-DEBUG = True
+DEBUG = False
 config = {
     "DEBUG": DEBUG,          # some Flask specific configs
     "CACHE_TYPE": "simple", # Flask-Caching related configs
@@ -40,6 +41,12 @@ def prefetched_users():
     users = [user.steamid for user in users]
     return jsonify(users)
 
+def is_steamid_valid(steamid):
+    resp = requests.get(f'https://steamidfinder.com/lookup/{steamid}/')
+    if resp.status_code == 200:
+        return True
+    return False
+
 def get_date_of_user(steamid, limit):
     data = cache.get(f'games_{steamid}_{limit}')
     if data is not None:
@@ -48,6 +55,8 @@ def get_date_of_user(steamid, limit):
     print(f'fetch games for {steamid}')
     user = User.select().where(User.steamid==steamid)
     if (not user.exists()) or not Playtime.select().where(Playtime.user==user).exists():
+        if not is_steamid_valid(steamid):
+            abort(404)
         crawl_new_user(steamid, 15)
         user = User.select().where(User.steamid==steamid)
     if not user.exists():
@@ -95,4 +104,4 @@ def filter_games_api(steamid):
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(host= '0.0.0.0', debug=DEBUG, port=8000)
+    app.run(host= '0.0.0.0', debug=DEBUG, port=8100)
