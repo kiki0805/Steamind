@@ -128,7 +128,8 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .on("click", click);
+            .on('mouseover', function(d) { nodeHover(d,1); });
+            //.on("click", userclick);
 
         //Append circle to category
         d3.selectAll('.category').append('polygon')
@@ -137,9 +138,7 @@ function viz(tree) {
             .style('stroke-width', '1.5px')
             .style('fill', 'black') // change this later so it depends on category
             .on('click', filtercategory)
-            .on('mouseover', function(d) {
-                nodeHover(d);
-            });
+            .on('mouseover', function(d) { nodeHover(d,0); });
 
         //If we want text, looks horrible 
         //nodeEnter.append("text")
@@ -218,9 +217,15 @@ function viz(tree) {
 
     }
 
-    function nodeHover(d) {
+    function nodeHover(d,toggle) {
+        var txt;
+        if(toggle) {
+            txt = "That's you!"
+        }else {
+            txt = d.name;
+        }
         d3.select('#tooltip_hover')
-            .html('<p>' + d.name + '</p>')
+            .html('<p>' + txt + '</p>')
             .transition().duration(400)
             .style('opacity', 1)
             .style('display', 'block')
@@ -228,6 +233,19 @@ function viz(tree) {
             .style('top', (d3.event.pageY - 60) + "px");
     }
 
+    // When clicking on a user, display their information
+    /*
+    function userclick(d) {
+        d3.select('#tooltip')
+        .html("<img width=100% height=45% src=" + d.avatar + '>' +
+            "<p><b>" + d.name + "</b><br>" + "Amount of owned games: " + d.amount_of_games + "</p>")
+        .transition().duration(300)
+        .style('opacity', 1)
+        .style('display', 'block')
+        .style('left', this.getBoundingClientRect().x - 300 + 'px')
+        .style('top', this.getBoundingClientRect().y - 60 + 'px');
+    }
+    */
 
     //When user clicks on a game 
     function gameclick(d) {
@@ -237,7 +255,7 @@ function viz(tree) {
 
         if (d.header_img) {
             //This creates the buylink
-            var buylink = "<input type=button value=Buy name onclick=window.open('" + "https://store.steampowered.com/app/" + d.appid + "') />";
+            var buylink = "<input type=button class='buy_button' value=Buy name onclick=window.open('" + "https://store.steampowered.com/app/" + d.appid + "') />";
 
             function dropdown() {
                 //This creates the dropdown menu for the tags 
