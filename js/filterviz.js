@@ -203,7 +203,7 @@ function viz(tree) {
             .attr("alignment-baseline","middle")
 
         svg.append('polygon')
-            .attr('points', '1140,160 1150,180 1130,180')
+            .attr('points', `${width - 290},160 ${width - 280},180 ${width - 300},180`)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
             .style('fill', 'black')
