@@ -323,7 +323,7 @@ function viz(tree) {
         svg.append("text")
             .attr("x",width-300)
             .attr("y",350)
-            .text("Saturation -> positive review ratio")
+            .text("Review ratio (darker = less popular)")
             .style("font-size","15px")
             .style("fill","white")
             .attr("alignment-baseline","middle")
