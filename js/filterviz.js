@@ -294,7 +294,7 @@ function viz(tree) {
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#e61919')
+            .style("fill",'#c51f16')
 
         svg.append("circle")
             .attr("cx",width-230)
@@ -302,7 +302,7 @@ function viz(tree) {
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#cc3333')
+            .style("fill",'#932a25')
 
         svg.append("circle")
             .attr("cx",width-200)
@@ -310,7 +310,7 @@ function viz(tree) {
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#b34d4d')
+            .style("fill",'#682f2c')
         
         svg.append("circle")
             .attr("cx",width-170)
@@ -318,7 +318,7 @@ function viz(tree) {
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#996666')
+            .style("fill",'#492927')
 
         svg.append("text")
             .attr("x",width-300)
