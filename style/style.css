@@ -36,14 +36,18 @@ text {
     font-size: 10px;
     margin: 0;
     padding: 0;
-    color: white;
-    background-color: #1b2838;
+    color: black;
+    background-color: #66c0f4;
 }
 
 .fa-info-circle {
     position: absolute;
     top: 15px;
     right: 20px;
+}
+
+#tooltip p, #cooltip p {
+    margin-left: 10px;
 }
 
 
