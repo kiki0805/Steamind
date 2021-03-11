@@ -2,7 +2,8 @@ var steamtree = [];
 var currentfilter;
 var currentSteamid = '76561197963264495';
 
-var width = 1280,
+var vizParent = document.getElementById("viz");
+var width = vizParent.clientWidth,
     height = 720,
     root;
 
@@ -202,7 +203,7 @@ function viz(tree) {
             .attr("alignment-baseline","middle")
 
         svg.append('polygon')
-            .attr('points', '990,160 980,180 1000,180')
+            .attr('points', '840,160 830,180 850,180')
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
             .style('fill', 'black')
