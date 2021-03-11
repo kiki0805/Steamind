@@ -151,8 +151,7 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .on('mouseover', function(d) { nodeHover(d,1); })
-            .on("click", resetviz);
+            .on('mouseover', function(d) { nodeHover(d,1); });
 
         //Append circle to category
         d3.selectAll('.category').append('polygon')
@@ -567,7 +566,7 @@ var selection = {
 // price filter
 price_filter.append('h5')
     .attr('id', 'price_val')
-    .text(('Max price: ' + price)); // default value
+    .text(('Max price: ' + price + '$')); // default value
 
 price_filter.append('input')
     .attr('type', 'range')
@@ -578,7 +577,7 @@ price_filter.append('input')
     .attr('id', 'price_slider')
     .on('input', function() {
         price = +this.value;
-        d3.select('#price_val').text(('Max price: ' + price));
+        d3.select('#price_val').text(('Max price: ' + price + '$'));
     })
     .on('change', function() { updateFilterSlider('price', this.value) });
 
@@ -643,6 +642,7 @@ function addSelection(type, value) {
                 .attr('id', function() {
                     return value.toLowerCase().replace(/[^a-zA-Z+]+/gi, "");
                 })
+                .attr('class', 'filteredSelection')
                 .text('✕ ' + value)
                 .on('click', function() { removeSelection(type, value) })
         }
@@ -672,22 +672,41 @@ function updateFilterSlider(type, value) {
 };
 
 /* Reset visualization */
-function resetviz() {
+d3.select('#resetVizButton').on('click', function() {
+    // reset filter selection
+    d3.selectAll('.filteredSelection').remove();
+    pop = 0;
+    price = 100;
+    d3.select('#pop_slider').attr('value', pop);
+    d3.select('#pop_val').text(('Min popularity: ' + pop + '%'));
+    d3.select('#price_slider').attr('value', price);
+    d3.select('#price_val').text(('Max price: ' + price + '$'));
+    
+
+    // reset everything!
     selection.categories = [];
     selection.tags = [];
     selection.developers = [];
-    selection.price = 100;
-    selection.popularity = 0;
+    selection.price = price;
+    selection.popularity = pop;
+    start = 1;
     updateVis();
-}
+});
+
+var start = 1;
 
 function updateVis() {
-    $.LoadingOverlay('show');
+    if(start) {
+        $.LoadingOverlay('show');
+    }
+    
     if ((selection.categories).length != 0) {
         sendRequestCat();
     } else {
         sendRequestNoCat();
     }
+
+    start = 0;
 };
 
 $.ajaxSetup({
