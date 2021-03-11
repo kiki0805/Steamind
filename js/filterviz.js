@@ -104,22 +104,17 @@ function viz(tree) {
         d3.selectAll('.node').append("circle")
             .attr("r", function(d) {
 
-                if (d.playtime != -1) {
+                if (d.playtime > 0) {
                     return 7 + (Math.log(d.playtime));
                 } else {
                     return 7;
                 }
-                /*
-                                if (d.playtime > 100) {
-                                    return (d.playtime / 1000)
-                                } else {
-                                    
-                                }
-                */
+
             })
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .on("click", gameclick);
+            .on("click", gameclick)
+            .on('mouseover', function(d) { nodeHover(d,0) });
 
         //Append rect to user
         d3.selectAll('.user').append("rect")
@@ -128,7 +123,8 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .on("click", click);
+            .on('mouseover', function(d) { nodeHover(d,1); });
+            //.on("click", userclick);
 
         //Append circle to category
         d3.selectAll('.category').append('polygon')
@@ -137,14 +133,174 @@ function viz(tree) {
             .style('stroke-width', '1.5px')
             .style('fill', 'black') // change this later so it depends on category
             .on('click', filtercategory)
-            .on('mouseover', function(d) {
-                nodeHover(d);
-            });
+            .on('mouseover', function(d) { nodeHover(d,0); });
 
         //If we want text, looks horrible 
         //nodeEnter.append("text")
         //  .attr("dy", ".35em")
         //  .text(function(d) { return d.name; });
+
+        //manually create legends
+        svg.append("rect")
+            .attr("x",width-300)
+            .attr("y",100)
+            .attr("width",20)
+            .attr("height",20)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill","rgb(78, 121, 167)")
+
+        svg.append("text")
+            .attr("x",width-270)
+            .attr("y",110)
+            .text("User")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle")
+
+        svg.append("circle")
+            .attr("cx",width-290)
+            .attr("cy",140)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'rgb(78, 121, 167)')
+
+        svg.append("text")
+            .attr("x",width-270)
+            .attr("y",140)
+            .text("Owned Games")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle")
+
+        svg.append('polygon')
+            .attr('points', '990,160 980,180 1000,180')
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style('fill', 'black')
+
+        svg.append("text")
+            .attr("x",width-270)
+            .attr("y",170)
+            .text("Category")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle")
+
+        svg.append("circle")
+            .attr("cx",width-290)
+            .attr("cy",200)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#ff0000')
+
+        svg.append("text")
+            .attr("x",width-270)
+            .attr("y",200)
+            .text("Strategy & Simulation Games")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle")
+
+        svg.append("circle")
+            .attr("cx",width-290)
+            .attr("cy",230)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#80ff00')
+
+        svg.append("text")
+            .attr("x",width-270)
+            .attr("y",230)
+            .text("Shooter Games")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle")
+        
+        svg.append("circle")
+            .attr("cx",width-290)
+            .attr("cy",260)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#ff9500')
+
+        svg.append("text")
+            .attr("x",width-270)
+            .attr("y",260)
+            .text("RPG Games")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle")
+
+        svg.append("circle")
+            .attr("cx",width-290)
+            .attr("cy",290)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#ff00ff')
+
+        svg.append("text")
+            .attr("x",width-270)
+            .attr("y",290)
+            .text("Puzzle & Arcade Games")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle")
+
+        //saturation
+        svg.append("circle")
+            .attr("cx",width-290)
+            .attr("cy",320)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#ff0000')
+
+        svg.append("circle")
+            .attr("cx",width-260)
+            .attr("cy",320)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#e61919')
+
+        svg.append("circle")
+            .attr("cx",width-230)
+            .attr("cy",320)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#cc3333')
+
+        svg.append("circle")
+            .attr("cx",width-200)
+            .attr("cy",320)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#b34d4d')
+        
+        svg.append("circle")
+            .attr("cx",width-170)
+            .attr("cy",320)
+            .attr("r", 10)
+            .style('stroke', '#fff')
+            .style('stroke-width', '1.5px')
+            .style("fill",'#996666')
+
+        svg.append("text")
+            .attr("x",width-300)
+            .attr("y",350)
+            .text("Saturation -> positive review ratio")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle")
+
 
 
     }
@@ -184,7 +340,10 @@ function viz(tree) {
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; });
-        svg.selectAll("g").attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            
+        svg.selectAll("g").attr("transform", function(d) { return "translate(" + 
+                                                            Math.max(7, Math.min(width - 7, d.x)) + "," +
+                                                            Math.max(7, Math.min(height - 7, d.y)) + ")"; });
     }
 
     function color(d) {
@@ -198,18 +357,20 @@ function viz(tree) {
         //     d.children ? "#c6dbef" // expanded package
         //     :
         //     "#fd8d3c"; // leaf node
-
+  
         //console.log(d)
         var color
+        var rating = d.positive_review_ratio
+        if( typeof rating == 'undefined' || rating < 0.0) {rating = 0.0}
 
         if (d.category == "Strategy & Simulation Games") {
-            color = d3.hsl(0, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+            color = d3.hsl(0, Math.max(0.5,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Shooter Games") {
-            color = d3.hsl(90, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+            color = d3.hsl(90, Math.max(0.5,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "RPG Games") {
-            color = d3.hsl(35, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+            color = d3.hsl(35, Math.max(0.5,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Puzzle & Arcade Games") {
-            color = d3.hsl(300, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+            color = d3.hsl(300, Math.max(0.5,rating), 0.15 + 0.35 * rating)
         } else {
             color = "#000000"
         };
@@ -219,16 +380,35 @@ function viz(tree) {
 
     }
 
-    function nodeHover(d) {
+    function nodeHover(d,toggle) {
+        var txt;
+        if(toggle) {
+            txt = "That's you!"
+        }else {
+            txt = d.name;
+        }
         d3.select('#tooltip_hover')
-            .html('<p>' + d.name + '</p>')
+            .html('<p>' + txt + '</p>')
             .transition().duration(400)
             .style('opacity', 1)
             .style('display', 'block')
-            .style('left', (d3.event.pageX - 150) + "px")
-            .style('top', (d3.event.pageY - 60) + "px");
+            .style('left', (d3.event.pageX - 300) + "px")
+            .style('top', (d3.event.pageY - 50) + "px");
     }
 
+    // When clicking on a user, display their information
+    /*
+    function userclick(d) {
+        d3.select('#tooltip')
+        .html("<img width=100% height=45% src=" + d.avatar + '>' +
+            "<p><b>" + d.name + "</b><br>" + "Amount of owned games: " + d.amount_of_games + "</p>")
+        .transition().duration(300)
+        .style('opacity', 1)
+        .style('display', 'block')
+        .style('left', this.getBoundingClientRect().x - 300 + 'px')
+        .style('top', this.getBoundingClientRect().y - 60 + 'px');
+    }
+    */
 
     //When user clicks on a game 
     function gameclick(d) {
@@ -238,7 +418,7 @@ function viz(tree) {
 
         if (d.header_img) {
             //This creates the buylink
-            var buylink = "<input type=button value=Buy name onclick=window.open('" + "https://store.steampowered.com/app/" + d.appid + "') />";
+            var buylink = "<input type=button class='buy_button' value=Buy name onclick=window.open('" + "https://store.steampowered.com/app/" + d.appid + "') />";
 
             function dropdown() {
                 //This creates the dropdown menu for the tags 
@@ -256,8 +436,8 @@ function viz(tree) {
                     .html("<img width=100% height=45% src=" + d.header_img + '>' +
                         "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
                         "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
-                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + d.playtime + " Minutes" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select>" +
-                        "</p>")
+                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + d.playtime + " Minutes" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
+                        "<b>This game is owned by you.</b></p>")
                     .transition().duration(300)
                     .style('opacity', 1)
                     .style('display', 'block')
