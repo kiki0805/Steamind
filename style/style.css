@@ -61,6 +61,10 @@ text {
     margin-left: 10px;
 }
 
+button .buy_button {
+    background: black;
+    opacity: 1;
+}
 
 /* CSS for the filter */
 
