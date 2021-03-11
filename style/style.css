@@ -72,6 +72,9 @@ button .buy_button {
 }
 
 /* CSS for the filter */
+input {
+    z-index: 1;
+}
 
 #filter-wrap {
     display: flex;

@@ -117,7 +117,7 @@ function viz(tree) {
                 if (d.name == "Steamuser") {
                     return "user"
                 } //Categories get the class category 
-                else if (d.name == "Strategy & Simulation Games" || d.name == "Shooter Games" || d.name == "RPG Games" || d.name == "Puzzle & Arcade Games") {
+                else if (d.name == "Strategy & Simulation Games" || d.name == "Shooter Games" || d.name == "RPG Games" || d.name == "Puzzle & Arcade Games" || d.name == "Software") {
                     return "category"
                 } else if (d.name == "") {
                     return "empty";
@@ -133,7 +133,7 @@ function viz(tree) {
             .attr("r", function(d) {
 
                 if (d.playtime > 0) {
-                    return 8 + Math.min(5, d.playtime/90) + Math.min(5, d.playtime/1000) + Math.min(5, d.playtime/4000) + Math.min(5, d.playtime/15000);
+                    return 8 + Math.min(6, d.playtime/60) + Math.min(3, d.playtime/1000) + Math.min(15, d.playtime/10000);
                 } else {
                     return 8;
                 }
@@ -693,6 +693,7 @@ d3.select('#resetVizButton').on('click', function() {
     updateVis();
 });
 
+/* Show loading screen when start/reset */
 var start = 1;
 
 function updateVis() {
