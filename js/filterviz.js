@@ -152,6 +152,7 @@ function viz(tree) {
     function filtercategory(d) {
 
         if (d == currentfilter) {
+            currentfilter = "";
             viz(steamtree[0]);
         } else {
             currentfilter = d;
@@ -165,11 +166,11 @@ function viz(tree) {
         .attr('style', 'position: absolute; opacity: 0;');
 
     d3.select('body').on('click', function(e) {
-        d3.select('#tooltip').style('opacity', 0).style('display', 'none')
-    })
-    .on('mouseover', function(e) {
-        d3.select('#tooltip_hover').style('opacity', 0).style('display', 'none');
-    });
+            d3.select('#tooltip').style('opacity', 0).style('display', 'none')
+        })
+        .on('mouseover', function(e) {
+            d3.select('#tooltip_hover').style('opacity', 0).style('display', 'none');
+        });
 
     //Tooltip but only for hovering
     var tooltip_hover = d3.select('#viz').append('div')
@@ -197,7 +198,7 @@ function viz(tree) {
         //     d.children ? "#c6dbef" // expanded package
         //     :
         //     "#fd8d3c"; // leaf node
-  
+
         //console.log(d)
         var color
 
