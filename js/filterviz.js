@@ -113,7 +113,8 @@ function viz(tree) {
             })
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .on("click", gameclick);
+            .on("click", gameclick)
+            .on('mouseover', function(d) { nodeHover(d,0) });
 
         //Append rect to user
         d3.selectAll('.user').append("rect")
@@ -391,8 +392,8 @@ function viz(tree) {
             .transition().duration(400)
             .style('opacity', 1)
             .style('display', 'block')
-            .style('left', (d3.event.pageX - 150) + "px")
-            .style('top', (d3.event.pageY - 60) + "px");
+            .style('left', (d3.event.pageX - 300) + "px")
+            .style('top', (d3.event.pageY - 50) + "px");
     }
 
     // When clicking on a user, display their information
@@ -435,8 +436,8 @@ function viz(tree) {
                     .html("<img width=100% height=45% src=" + d.header_img + '>' +
                         "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
                         "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
-                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + d.playtime + " Minutes" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select>" +
-                        "</p>")
+                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + d.playtime + " Minutes" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
+                        "<b>This game is owned by you.</b></p>")
                     .transition().duration(300)
                     .style('opacity', 1)
                     .style('display', 'block')
