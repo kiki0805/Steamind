@@ -133,7 +133,7 @@ function viz(tree) {
             .attr("r", function(d) {
 
                 if (d.playtime > 0) {
-                    return 8 + Math.min(6, d.playtime/60) + Math.min(3, d.playtime/1000) + Math.min(15, d.playtime/10000);
+                    return 8 + Math.min(5, d.playtime/90) + Math.min(5, d.playtime/1000) + Math.min(5, d.playtime/4000) + Math.min(5, d.playtime/15000);
                 } else {
                     return 8;
                 }
