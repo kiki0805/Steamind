@@ -28,8 +28,9 @@
         <!-- <section id="sidebar" onmouseover="toggleSidebar()" onmouseout="toggleSidebar()"></section> -->
         <div class="inner">
             <nav>
+                <h2>Steamind</h2>
                 <ul>
-                    <li><a href="#intro">Steamind</a></li>
+                    <li><a href="#intro">The visualization</a></li>
                     <li><a href="#one">Who we are</a></li>
                     <li><a href="#two">What we do</a></li>
                     <li><a href="#three">Contact us</a></li>
@@ -50,7 +51,6 @@
                 </svg>
             </div>
             <!-- <i class="fas fa-info-circle fa-2x" data-toggle="tooltip" data-placement="left"></i> -->
-
             <div id="filter">
                 <ul id="selection">Filters: </ul>
                 <div id="filter-wrap">
@@ -68,6 +68,7 @@
                                 <option value="Shooter Games">Shooter Games</option>
                                 <option value="RPG Games">RPG Games</option>
                                 <option value="Puzzle & Arcade Games">Puzzle & Arcade Games</option>
+                                <option value="Software">Software</option>
                         </select>
                     </div>
                     <div>
@@ -88,10 +89,11 @@
                 <input type='text' id='mySteamid' placeholder="My steamid">
                 <span style='display: inline;'>Find your steamid: <a target="_blank" href='https://steamidfinder.com/'>https://steamidfinder.com/</a></span>
                 </div>
-                <button id='fetchCustomSteamid'>Fetch my data</button>
+                <button id='fetchCustomSteamid' class="customButton">Fetch my data</button>
+                <button id='resetVizButton' class="customButton">Reset</button>
             </div>
-            <!-- Close div here so that it does not interfere with filter -->
             <div id="viz"></div>
+            <!-- Close div here so that it does not interfere with filter -->
         </section>
 
         <!-- One -->

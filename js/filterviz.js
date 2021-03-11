@@ -117,7 +117,7 @@ function viz(tree) {
                 if (d.name == "Steamuser") {
                     return "user"
                 } //Categories get the class category 
-                else if (d.name == "Strategy & Simulation Games" || d.name == "Shooter Games" || d.name == "RPG Games" || d.name == "Puzzle & Arcade Games") {
+                else if (d.name == "Strategy & Simulation Games" || d.name == "Shooter Games" || d.name == "RPG Games" || d.name == "Puzzle & Arcade Games" || d.name == "Software") {
                     return "category"
                 } else if (d.name == "") {
                     return "empty";
@@ -152,7 +152,6 @@ function viz(tree) {
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
             .on('mouseover', function(d) { nodeHover(d,1); });
-            //.on("click", userclick);
 
         //Append circle to category
         d3.selectAll('.category').append('polygon')
@@ -295,7 +294,7 @@ function viz(tree) {
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#e61919')
+            .style("fill",'#c51f16')
 
         svg.append("circle")
             .attr("cx",width-230)
@@ -303,7 +302,7 @@ function viz(tree) {
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#cc3333')
+            .style("fill",'#932a25')
 
         svg.append("circle")
             .attr("cx",width-200)
@@ -311,7 +310,7 @@ function viz(tree) {
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#b34d4d')
+            .style("fill",'#682f2c')
         
         svg.append("circle")
             .attr("cx",width-170)
@@ -319,12 +318,12 @@ function viz(tree) {
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#996666')
+            .style("fill",'#492927')
 
         svg.append("text")
             .attr("x",width-300)
             .attr("y",350)
-            .text("Saturation -> positive review ratio")
+            .text("Review ratio (darker = less popular)")
             .style("font-size","15px")
             .style("fill","white")
             .attr("alignment-baseline","middle")
@@ -337,10 +336,20 @@ function viz(tree) {
 
         if (d == currentfilter) {
             currentfilter = "";
-            viz(steamtree[0]);
+
+            // remove that category from selection
+            var i = (selection.categories).indexOf(currentfilter.name);
+            (selection.categories).splice(i,1);
+            console.log(selection);
+            updateVis();
         } else {
             currentfilter = d;
+
+            // add that category to selection
+            (selection.categories).push(currentfilter.name);
+            console.log(selection);
             viz(d);
+            
         }
     }
     //Tooltip 
@@ -415,6 +424,7 @@ function viz(tree) {
         }else {
             txt = d.name;
         }
+
         d3.select('#tooltip_hover')
             .html('<p>' + txt + '</p>')
             .transition().duration(400)
@@ -464,7 +474,7 @@ function viz(tree) {
                     .html("<img width=100% height=45% src=" + d.header_img + '>' +
                         "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
                         "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
-                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + d.playtime + " Minutes" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
+                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + (d.playtime/60) + " hrs" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
                         "<b>This game is owned by you.</b></p>")
                     .transition().duration(300)
                     .style('opacity', 1)
@@ -556,7 +566,7 @@ var selection = {
 // price filter
 price_filter.append('h5')
     .attr('id', 'price_val')
-    .text(('Max price: ' + price)); // default value
+    .text(('Max price: ' + price + '$')); // default value
 
 price_filter.append('input')
     .attr('type', 'range')
@@ -567,7 +577,7 @@ price_filter.append('input')
     .attr('id', 'price_slider')
     .on('input', function() {
         price = +this.value;
-        d3.select('#price_val').text(('Max price: ' + price));
+        d3.select('#price_val').text(('Max price: ' + price + '$'));
     })
     .on('change', function() { updateFilterSlider('price', this.value) });
 
@@ -632,6 +642,7 @@ function addSelection(type, value) {
                 .attr('id', function() {
                     return value.toLowerCase().replace(/[^a-zA-Z+]+/gi, "");
                 })
+                .attr('class', 'filteredSelection')
                 .text('✕ ' + value)
                 .on('click', function() { removeSelection(type, value) })
         }
@@ -660,18 +671,48 @@ function updateFilterSlider(type, value) {
     updateVis();
 };
 
-$.ajaxSetup({
-    contentType: "application/json; charset=utf-8"
+/* Reset visualization */
+d3.select('#resetVizButton').on('click', function() {
+    // reset filter selection
+    d3.selectAll('.filteredSelection').remove();
+    pop = 0;
+    price = 100;
+    d3.select('#pop_slider').attr('value', pop);
+    d3.select('#pop_val').text(('Min popularity: ' + pop + '%'));
+    d3.select('#price_slider').attr('value', price);
+    d3.select('#price_val').text(('Max price: ' + price + '$'));
+    
+
+    // reset everything!
+    selection.categories = [];
+    selection.tags = [];
+    selection.developers = [];
+    selection.price = price;
+    selection.popularity = pop;
+    start = 1;
+    updateVis();
 });
 
+/* Show loading screen when start/reset */
+var start = 1;
+
 function updateVis() {
-    $.LoadingOverlay('show');
+    if(start) {
+        $.LoadingOverlay('show');
+    }
+    
     if ((selection.categories).length != 0) {
         sendRequestCat();
     } else {
         sendRequestNoCat();
     }
+
+    start = 0;
 };
+
+$.ajaxSetup({
+    contentType: "application/json; charset=utf-8"
+});
 
 /* Send request with categories */
 function sendRequestCat() {
