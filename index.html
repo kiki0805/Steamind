@@ -43,7 +43,13 @@
         <!-- Intro -->
         <section id="intro" class="wrapper style1 fullscreen fade-up">
         <div class="inner">
-            <i class="fas fa-info-circle fa-2x" data-toggle="tooltip" data-placement="left"></i>
+            <div id="infobox">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16"  id='info' data-toggle="tooltip">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                </svg>
+            </div>
+            <!-- <i class="fas fa-info-circle fa-2x" data-toggle="tooltip" data-placement="left"></i> -->
+
             <div id="filter">
                 <ul id="selection">Filters: </ul>
                 <div id="filter-wrap">
@@ -268,6 +274,7 @@
     <script src="//d3js.org/d3.v3.min.js"></script>
     <!-- <script src="d3/d3.js"></script> -->
     <script type="module" src="js/filterviz.js"></script>
+    <!-- <script type="module" src="js/infoBox.js"></script> -->
     <!-- For testing purposes use script below -->
     <!--<script src="js/script.js"></script>-->
 

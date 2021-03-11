@@ -134,6 +134,8 @@ function viz(tree) {
         //nodeEnter.append("text")
         //  .attr("dy", ".35em")
         //  .text(function(d) { return d.name; });
+
+    
     }
 
     //Tooltip 
