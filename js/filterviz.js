@@ -104,18 +104,12 @@ function viz(tree) {
         d3.selectAll('.node').append("circle")
             .attr("r", function(d) {
 
-                if (d.playtime != -1) {
+                if (d.playtime > 0) {
                     return 7 + (Math.log(d.playtime));
                 } else {
                     return 7;
                 }
-                /*
-                                if (d.playtime > 100) {
-                                    return (d.playtime / 1000)
-                                } else {
-                                    
-                                }
-                */
+
             })
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
@@ -362,18 +356,20 @@ function viz(tree) {
         //     d.children ? "#c6dbef" // expanded package
         //     :
         //     "#fd8d3c"; // leaf node
-
+  
         //console.log(d)
         var color
+        var rating = d.positive_review_ratio
+        if( typeof rating == 'undefined' || rating < 0.0) {rating = 0.0}
 
         if (d.category == "Strategy & Simulation Games") {
-            color = d3.hsl(0, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+            color = d3.hsl(0, Math.max(0.5,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Shooter Games") {
-            color = d3.hsl(90, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+            color = d3.hsl(90, Math.max(0.5,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "RPG Games") {
-            color = d3.hsl(35, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+            color = d3.hsl(35, Math.max(0.5,rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Puzzle & Arcade Games") {
-            color = d3.hsl(300, d.positive_review_ratio, 0.4 + 0.2 * d.positive_review_ratio)
+            color = d3.hsl(300, Math.max(0.5,rating), 0.15 + 0.35 * rating)
         } else {
             color = "#000000"
         };
