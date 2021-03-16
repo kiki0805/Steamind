@@ -76,6 +76,10 @@ input {
     z-index: 1;
 }
 
+#viz-wrap {
+    display: flex;
+}
+
 #filter-wrap {
     display: flex;
     flex-grow: 5;
