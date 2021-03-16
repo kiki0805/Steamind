@@ -315,7 +315,7 @@ function viz(tree) {
                     .html("<img width=100% height=45% src=" + d.header_img + '>' +
                         "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
                         "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
-                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + (d.playtime/60) + " hrs" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
+                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + (d.playtime/60).toFixed(1) + " hrs" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
                         "<b>This game is owned by you.</b></p>")
                     .transition().duration(300)
                     .style('opacity', 1)
