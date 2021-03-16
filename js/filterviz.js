@@ -309,13 +309,14 @@ function viz(tree) {
             }
 
             var tags = dropdown();
+            const priceStr = d.price == -1 ? "Unavailable" : `$ ${d.price}`;
             if (d.playtime > -1) {
                 //Goes here if the game is owned 
                 d3.select('#tooltip')
                     .html("<img width=100% height=45% src=" + d.header_img + '>' +
                         "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
                         "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
-                        "<br>" + "Price: " + d.price + "$" + "<br>" + "Playtime: " + (d.playtime/60) + " hrs" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
+                        "<br>" + "Price: " + priceStr + "<br>" + "Playtime: " + (d.playtime/60).toFixed(1) + " hrs" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
                         "<b>This game is owned by you.</b></p>")
                     .transition().duration(300)
                     .style('opacity', 1)
@@ -331,11 +332,12 @@ function viz(tree) {
                     return tag;
                 }
                 var tags = dropdown();
+                const priceStr = d.price == -1 ? "Unavailable" : `$ ${d.price}`;
                 d3.select('#tooltip')
                     .html("<img width=100% height=45% src=" + d.header_img + '>' +
                         "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
                         "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
-                        "<br>" + "Price: " + d.price + "$" + "<br>" +
+                        "<br>" + "Price: " + priceStr + "<br>" +
                         "<select id=selectNumber> <option>Tags</option>" + tags + "</select>" + "<br>" + buylink +
                         "</p>")
                     .transition().duration(300)
