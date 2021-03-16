@@ -1,7 +1,7 @@
 import {create_legend} from './create_legend.js'
 
 var steamtree = [];
-var currentfilter;
+var currentfilter = "";
 var currentSteamid = '76561197963264495';
 
 var vizParent = document.getElementById("viz");
@@ -182,7 +182,7 @@ function viz(tree) {
             viz(steamtree[0]);
             
             // remove category from selection
-            removeSelection('categories', d.name, 1);
+            removeSelection('categories', d.name, 0);
             //console.log(selection);
         } else {
             currentfilter = d;
@@ -505,7 +505,9 @@ function removeSelection(type, value, update) {
     d3.select(tmp).remove();
 
     //console.log('updated selection: ', selection);
-    if(update) {
+    if(currentfilter != "" || !update) {
+        viz(steamtree[0]);
+    } else {
         updateVis();
     }
 };
@@ -522,24 +524,27 @@ d3.select('#resetVizButton').on('click', function() {
 });
 
 function reset() {
-    // reset filter selection
-    d3.selectAll('.filteredSelection').remove();
-    pop = 0;
-    price = 100;
-    d3.select('#pop_slider').attr('value', pop);
-    d3.select('#pop_val').text(('Min popularity: ' + pop + '%'));
-    d3.select('#price_slider').attr('value', price);
-    d3.select('#price_val').text(('Max price: ' + price + '$'));
-    
+    // reset only if something has been filtered
+    if(!( (selection.categories).length == 0 && (selection.tags).length == 0 && (selection.developers).length == 0 && price == 100 && pop == 0 )) {
+        // reset filter selection
+        d3.selectAll('.filteredSelection').remove();
+        pop = 0;
+        price = 100;
+        d3.select('#pop_slider').attr('value', pop);
+        d3.select('#pop_val').text(('Min popularity: ' + pop + '%'));
+        d3.select('#price_slider').attr('value', price);
+        d3.select('#price_val').text(('Max price: ' + price + '$'));
 
-    // reset everything!
-    selection.categories = [];
-    selection.tags = [];
-    selection.developers = [];
-    selection.price = price;
-    selection.popularity = pop;
-    start = 1;
-    updateVis();
+
+        // reset everything!
+        selection.categories = [];
+        selection.tags = [];
+        selection.developers = [];
+        selection.price = price;
+        selection.popularity = pop;
+        start = 1;
+        updateVis();
+    }
 }
 
 /* Show loading screen when start/reset */
@@ -589,12 +594,15 @@ function sendRequestCat() {
             steamtree = JSON.stringify(Object.assign({}, steamtree));
             steamtree = JSON.parse(steamtree);
             viz(steamtree[0]);
-            
-            if(currentfilter != "" && (selection.categories).length == 1) {
+            /*
+            // show only category if one category filtered
+            if((selection.categories).length == 1) {
                 //currentfilter = steamtree[0].children[0];
                 currentfilter = steamtree[0].children[0];
                 viz(currentfilter);
             }
+            */
+            
             $.LoadingOverlay('hide');
         });
 };
@@ -620,6 +628,14 @@ function sendRequestNoCat() {
             steamtree = JSON.parse(steamtree);
             viz(steamtree[0]);
             $.LoadingOverlay('hide');
+            /*
+            // show only category if one category filtered
+            if((selection.categories).length == 1) {
+                //currentfilter = steamtree[0].children[0];
+                currentfilter = steamtree[0].children[0];
+                viz(currentfilter);
+            }
+            */
         });
 }
 
