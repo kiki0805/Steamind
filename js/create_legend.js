@@ -1,5 +1,10 @@
-export function create_legend(width, height) {
-        var svg = d3.select("#legend").append("svg")
+export function create_legend() {
+        var svgParent = d3.select("#legend");
+
+        var width = document.getElementById("legend").getBoundingClientRect().width;
+        var height = document.getElementById("legend").getBoundingClientRect().height;
+
+        var svg = svgParent.append("svg")
         .attr("id", "svgLegend")
         .attr("width", width)
         .attr("height", height);

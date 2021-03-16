@@ -5,7 +5,7 @@ var currentfilter;
 var currentSteamid = '76561197963264495';
 
 var vizParent = document.getElementById("viz");
-var width = (vizParent.clientWidth) - 200, // leave room for legend
+var width = (vizParent.clientWidth), // leave room for legend
     height = 720,
     root;
 
@@ -61,7 +61,7 @@ fetchGames().then(post => {
 });
 
 // manually create legend
-create_legend(200, height);
+create_legend();
 
 var svg = d3.select("#viz").append("svg")
     .attr("id", "svgViz")
@@ -172,11 +172,6 @@ function viz(tree) {
         //nodeEnter.append("text")
         //  .attr("dy", ".35em")
         //  .text(function(d) { return d.name; });
-
-
-
-
-
     }
 
     function filtercategory(d) {
@@ -544,9 +539,11 @@ d3.select('#resetVizButton').on('click', function() {
 var start = 1;
 
 function updateVis() {
+    $.LoadingOverlay('show');
+    /*
     if(start) {
         $.LoadingOverlay('show');
-    }
+    }*/
     
     if ((selection.categories).length != 0) {
         sendRequestCat();
@@ -554,7 +551,7 @@ function updateVis() {
         sendRequestNoCat();
     }
 
-    start = 0;
+    //start = 0;
 };
 
 $.ajaxSetup({

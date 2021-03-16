@@ -76,6 +76,16 @@ input {
     z-index: 1;
 }
 
+#legend {
+    width: 320px;
+    height: 720px;
+}
+
+#viz {
+    width: 1080px;
+    height: 720px;
+}
+
 #viz-wrap {
     display: flex;
 }
