@@ -157,6 +157,7 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
+            .on('click', reset)
             .on('mouseover', function(d) { nodeHover(d,1); });
 
         //Append circle to category
@@ -178,20 +179,18 @@ function viz(tree) {
 
         if (d == currentfilter) {
             currentfilter = "";
-
-            // remove that category from selection
-            var i = (selection.categories).indexOf(currentfilter.name);
-            (selection.categories).splice(i,1);
-            console.log(selection);
-            updateVis();
+            viz(steamtree[0]);
+            
+            // remove category from selection
+            removeSelection('categories', d.name, 1);
+            //console.log(selection);
         } else {
             currentfilter = d;
-
-            // add that category to selection
-            (selection.categories).push(currentfilter.name);
-            console.log(selection);
             viz(d);
-            
+
+            // add category to selection
+            addSelection('categories', d.name, 0);
+            //console.log(selection);
         }
     }
     //Tooltip 
@@ -471,12 +470,12 @@ function create_filter_options() {
             .text(developer)
     });
 
-    $('.filter').on('change', function() { addSelection(this.id, this.value) });
+    $('.filter').on('change', function() { addSelection(this.id, this.value, 1) });
 };
 
 /*** FUNCTIONS ***/
 /* Add attribute to selection list and as a list item on the page */
-function addSelection(type, value) {
+function addSelection(type, value, update) {
     if (value != -1) {
         if (!selection[type].includes(value)) { // check if item already in filter
             selection[type].push(value);
@@ -486,15 +485,17 @@ function addSelection(type, value) {
                 })
                 .attr('class', 'filteredSelection')
                 .text('✕ ' + value)
-                .on('click', function() { removeSelection(type, value) })
+                .on('click', function() { removeSelection(type, value, 1) })
         }
         //console.log('updated selection: ', selection);
-        updateVis();
+        if(update) {
+            updateVis();
+        }
     }
 };
 
 /* Remove attribute from selection list and its html element */
-function removeSelection(type, value) {
+function removeSelection(type, value, update) {
     var index = (selection[type]).indexOf(value);
     if (index != -1) {
         (selection[type]).splice(index, 1);
@@ -504,7 +505,9 @@ function removeSelection(type, value) {
     d3.select(tmp).remove();
 
     //console.log('updated selection: ', selection);
-    updateVis();
+    if(update) {
+        updateVis();
+    }
 };
 
 /* Update attribute in selection */
@@ -515,6 +518,10 @@ function updateFilterSlider(type, value) {
 
 /* Reset visualization */
 d3.select('#resetVizButton').on('click', function() {
+    reset();
+});
+
+function reset() {
     // reset filter selection
     d3.selectAll('.filteredSelection').remove();
     pop = 0;
@@ -533,12 +540,13 @@ d3.select('#resetVizButton').on('click', function() {
     selection.popularity = pop;
     start = 1;
     updateVis();
-});
+}
 
 /* Show loading screen when start/reset */
 var start = 1;
 
 function updateVis() {
+    console.log("updateVis: ", selection);
     $.LoadingOverlay('show');
     /*
     if(start) {
@@ -575,12 +583,18 @@ function sendRequestCat() {
                 alert('failed to fetch data');
                 return;
             }
-            console.log('ok', data.games);
+            //console.log('ok', data.games);
             steamtree = [];
             steamtree.push({ "name": "Steamuser", "children": data.games });
             steamtree = JSON.stringify(Object.assign({}, steamtree));
             steamtree = JSON.parse(steamtree);
             viz(steamtree[0]);
+            
+            if(currentfilter != "" && (selection.categories).length == 1) {
+                //currentfilter = steamtree[0].children[0];
+                currentfilter = steamtree[0].children[0];
+                viz(currentfilter);
+            }
             $.LoadingOverlay('hide');
         });
 };
@@ -599,7 +613,7 @@ function sendRequestNoCat() {
                 alert('failed to fetch data');
                 return;
             }
-            console.log('ok', data.games);
+            //console.log('ok', data.games);
             steamtree = [];
             steamtree.push({ "name": "Steamuser", "children": data.games });
             steamtree = JSON.stringify(Object.assign({}, steamtree));
