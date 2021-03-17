@@ -82,17 +82,23 @@ input {
 }
 
 #viz {
-    width: 1080px;
+    width: 100%;
     height: 720px;
 }
 
 #viz-wrap {
     display: flex;
+    padding: 0.5em;
+    margin: 0.5em 0;
 }
 
 #filter-wrap {
     display: flex;
     flex-grow: 5;
+    margin-bottom: 1em;
+    background-color: rgb(255, 255, 255, 0.05);
+    border-radius: 1em;
+    padding: 1em;
 }
 
 #filter select {
@@ -130,6 +136,11 @@ input {
 
 #filter span {
     display: block;
+    font-size: 12px;
+}
+
+#fetch-steam-id h5, input{
+    display: inline;
     font-size: 12px;
 }
 

@@ -5,7 +5,7 @@ var currentfilter = "";
 var currentSteamid = '76561197963264495';
 
 var vizParent = document.getElementById("viz");
-var width = (vizParent.clientWidth), // leave room for legend
+var width = (vizParent.clientWidth),
     height = 720,
     root;
 
@@ -57,7 +57,6 @@ fetchGames().then(post => {
     steamtree = JSON.stringify(Object.assign({}, steamtree));
     steamtree = JSON.parse(steamtree);
     viz(steamtree[0]);
-
 });
 
 // manually create legend
@@ -466,6 +465,8 @@ var tagL, devL;
 });*/
 
 function create_filter_options() {
+    tagL.sort();
+    devL.sort();
     /* Adding values for each filter drop down */
     var tag_dropdown = d3.select('#tags');
     tagL.forEach(tag => {
@@ -480,7 +481,6 @@ function create_filter_options() {
             .attr('value', () => { return developer })
             .text(developer)
     });
-
     $('.filter').on('change', function() { addSelection(this.id, this.value, 1) });
 };
 

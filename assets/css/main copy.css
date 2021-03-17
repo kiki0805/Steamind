@@ -1836,7 +1836,7 @@ input, textarea {
 		color: #ffffff !important;
 		cursor: pointer;
 		display: inline-block;
-		font-size: 0.6em;
+		font-size: 0.4em;
 		font-weight: bold;
 		height: calc(4.75em + 2px);
 		letter-spacing: 0.25em;
@@ -3186,7 +3186,7 @@ input, textarea {
 	}
 
 		.wrapper > .inner {
-			padding: 5em 5em 3em 5em ;
+			padding: 3.5em 5em 3em 4em ;
 			max-width: 100%;
 			width: 75em;
 		}

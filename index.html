@@ -45,7 +45,7 @@
         <!-- Intro -->
         <section id="intro" class="wrapper style1 fullscreen fade-up">
         <div class="inner">
-            <div id="infobox">
+            <div id="infobox"> <!-- Little info circle -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16"  id='info' data-toggle="tooltip">
                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
                 </svg>
@@ -83,14 +83,15 @@
                     </div>
                     <div id="price_filter"></div>
                     <div id="pop_filter"></div>
+                    <button id='resetVizButton' class="customButton">Reset filters</button>
                 </div>
                 <!--<button id="send_request">apply filters</button>-->
-                <div>
-                <input type='text' id='mySteamid' placeholder="My steamid">
-                <span style='display: inline;'>Find your steamid: <a target="_blank" href='https://steamidfinder.com/'>https://steamidfinder.com/</a></span>
-                </div>
+            </div>
+            <div id="fetch-steam-id"> <!-- Things related to fetching own id data -->
+                <h5>Use your own Steam ID:</h5>
+                <input type='text' id='mySteamid' placeholder="My steamID">
                 <button id='fetchCustomSteamid' class="customButton">Fetch my data</button>
-                <button id='resetVizButton' class="customButton">Reset</button>
+                <p style="font-size:12px">Don't know your ID? Find it here: <a target="_blank" href='https://steamidfinder.com/'>https://steamidfinder.com/</a></p>
             </div>
             <div id="viz-wrap">
                 <div id="viz"></div>
@@ -292,6 +293,5 @@
     <!-- <script type="module" src="js/infoBox.js"></script> -->
     <!-- For testing purposes use script below -->
     <!--<script src="js/script.js"></script>-->
-
 </body>
 </html>
