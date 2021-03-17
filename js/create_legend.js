@@ -206,7 +206,23 @@ export function create_legend() {
         svg.append("text")
             .attr("x",width-260)
             .attr("y",420)
-            .text("Playtime")
+            .text("Playtime (Larger = more playtime)")
+            .style("font-size","15px")
+            .style("fill","white")
+            .attr("alignment-baseline","middle");
+
+        svg.append("circle")
+            .attr("cx",width-240)
+            .attr("cy",440)
+            .attr("r", 8)
+            .style('stroke', '#000')
+            .style('stroke-width', '1.5px')
+            .style("fill",'rgb(78, 121, 167)');
+
+        svg.append("text")
+            .attr("x",width-260)
+            .attr("y",460)
+            .text("Black Border = Visited Game")
             .style("font-size","15px")
             .style("fill","white")
             .attr("alignment-baseline","middle");
