@@ -211,7 +211,6 @@ function viz(tree) {
             d3.select('#tooltip').style('opacity', 0).style('display', 'none');
         }
     });
-    ß
 
 
     //Tooltip but only for hovering
