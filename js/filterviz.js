@@ -1,4 +1,4 @@
-import {create_legend} from './create_legend.js'
+import { create_legend } from './create_legend.js'
 
 var steamtree = [];
 var currentfilter = "";
@@ -24,15 +24,15 @@ async function fetchSteamids() {
     const steamidL = await response.json();
     var steamid_dropdown = d3.select('#selUser');
     steamid_dropdown.append('option')
-            .attr('value', () => { return steamidL[0] })
-            .text(`Default: ${steamidL[0]}`);
+        .attr('value', () => { return steamidL[0] })
+        .text(`Default: ${steamidL[0]}`);
     steamidL.shift();
     steamidL.forEach(steamid => {
         steamid_dropdown.append('option')
             .attr('value', () => { return steamid })
             .text(steamid)
     });
-    $('#selUser').on('change', function() { 
+    $('#selUser').on('change', function() {
         currentSteamid = this.value;
         updateVis();
     });
@@ -139,7 +139,7 @@ function viz(tree) {
             .attr("r", function(d) {
 
                 if (d.playtime > 0) {
-                    return 8 + Math.min(6, d.playtime/60) + Math.min(3, d.playtime/1000) + Math.min(15, d.playtime/10000);
+                    return 8 + Math.min(6, d.playtime / 60) + Math.min(3, d.playtime / 1000) + Math.min(15, d.playtime / 10000);
                 } else {
                     return 8;
                 }
@@ -148,7 +148,7 @@ function viz(tree) {
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
             .on("click", gameclick)
-            .on('mouseover', function(d) { nodeHover(d,0) });
+            .on('mouseover', function(d) { nodeHover(d, 0) });
 
         //Append rect to user
         d3.selectAll('.user').append("rect")
@@ -158,7 +158,7 @@ function viz(tree) {
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
             .on('click', reset)
-            .on('mouseover', function(d) { nodeHover(d,1); });
+            .on('mouseover', function(d) { nodeHover(d, 1); });
 
         //Append circle to category
         d3.selectAll('.category').append('polygon')
@@ -167,7 +167,7 @@ function viz(tree) {
             .style('stroke-width', '1.5px')
             .style('fill', 'black') // change this later so it depends on category
             .on('click', filtercategory)
-            .on('mouseover', function(d) { nodeHover(d,0); });
+            .on('mouseover', function(d) { nodeHover(d, 0); });
 
         //If we want text, looks horrible 
         //nodeEnter.append("text")
@@ -180,7 +180,7 @@ function viz(tree) {
         if (d == currentfilter) {
             currentfilter = "";
             viz(steamtree[0]);
-            
+
             // remove category from selection
             removeSelection('categories', d.name, 0);
             //console.log(selection);
@@ -199,12 +199,20 @@ function viz(tree) {
         .attr('all', 'unset')
         .attr('style', 'position: absolute; opacity: 0;');
 
-    d3.select('body').on('click', function(e) {
-            d3.select('#tooltip').style('opacity', 0).style('display', 'none')
-        })
-        .on('mouseover', function(e) {
-            d3.select('#tooltip_hover').style('opacity', 0).style('display', 'none');
-        });
+    d3.select('body').on('mouseover', function(e) {
+        d3.select('#tooltip_hover').style('opacity', 0).style('display', 'none');
+    });
+    //Remove when clicking outside tooltip      
+    window.addEventListener('click', function(e) {
+        if (document.getElementById('tooltip').contains(e.target)) {
+            // Clicked in box consoe
+            return;
+        } else {
+            d3.select('#tooltip').style('opacity', 0).style('display', 'none');
+        }
+    });
+    ß
+
 
     //Tooltip but only for hovering
     var tooltip_hover = d3.select('#viz').append('div')
@@ -218,10 +226,12 @@ function viz(tree) {
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; });
-            
-        svg.selectAll("g").attr("transform", function(d) { return "translate(" + 
-                                                            Math.max(7, Math.min(width - 7, d.x)) + "," +
-                                                            Math.max(7, Math.min(height - 7, d.y)) + ")"; });
+
+        svg.selectAll("g").attr("transform", function(d) {
+            return "translate(" +
+                Math.max(7, Math.min(width - 7, d.x)) + "," +
+                Math.max(7, Math.min(height - 7, d.y)) + ")";
+        });
     }
 
     function color(d) {
@@ -235,20 +245,20 @@ function viz(tree) {
         //     d.children ? "#c6dbef" // expanded package
         //     :
         //     "#fd8d3c"; // leaf node
-  
+
         //console.log(d)
         var color
         var rating = d.positive_review_ratio
-        if( typeof rating == 'undefined' || rating < 0.0) {rating = 0.0}
+        if (typeof rating == 'undefined' || rating < 0.0) { rating = 0.0 }
 
         if (d.category == "Strategy & Simulation Games") {
-            color = d3.hsl(0, Math.max(0.3,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(0, Math.max(0.3, rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Shooter Games") {
-            color = d3.hsl(90, Math.max(0.3,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(90, Math.max(0.3, rating), 0.15 + 0.35 * rating)
         } else if (d.category == "RPG Games") {
-            color = d3.hsl(35, Math.max(0.3,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(35, Math.max(0.3, rating), 0.15 + 0.35 * rating)
         } else if (d.category == "Puzzle & Arcade Games") {
-            color = d3.hsl(300, Math.max(0.3,rating), 0.15 + 0.35 * rating)
+            color = d3.hsl(300, Math.max(0.3, rating), 0.15 + 0.35 * rating)
         } else {
             color = "#000000"
         };
@@ -258,11 +268,11 @@ function viz(tree) {
 
     }
 
-    function nodeHover(d,toggle) {
+    function nodeHover(d, toggle) {
         var txt;
-        if(toggle) {
+        if (toggle) {
             txt = "That's you!"
-        }else {
+        } else {
             txt = d.name;
         }
 
@@ -316,7 +326,7 @@ function viz(tree) {
                     .html("<img width=100% height=45% src=" + d.header_img + '>' +
                         "<p><b>" + d.name + "</b><br>" + "Category: " + d.category + "<br>" +
                         "Reviewscore: " + ((d.total_positive / (d.total_negative + d.total_positive)).toFixed(2) * 100) + "% Positive" +
-                        "<br>" + "Price: " + priceStr + "<br>" + "Playtime: " + (d.playtime/60).toFixed(1) + " hrs" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
+                        "<br>" + "Price: " + priceStr + "<br>" + "Playtime: " + (d.playtime / 60).toFixed(1) + " hrs" + "<select id=selectNumber> <option>Tags</option>" + tags + "</select><br>" +
                         "<b>This game is owned by you.</b></p>")
                     .transition().duration(300)
                     .style('opacity', 1)
@@ -490,7 +500,7 @@ function addSelection(type, value, update) {
                 .on('click', function() { removeSelection(type, value, 1) })
         }
         //console.log('updated selection: ', selection);
-        if(update) {
+        if (update) {
             updateVis();
         }
     }
@@ -507,7 +517,7 @@ function removeSelection(type, value, update) {
     d3.select(tmp).remove();
 
     //console.log('updated selection: ', selection);
-    if(currentfilter != "" || !update) {
+    if (currentfilter != "" || !update) {
         viz(steamtree[0]);
     } else {
         updateVis();
@@ -527,7 +537,7 @@ d3.select('#resetVizButton').on('click', function() {
 
 function reset() {
     // reset only if something has been filtered
-    if(!( (selection.categories).length == 0 && (selection.tags).length == 0 && (selection.developers).length == 0 && price == 100 && pop == 0 )) {
+    if (!((selection.categories).length == 0 && (selection.tags).length == 0 && (selection.developers).length == 0 && price == 100 && pop == 0)) {
         // reset filter selection
         d3.selectAll('.filteredSelection').remove();
         pop = 0;
@@ -559,7 +569,7 @@ function updateVis() {
     if(start) {
         $.LoadingOverlay('show');
     }*/
-    
+
     if ((selection.categories).length != 0) {
         sendRequestCat();
     } else {
@@ -604,7 +614,7 @@ function sendRequestCat() {
                 viz(currentfilter);
             }
             */
-            
+
             $.LoadingOverlay('hide');
         });
 };
@@ -648,4 +658,3 @@ $("#send_request").click(function() {
         sendRequestNoCat();
     }
 });
-
