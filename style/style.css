@@ -111,7 +111,9 @@ input {
     font-size: 15px;
     list-style-type: none;
     color: white;
-    margin-bottom: 20px;
+    background-color: #66c0f4;
+    padding: 0.2em 1em;
+    border-radius: 10px;
 }
 
 #selection li {
@@ -122,6 +124,7 @@ input {
 }
 
 #filter h5 {
+    padding-top: 1em;
     font-size: 12px;
 }
 
