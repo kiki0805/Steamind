@@ -301,7 +301,8 @@ function viz(tree) {
     function gameclick(d) {
 
         d3.select(this)
-            .style('stroke', 'black');
+            .style('stroke', 'black')
+            .style('stroke-width', '1.5px');
 
         if (d.header_img) {
             //This creates the buylink

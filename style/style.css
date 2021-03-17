@@ -144,6 +144,27 @@ input {
     font-size: 12px;
 }
 
+p {
+    font-style: Helvetica, Arial, Sans-serif;
+    color: white;
+}
+
+/* Style of about us page */
+#flex-team {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.team-member {
+    margin: 0 0.2em;
+    width: 200px; /* images are rn 200px width */
+}
+
+.team-member p {
+    font-size: 14px;
+    text-justify: inter-word;
+}
+
 
 /***** FILTER SLIDER STYLING *****/
 

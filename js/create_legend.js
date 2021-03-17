@@ -221,7 +221,7 @@ export function create_legend() {
 
         svg.append("text")
             .attr("x",width-260)
-            .attr("y",460)
+            .attr("y",465)
             .text("Black Border = Visited Game")
             .style("font-size","15px")
             .style("fill","white")

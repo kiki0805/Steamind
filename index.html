@@ -30,10 +30,10 @@
             <nav>
                 <h2>Steamind</h2>
                 <ul>
-                    <li><a href="#intro">The visualization</a></li>
-                    <li><a href="#one">Who we are</a></li>
-                    <li><a href="#two">What we do</a></li>
-                    <li><a href="#three">Contact us</a></li>
+                    <li><a href="#intro">The Visualization</a></li>
+                    <li><a href="#one">About</a></li>
+                    <li><a href="#two">The Team</a></li>
+                    <li><a href="#three">Demo</a></li>
                 </ul>
             </nav>
         </div>
@@ -101,162 +101,87 @@
 
         <!-- One -->
         <section id="one" class="wrapper style2 spotlights">
-            <section>
-                <a href="#" class="image"><img src="images/Hugo.png" alt="" data-position="center center" /></a>
-                <div class="content">
-                    <div class="inner">
-                        <h2>Hugo Bellem Westin</h2>
-                        <p>Data Processing Manager / Back-end</p>
-                        <ul class="actions">
-                            <li><a href="https://www.linkedin.com/in/hugo-bellem-westin-3102a3156/" class="button">Learn more</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-            <section>
-                <a href="#" class="image"><img src="images/Zezhe.png" alt="" data-position="top center" /></a>
-                <div class="content">
-                    <div class="inner">
-                        <h2>Zezhe Huang</h2>
-                        <p>Github Manager / Back-end</p>
-                        <ul class="actions">
-                            <li><a href="https://www.linkedin.com/in/zezhe-huang-b8844b121/" class="button">Learn more</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-            <section>
-                <a href="#" class="image"><img src="images/Carl.png" alt="" data-position="25% 25%" /></a>
-                <div class="content">
-                    <div class="inner">
-                        <h2>Carl Leandersson</h2>
-                        <p>Front-end Manager / Back-end</p>
-                        <ul class="actions">
-                            <li><a href="https://www.linkedin.com/in/carl-leandersson-520038140/" class="button">Learn more</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-            <section>
-                <a href="#" class="image"><img src="images/Karo.png" alt="" data-position="25% 25%" /></a>
-                <div class="content">
-                    <div class="inner">
-                        <h2>Karolina Shi</h2>
-                        <p>Documentation Manager / Front-end / UX / UI</p>
-                        <ul class="actions">
-                            <li><a href="https://www.linkedin.com/in/karolina-shi-3684bb18a/" class="button">Learn more</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-            <section>
-                <a href="#" class="image"><img src="images/Xinyi.png" alt="" data-position="25% 25%" /></a>
-                <div class="content">
-                    <div class="inner">
-                        <h2>Xinyi Wang</h2>
-                        <p>UX / UI Manager / Front-end</p>
-                        <ul class="actions">
-                            <li><a href="https://www.linkedin.com/in/xinyi-wang-b48290200/?originalSubdomain=se" class="button">Learn more</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+            <div class="inner">
+                <section>
+                    <h2>About</h2>
+                    <p>
+                        Steamind is a tool for visualizing games from your own Steam library as well as other games from Steam that might suit your interests.
+                        It is a final project for the course DH2321 Information Visualization given at KTH Royal Institute of Technology. By displaying
+                        the games that you own, Steamind aims to provide a way for you to gain insight of your own gaming preferences. Furthermore, a handful
+                        of other games from Steam are shown based on your top recommended tags.
+                        <br><br>
+                        The visualization consists of a <b>force-directed graph</b> organized in a <b>hierarchical structure</b> with two levels. Starting at the
+                        root node which is the user, four branches representing game categories emerges from it. At the very top, we have the leaves of the tree
+                        which are the games.
+                    </p>
+                </section>
+                <section>
+                    <h2>The Data</h2>
+                    <p>
+                        The data was retrieved through Steam's API and through web-scraping. The nature of data is <b>nominal</b>, <b>numerical</b>,
+                        and <b>categorical</b>. The data is stored in a database through <b>SQLite</b>.
+                    </p>
+                </section>
+                <section>
+                    <h2>Learning Objectives</h2>
+                    <p>
+                        Our main learning objectives for this project was to learn to work with <b>Javascript</b> and <b>Javascript libraries</b>. We used
+                        <b>d3.js</b> and <b>jQuery</b>. We also created our own <b>API</b> which we used to gather, and filter, the data dynamically.
+                        This was done with <b>Python</b>, <b>Scrapy</b>, <b>Flask</b>, and <b>Peewee</b>.
+                    </p>
+                </section>
+                <button><a href="https://gits-15.sys.kth.se/karshi/SteamViz">Link to Github repo</a></button>
+            </div>
         </section>
 
         <!-- Two -->
         <section id="two" class="wrapper style3 fade-up">
             <div class="inner">
-                <h2>What we do</h2>
-                <p>Steamind is a recommendation system based on Steam users previous data (e.g. games they own, playtime).</p>
-                <div class="features">
-                    <section>
-                        <span class="icon solid major fa-code"></span>
-                        <h3>User Goals</h3>
-                        <p>Buy someone a personalized gift<br/> Optimize thinking time about gift to give<br/> Improve relationship with friend<br/> Pandemic-safe lifestyle
-                        </p>
+                <h2>The Team</h2>
+                <div id="flex-team">
+                    <section class="team-member">
+                        <img src="images/Hugo.png" alt="Hugo Bellem Westin" width="200" height="200"/>
+                        <h4>Hugo Bellem Westin</h4>
+                        <p></p>
                     </section>
-                    <section>
-                        <span class="icon solid major fa-lock"></span>
-                        <h3>Languages & Libraries</h3>
-                        <p>HTML / CSS / Jacascript<br/> D3.js <br/> Python
-                            <br/>
-                        </p>
+                    <section class="team-member">
+                        <img src="images/Zezhe.png" alt="Zezhe Huang" width="200" height="200"/>
+                        <h4>Zezhe Huang</h4>
+                        <p>Lorem Ipsum</p>
                     </section>
-                    <section>
-                        <span class="icon solid major fa-cog"></span>
-                        <h3>Visual Representation</h3>
-                        <p>Force Directed Graph</p>
+                    <section class="team-member">
+                        <img src="images/Carl.png" alt="Carl Leandersson" width="200" height="200"/>
+                        <h4>Carl Leandersson</h4>
+                        <p>Lorem Ipsum</p>
                     </section>
-                    <section>
-                        <span class="icon solid major fa-desktop"></span>
-                        <h3>Visualise Metrics</h3>
-                        <p>Genre<br/> Developer
-                            <br/> Rating
-                            <br/> Popularity
-                            <br/> Friends Games<br/> And so on
+                    <section class="team-member">
+                        <img src="images/Xinyi.png" alt="Xinyi Wang" width="200" height="200"/>
+                        <h4>Xinyi Wang</h4>
+                        <p>Lorem Ipsum</p>
+                    </section>
+                    <section class="team-member">
+                        <img src="images/Karo.png" alt="Karolina Shi" width="200" height="200"/>
+                        <h4>Karolina Shi</h4>
+                        <p>
+                            Taking the role as project manager, Karolina's main contribution was organizing meetings and keeping the project on its' track.
+                            She also worked on the front-end part of the filters, and a bit with the overall look of the visualization.
                         </p>
                     </section>
                 </div>
-                <ul class="actions">
-                    <li><a href="https://docs.google.com/presentation/d/1XUEU5XJjTuqJut8jCK8oZ2lrsC8lp1x-424eW-cc-fc/edit?usp=sharing" class="button">Learn more</a></li>
-                </ul>
             </div>
         </section>
 
         <!-- Three -->
         <section id="three" class="wrapper style1 fade-up">
             <div class="inner">
-                <h2>Contact us</h2>
+                <h2>Demo</h2>
 
                 <div class="split style1">
                     <section>
-                        <form method="post" action="#">
-                            <div class="fields">
-                                <div class="field half">
-                                    <label for="name">Name</label>
-                                    <input type="text" name="name" id="name" />
-                                </div>
-                                <div class="field half">
-                                    <label for="email">Email</label>
-                                    <input type="text" name="email" id="email" />
-                                </div>
-                                <div class="field">
-                                    <label for="message">Message</label>
-                                    <textarea name="message" id="message" rows="5"></textarea>
-                                </div>
-                            </div>
-                            <ul class="actions">
-                                <li><a href="" class="button submit">Send Message</a></li>
-                            </ul>
-                        </form>
+                        <p>Demo video</p>
                     </section>
                     <section>
-                        <ul class="contact">
-                            <li>
-                                <h3>Address</h3>
-                                <span>Kungliga Tekniska Högskolan<br />
-                                            Brinellvägen 8, Stockholm<br />
-											Sweden</span>
-                            </li>
-                            <li>
-                                <h3>Email</h3>
-                                <a href="#">Karshi@kth.se</a>
-                            </li>
-                            <li>
-                                <h3>Phone</h3>
-                                <span>(000) 000-0000</span>
-                            </li>
-                            <li>
-                                <h3>Social</h3>
-                                <ul class="icons">
-                                    <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-                                    <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-                                    <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-                                    <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-                                    <li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                        <p>To the left is a demo</p>
                     </section>
                 </div>
             </div>
