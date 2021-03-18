@@ -9,6 +9,26 @@ export function create_legend() { //manually create legend
         .attr("width", width)
         .attr("height", height);
 
+    // info icon
+    svg.append('text')
+        .attr('x', width - 33)
+        .attr('y', 77)
+        .text('i')
+        .style('font-size','20px')
+        .style('font-family', 'serif')
+        .style('font-style', 'bold')
+        .style('fill', 'white')
+        .style('cursor', 'pointer');
+
+    svg.append('circle') // create info circle
+        .attr('id', 'infobtn')
+        .attr('cx', width - 30)
+        .attr('cy', 70)
+        .attr('r', 15)
+        .style('fill', 'white')
+        .style('fill-opacity', '0.5')
+        .style('cursor', 'pointer');
+
     // title
     svg.append("text")
         .attr("x", width - 260)

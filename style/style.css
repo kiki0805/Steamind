@@ -1,5 +1,6 @@
 #info {
-    float: right;
+    padding-top: 2em;
+    position: absolute;
     cursor: pointer;
 }
 
@@ -19,7 +20,7 @@
 
 /* Modal Content/Box */
 .modal-content {
-    background-color: rgba(102, 192, 244, 0.80);
+    background-color: rgba(102, 192, 244, 0.9);
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px 50px;
     width: 80%; /* Could be more or less, depending on screen size */
