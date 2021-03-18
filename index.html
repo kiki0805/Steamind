@@ -106,14 +106,18 @@
                     <h2>About</h2>
                     <p>
                         Steamind is a tool for visualizing games from your own Steam library as well as other games from Steam that might suit your interests.
-                        It is a final project for the course DH2321 Information Visualization given at KTH Royal Institute of Technology. By displaying
-                        the games that you own, Steamind aims to provide a way for you to gain insight of your own gaming preferences. Furthermore, a handful
-                        of other games from Steam are shown based on your top recommended tags.
-                        <br><br>
-                        The visualization consists of a <b>force-directed graph</b> organized in a <b>hierarchical structure</b> with two levels. Starting at the
-                        root node which is the user, four branches representing game categories emerges from it. At the very top, we have the leaves of the tree
-                        which are the games.
+                        It is the final project for the course DH2321 Information Visualization given at KTH Royal Institute of Technology. Initially inpsired
+                        by Steam's own recommendation system, we wanted to explore a different way of visualizing the data. By displaying the games that you
+                        own, Steamind aims to provide a way for you to gain insight of your own gaming preferences such as which categories you prefer, or
+                        help you come to terms with the uncomfortable thruth about your bundle-spending habits. Apart from that, Steamind also visualizes a
+                        selected set of other games that you might not own in hopes that you can use the visualizaiton to expand your library with games you
+                        might want to play.
                     </p>
+                    <p>
+                        The visualization consists of a <b>force-directed graph</b> organized in a <b>hierarchical structure</b> with two levels. Starting at the
+                        root node is the user and four branches representing game categories emerges from it. At the last level, we have the leaves which represent the
+                        games. The games are organized into these four main categories based on a research article from 2020 by Xiaozhou Li and Boyang Zhang [1].
+                    </p>    
                 </section>
                 <section>
                     <h2>The Data</h2>
@@ -130,7 +134,12 @@
                         This was done with <b>Python</b>, <b>Scrapy</b>, <b>Flask</b>, and <b>Peewee</b>.
                     </p>
                 </section>
-                <button><a href="https://gits-15.sys.kth.se/karshi/SteamViz">Link to Github repo</a></button>
+                <section>
+                    <p style="font-size:12px">
+                        <a href="https://doi.org/10.1145/3377290.3377300">[1] Li, X. & Zhang, B. 2020. A preliminary network analysis on Steam game tags: Another way of understanding game genres</a>
+                    </p>
+                    <button><a href="https://gits-15.sys.kth.se/karshi/SteamViz">Link to Github repo</a></button>
+                </section>
             </div>
         </section>
 
@@ -138,37 +147,71 @@
         <section id="two" class="wrapper style3 fade-up">
             <div class="inner">
                 <h2>The Team</h2>
-                <div id="flex-team">
-                    <section class="team-member">
-                        <img src="images/Hugo.png" alt="Hugo Bellem Westin" width="200" height="200"/>
-                        <h4>Hugo Bellem Westin</h4>
-                        <p></p>
-                    </section>
-                    <section class="team-member">
-                        <img src="images/Zezhe.png" alt="Zezhe Huang" width="200" height="200"/>
-                        <h4>Zezhe Huang</h4>
-                        <p>Lorem Ipsum</p>
-                    </section>
-                    <section class="team-member">
-                        <img src="images/Carl.png" alt="Carl Leandersson" width="200" height="200"/>
-                        <h4>Carl Leandersson</h4>
-                        <p>Lorem Ipsum</p>
-                    </section>
-                    <section class="team-member">
-                        <img src="images/Xinyi.png" alt="Xinyi Wang" width="200" height="200"/>
-                        <h4>Xinyi Wang</h4>
-                        <p>Lorem Ipsum</p>
-                    </section>
-                    <section class="team-member">
-                        <img src="images/Karo.png" alt="Karolina Shi" width="200" height="200"/>
-                        <h4>Karolina Shi</h4>
-                        <p>
-                            Taking the role as project manager, Karolina's main contribution was organizing meetings and keeping the project on its' track.
-                            She also worked on the front-end part of the filters, and a bit with the overall look of the visualization.
-                        </p>
-                    </section>
-                </div>
             </div>
+            <section id="one" class="wrapper style2 spotlights">
+                <section>
+                    <a href="#" class="image"><img src="images/Hugo.png" alt="" data-position="center center" /></a>
+                    <div class="content">
+                        <div class="inner">
+                            <h2>Hugo Bellem Westin</h2>
+                            <p>Data Management / Back-end</p>
+                            <p>
+                                Having a background in Computer Science and currently doing his masters in Data Science,
+                                Hugo mainly focused on the back-end and organizing the data.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <a href="#" class="image"><img src="images/Zezhe.png" alt="" data-position="top center" /></a>
+                    <div class="content">
+                        <div class="inner">
+                            <h2>Zezhe Huang</h2>
+                            <p>Data Management / API constructer / Back-end</p>
+                            <p>
+                                Using her data management skills, Zezhe gathered the data necessary for the visualization.
+                                She was also the main contributor in creating a custom API for this project.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <a href="#" class="image"><img src="images/Carl.png" alt="" data-position="25% 25%" /></a>
+                    <div class="content">
+                        <div class="inner">
+                            <h2>Carl Leandersson</h2>
+                            <p>Front-end</p>
+                            <p>
+
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <a href="#" class="image"><img src="images/Karo.png" alt="" data-position="25% 25%" /></a>
+                    <div class="content">
+                        <div class="inner">
+                            <h2>Karolina Shi</h2>
+                            <p>Documentation Manager / Front-end</p>
+                            <p>Taking the role as project manager, Karolina's main contribution was organizing meetings and keeping the project on its' track.
+                                She also worked on the front-end part of the filters, and a bit with the overall look of the visualization.</p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <a href="#" class="image"><img src="images/Xinyi.png" alt="" data-position="25% 25%" /></a>
+                    <div class="content">
+                        <div class="inner">
+                            <h2>Xinyi Wang</h2>
+                            <p>UX design / UI design / Front-end</p>
+                            <p>
+                                Creating the overall look of the website, Xinyi made sure the website looked modern
+                                and engaging.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </section>
         </section>
 
         <!-- Three -->
@@ -193,7 +236,7 @@
     <footer id="footer" class="wrapper style1-alt">
         <div class="inner">
             <ul class="menu">
-                <li>&copy; Untitled. All rights reserved.</li>
+                <li>&copy; Steamind 2020</li>
                 <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
             </ul>
         </div>
