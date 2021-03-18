@@ -121,8 +121,16 @@
                 <section>
                     <h2>The Data</h2>
                     <p>
-                        The data was retrieved through Steam's API and through web-scraping. The nature of data is <b>nominal</b>, <b>numerical</b>,
-                        and <b>categorical</b>. The data is stored in a database through <b>SQLite</b>.
+                        The data was retrieved from various sources such as the <a href="https://partner.steamgames.com/doc/webapi" target="_blank">Steam Web API</a>,
+                        and <a href="https://club.steam250.com/app/620" target="_blank">Club 250</a>. Data was also scraped using <b>Python</b> and <b>Scrapy</b> from the
+                        <a href="https://store.steampowered.com/" target="_blank">Steam store</a> itself. Ultimately, the database includes over 100 000 game entries. For each
+                        game, <b>nominal, numerical, and categorical</b> data was retrieved. These include names, header images, review ratios, (user's) playtime, popularity,
+                        category, tags, etc.
+                    </p>
+                    <p>
+                        Since the visualization is dynamic and changes depending on which user ID is currently being used, the data itself also needs to change dynamically.
+                        To achieve this, a custom API was created so that the front-end and back-end could communicate more efficiently. This means that the data model consists
+                        of a back-end database stored in <b>SQLite</b> and data retrieved in .json-format through the front-end.
                     </p>
                 </section>
                 <section>
@@ -135,9 +143,9 @@
                 </section>
                 <section>
                     <p style="font-size:12px">
-                        <a href="https://doi.org/10.1145/3377290.3377300">[1] Li, X. & Zhang, B. 2020. A preliminary network analysis on Steam game tags: Another way of understanding game genres</a>
+                        <a href="https://doi.org/10.1145/3377290.3377300" target="_blank">[1] Li, X. & Zhang, B. 2020. A preliminary network analysis on Steam game tags: Another way of understanding game genres</a>
                     </p>
-                    <button><a href="https://gits-15.sys.kth.se/karshi/SteamViz">Link to Github repo</a></button>
+                    <button><a href="https://gits-15.sys.kth.se/karshi/SteamViz" target="_blank">Link to Github repo</a></button>
                 </section>
             </div>
         </section>
