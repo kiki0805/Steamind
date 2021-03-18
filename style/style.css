@@ -165,6 +165,10 @@ p {
     text-justify: inter-word;
 }
 
+.team-member img{
+    object-fit: cover;
+}
+
 
 /***** FILTER SLIDER STYLING *****/
 
