@@ -160,6 +160,9 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
+            .style("display", function() {
+                if (tree.children.length == 1) { return "none"; }
+            })
             .on('click', reset)
             .on('mouseover', function(d) { nodeHover(d, 1); });
 
