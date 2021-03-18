@@ -134,10 +134,6 @@ input {
     font-size: 12px;
 }
 
-#filter span {
-    display: block;
-    font-size: 12px;
-}
 
 #fetch-steam-id h5, input{
     display: inline;
@@ -301,3 +297,17 @@ input[type=range]:focus::-ms-fill-upper {
     right: 100px;
 }
 
+.selectize-control {
+    height: 35px;
+    white-space:nowrap;
+    width: 140px;
+    margin-right: 40px;
+}
+
+.selectize-dropdown {
+    width: auto !important;
+}
+
+.customButton {
+    margin: auto;
+}
