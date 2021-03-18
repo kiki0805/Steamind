@@ -370,7 +370,8 @@ function viz(tree) {
 
         if (d.header_img) {
             //This creates the buylink
-            var buylink = "<input type=button class='buy_button' value=Buy name onclick=window.open('" + "https://store.steampowered.com/app/" + d.appid + "') />";
+            //var buylink = `<a class="buy_link" target=_blank href=https://store.steampowered.com/app/${d.appid}><b>Click here to see in Steam store.</b></a>`
+            var buylink = "<input type=button class=customButton value=Buy name onclick=window.open('" + "https://store.steampowered.com/app/" + d.appid + "') />";
 
             function dropdown() {
                 //This creates the dropdown menu for the tags 

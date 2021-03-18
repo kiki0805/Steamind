@@ -106,7 +106,12 @@ text {
     color: black;
 }
 
-button .buy_button {
+.buy_link {
+    font-size: 15px;
+    color: white;
+}
+
+.buy_button {
     background: black;
     opacity: 1;
 }
