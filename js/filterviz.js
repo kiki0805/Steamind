@@ -82,6 +82,7 @@ var svg = d3.select("#viz").append("svg")
 
 function viz(tree) {
     d3.selectAll("#svgViz").remove();
+    d3.select("#tooltip").remove();
 
     //It there's only one category, remove rect
     if (tree.children.length == 1) {
