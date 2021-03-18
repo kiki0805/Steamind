@@ -84,9 +84,9 @@ function viz(tree) {
 
     //Force for nodes 
     var force = d3.layout.force()
-        .linkDistance(50)
-        .charge(-60)
-        .gravity(.05)
+        .linkDistance(30)
+        .charge(-150)
+        .gravity(.18)
         .size([width, height])
         .on("tick", tick);
 
