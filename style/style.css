@@ -319,3 +319,11 @@ input[type=range]:focus::-ms-fill-upper {
 .customButton {
     margin: auto;
 }
+
+#steamid-info {
+    z-index: 200;
+}
+
+#sidebar {
+    z-index: 100 !important;
+}

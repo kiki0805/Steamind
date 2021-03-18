@@ -64,7 +64,7 @@ def get_date_of_user(steamid, limit):
     if (not user.exists()) or not Playtime.select().where(Playtime.user==user).exists():
         if not is_steamid_valid(steamid):
             abort(404)
-        crawl_new_user(steamid, 15)
+        crawl_new_user(steamid, 5)
         user = User.select().where(User.steamid==steamid)
     if not user.exists():
         abort(400) 
