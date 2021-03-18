@@ -41,7 +41,7 @@ async function fetchSteamids() {
         currentSteamid = this.value;
         updateVis();
     });
-    $(document).ready(function () {
+    $(document).ready(function() {
         $select = $('select').selectize({
             sortField: 'text'
         });
@@ -120,6 +120,18 @@ function viz(tree) {
             .links(links)
             .start();
 
+        var drag = force.drag()
+            .on("dragstart", dragstart);
+
+
+        function dblclick(d) {
+            d3.select(this).classed("fixed", d.fixed = false);
+        }
+
+        function dragstart(d) {
+            if (d3.event.defaultPrevented) return;
+            d3.select(this).classed("fixed", d.fixed = true);
+        }
         // Update links.
         link = link.data(links, function(d) { return d.target.id; });
 
@@ -148,7 +160,7 @@ function viz(tree) {
             .style("fill", color)
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .call(force.drag);
+            .call(drag);
 
         //Append circle to games
         d3.selectAll('.node').append("circle")
@@ -163,6 +175,7 @@ function viz(tree) {
             })
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
+            .on("dblclick", dblclick)
             .on("click", gameclick)
             .on('mouseover', function(d) { nodeHover(d, 0) });
 
@@ -173,6 +186,7 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
+            .on("dblclick", dblclick)
             .on('click', function() {
                 // hinder everything from resetting by just dragging on user
                 var cLength = (selection.categories).length;
@@ -182,7 +196,7 @@ function viz(tree) {
                 var priceV = selection.price;
 
                 // if selection not totally empty
-                if(! (!cLength && !tLength && !dLength && !popularityV && priceV == 100 )) {
+                if (!(!cLength && !tLength && !dLength && !popularityV && priceV == 100)) {
                     reset();
                 }
             })
@@ -194,6 +208,7 @@ function viz(tree) {
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
             .style('fill', 'black') // change this later so it depends on category
+            .on("dblclick", dblclick)
             .on('click', filtercategory)
             .on('mouseover', function(d) { nodeHover(d, 0); });
 
@@ -206,9 +221,9 @@ function viz(tree) {
             })
             .on('click', function() {
                 var value = this.attributes.value.value;
-                if((selection.categories).includes(value)) {
+                if ((selection.categories).includes(value)) {
                     removeSelection('categories', value, 1);
-                }else {
+                } else {
                     addSelection('categories', value, 1);
                 }
             });
@@ -221,26 +236,27 @@ function viz(tree) {
 
     // filter category via triangle click
     function filtercategory(d) {
+        if (d3.event.defaultPrevented) return;
         if (d == currentfilter) { // if we click on category already filtered
             currentfilter = "";
 
             // if category only one currently being displayed
-            if((selection.categories).length <= 1) {
-                removeSelection('categories', d.name, 1);   // remove category from filter and update
-            }else {
-                viz(steamtree[0]);                          // show tree from root node
+            if ((selection.categories).length <= 1) {
+                removeSelection('categories', d.name, 1); // remove category from filter and update
+            } else {
+                viz(steamtree[0]); // show tree from root node
             }
         } else {
-            if(currentfilter != "") {
-                removeSelection('categories', currentfilter.name, 0);   // remove old category from selection
+            if (currentfilter != "") {
+                removeSelection('categories', currentfilter.name, 0); // remove old category from selection
             }
             currentfilter = d;
-            addSelection('categories', d.name, 0);     // update with new category
+            addSelection('categories', d.name, 0); // update with new category
             viz(d);
         }
     }
     //Tooltip 
-    var tooltip = d3.select('#viz').append('div')
+    var tooltip = d3.select('#legend').append('div')
         .attr('id', 'tooltip')
         .attr('all', 'unset')
         .attr('style', 'position: absolute; opacity: 0;');
@@ -248,15 +264,15 @@ function viz(tree) {
     d3.select('body').on('mouseover', function(e) {
         d3.select('#tooltip_hover').style('opacity', 0).style('display', 'none');
     });
-    //Remove when clicking outside tooltip      
-    window.addEventListener('click', function(e) {
-        if (document.getElementById('tooltip').contains(e.target)) {
-            // Clicked in box consoe
-            return;
-        } else {
-            d3.select('#tooltip').style('opacity', 0).style('display', 'none');
-        }
-    });
+    //Remove when clicking outside tooltip     - Not needed in new  
+    //window.addEventListener('click', function(e) {
+    //    if (document.getElementById('tooltip').contains(e.target)) {
+    // Clicked in box consoe
+    //     return;
+    //  } else {
+    //      d3.select('#tooltip').style('opacity', 0).style('display', 'none');
+    //  }
+    // });
 
 
     //Tooltip but only for hovering
@@ -346,7 +362,7 @@ function viz(tree) {
 
     //When user clicks on a game 
     function gameclick(d) {
-
+        if (d3.event.defaultPrevented) return;
         d3.select(this)
             .style('stroke', 'black')
             .style('stroke-width', '1.5px');
@@ -377,8 +393,8 @@ function viz(tree) {
                     .transition().duration(300)
                     .style('opacity', 1)
                     .style('display', 'block')
-                    .style('left', this.getBoundingClientRect().x - 300 + 'px')
-                    .style('top', this.getBoundingClientRect().y - 60 + 'px');
+                    //.style('left', this.getBoundingClientRect().x - 300 + 'px')
+                    //.style('top', this.getBoundingClientRect().y - 60 + 'px');
             } else {
                 function dropdown() {
                     var tag;
@@ -399,8 +415,8 @@ function viz(tree) {
                     .transition().duration(300)
                     .style('opacity', 1)
                     .style('display', 'block')
-                    .style('left', this.getBoundingClientRect().x - 300 + 'px')
-                    .style('top', this.getBoundingClientRect().y - 60 + 'px');
+                    // .style('left', this.getBoundingClientRect().x - 300 + 'px')
+                    //.style('top', this.getBoundingClientRect().y - 60 + 'px');
             }
 
         } else {
@@ -409,8 +425,8 @@ function viz(tree) {
                 .transition().duration(300)
                 .style('opacity', 1)
                 .style('display', 'block')
-                .style('left', this.getBoundingClientRect().x - 300 + 'px')
-                .style('top', this.getBoundingClientRect().y - 60 + 'px');
+                // .style('left', this.getBoundingClientRect().x - 300 + 'px')
+                // .style('top', this.getBoundingClientRect().y - 60 + 'px');
         }
     }
 
@@ -545,7 +561,7 @@ $('.filter').on('change', function() { // changing pop or price
 function addSelection(type, value, update) {
     if (value != -1) {
         // limit devs to only one at a time
-        if(type == 'developers' && selection[type].length >= 1) {
+        if (type == 'developers' && selection[type].length >= 1) {
             removeSelection(type, selection[type][0], 0);
         }
 
@@ -597,8 +613,9 @@ d3.select('#resetVizButton').on('click', function() {
 
 function reset() {
     // reset filter selection
+    if (d3.event.defaultPrevented) return;
     console.log($select)
-    for (var i = 0; i < $select.length - 2; i++){
+    for (var i = 0; i < $select.length - 2; i++) {
         var element = $select[i];
         element.selectize.clear(true);
     }

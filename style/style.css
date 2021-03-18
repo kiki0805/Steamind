@@ -3,6 +3,11 @@
     stroke-opacity: 0.6;
 }*/
 
+#intro {
+    margin-top: -50px;
+    margin-bottom: 50px;
+}
+
 line.link {
     stroke: #fff;
     stroke-opacity: 0.6;
@@ -30,11 +35,11 @@ text {
 
 #tooltip,
 #cooltip {
+    margin-top: -180px;
     height: 400px;
     width: 250px;
     border-radius: 10px;
     font-size: 10px;
-    margin: 0;
     padding: 0;
     color: black;
     background-color: #66c0f4;
@@ -50,18 +55,19 @@ text {
     background-color: #66c0f4;
 }
 
-
 .fa-info-circle {
     position: absolute;
     top: 15px;
     right: 20px;
 }
 
-#tooltip p, #cooltip p {
+#tooltip p,
+#cooltip p {
     margin-left: 10px;
 }
 
-#tooltip b, #cooltip b {
+#tooltip b,
+#cooltip b {
     font-size: 14px;
     color: black;
 }
@@ -71,12 +77,15 @@ button .buy_button {
     opacity: 1;
 }
 
+
 /* CSS for the filter */
+
 input {
     z-index: 1;
 }
 
 #legend {
+    margin-top: -170px;
     width: 320px;
     height: 720px;
 }
@@ -131,8 +140,8 @@ input {
     font-size: 12px;
 }
 
-
-#fetch-steam-id h5, input{
+#fetch-steam-id h5,
+input {
     display: inline;
     font-size: 12px;
 }
@@ -142,7 +151,9 @@ p {
     color: white;
 }
 
+
 /* Style of about us page */
+
 #flex-team {
     display: flex;
     flex-wrap: wrap;
@@ -150,7 +161,8 @@ p {
 
 .team-member {
     margin: 0 0.2em;
-    width: 200px; /* images are rn 200px width */
+    width: 200px;
+    /* images are rn 200px width */
 }
 
 .team-member p {
@@ -158,7 +170,7 @@ p {
     text-justify: inter-word;
 }
 
-.team-member img{
+.team-member img {
     object-fit: cover;
 }
 
@@ -287,8 +299,7 @@ input[type=range]:focus::-ms-fill-upper {
     background: #e4e4e4;
 }
 
-
-.bi-exclamation-circle-fill{
+.bi-exclamation-circle-fill {
     position: absolute;
     top: 100px;
     right: 100px;
@@ -296,7 +307,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 .selectize-control {
     height: 35px;
-    white-space:nowrap;
+    white-space: nowrap;
     width: 140px;
     margin-right: 40px;
 }
