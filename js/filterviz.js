@@ -8,7 +8,7 @@ var vizParent = document.getElementById("viz");
 var width = (vizParent.clientWidth),
     height = 720,
     root;
-
+var $select;
 // manually create legend
 create_legend();
 
@@ -36,14 +36,19 @@ async function fetchSteamids() {
             .text(steamid)
     });
     $('#selUser').on('change', function() {
+        if (this.value == "") return;
         currentSteamid = this.value;
         updateVis();
+    });
+    $(document).ready(function () {
+        $select = $('select').selectize({
+            sortField: 'text'
+        });
     });
 };
 
 var element = document.getElementById("fetchCustomSteamid");
 element.addEventListener("click", fetchCustomSteamid);
-fetchSteamids();
 
 async function fetchGames() {
     const response = await fetch(fetchusergames);
@@ -51,6 +56,7 @@ async function fetchGames() {
     return g;
 };
 
+$.LoadingOverlay('show');
 fetchGames().then(post => {
     devL = post.developers;
     tagL = post.tags;
@@ -60,8 +66,10 @@ fetchGames().then(post => {
     steamtree.push({ "name": "Steamuser", "children": post.games });
     steamtree = JSON.stringify(Object.assign({}, steamtree));
     steamtree = JSON.parse(steamtree);
+    fetchSteamids();
 
     viz(steamtree[0]);
+    $.LoadingOverlay('hide');
 });
 
 var svg = d3.select("#viz").append("svg")
@@ -438,7 +446,7 @@ var selection = {
 // price filter
 price_filter.append('h5')
     .attr('id', 'price_val')
-    .text(('Max price: ' + price + '$')); // default value
+    .text((`Max price: \$${price}`)); // default value
 
 price_filter.append('input')
     .attr('type', 'range')
@@ -449,7 +457,7 @@ price_filter.append('input')
     .attr('id', 'price_slider')
     .on('input', function() {
         price = +this.value;
-        d3.select('#price_val').text(('Max price: ' + price + '$'));
+        d3.select('#price_val').text((`Max price: \$${price}`));
     })
     .on('change', function() { updateFilterSlider('price', this.value) });
 
@@ -502,7 +510,13 @@ function create_filter_options() {
             .attr('value', () => { return developer })
             .text(developer)
     });
-    $('.filter').on('change', function() { addSelection(this.id, this.value, 1) });
+    $('.filter').on('change', function() { 
+        if (this.value == "") {
+            return;
+        } else {   
+            addSelection(this.id, this.value, 1) 
+        }
+    });
 };
 
 /*** FUNCTIONS ***/
@@ -559,6 +573,11 @@ function reset() {
     // reset only if something has been filtered
     if (!((selection.categories).length == 0 && (selection.tags).length == 0 && (selection.developers).length == 0 && price == 100 && pop == 0)) {
         // reset filter selection
+        console.log($select)
+        for (var i = 0; i < $select.length - 2; i++){
+            var element = $select[i];
+            element.selectize.clear(true);
+        }
         d3.selectAll('.filteredSelection').remove();
         pop = 0;
         price = 100;
