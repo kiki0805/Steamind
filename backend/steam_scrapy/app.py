@@ -49,14 +49,14 @@ def is_steamid_valid(steamid):
     return False
 
 def get_date_of_user(steamid, limit):
-    data = cache.get(f'games_{steamid}_{limit}')
+    f_key = f'.games_{steamid}_{limit}'
+    data = cache.get(f_key)
     if data is not None:
         return data
-    f_key = f'games_{steamid}_{limit}'
     if os.path.isfile(f_key):
         with open(f_key, 'r') as f:
             data = json.loads(f.read())
-            cache.set(f'games_{steamid}_{limit}', data)
+            cache.set(f_key, data)
             return data
     
     print(f'fetch games for {steamid}')
@@ -73,7 +73,7 @@ def get_date_of_user(steamid, limit):
     pts = Playtime.select().where(Playtime.user==user)
     games = [pt.game for pt in pts]
     data = dump_games_for_user(games, user, limit)
-    cache.set(f'games_{steamid}_{limit}', data)
+    cache.set(f_key, data)
     with open(f_key, 'w') as f:
         f.write(json.dumps(data))
     return data
