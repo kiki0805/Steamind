@@ -18,8 +18,9 @@ export function create_legend() {
             .style("fill","white")
             .attr("alignment-baseline","middle");
 
+        // user
         svg.append("rect")
-            .attr("x",width-260)
+            .attr("x",width-255)
             .attr("y",100)
             .attr("width",20)
             .attr("height",20)
@@ -35,8 +36,9 @@ export function create_legend() {
             .style("fill","white")
             .attr("alignment-baseline","middle");
 
+        // owned games
         svg.append("circle")
-            .attr("cx",width-250)
+            .attr("cx",width-245)
             .attr("cy",140)
             .attr("r", 10)
             .style('stroke', '#fff')
@@ -51,6 +53,7 @@ export function create_legend() {
             .style("fill","white")
             .attr("alignment-baseline","middle");
 
+        // category
         svg.append('polygon')
             .attr('points', `${width - 290},160 ${width - 280},180 ${width - 300},180`)
             .style('stroke', '#fff')
@@ -65,13 +68,17 @@ export function create_legend() {
             .style("fill","white")
             .attr("alignment-baseline","middle");
 
+        // strategy sim games
         svg.append("circle")
-            .attr("cx",width-250)
+            .attr("cx",width-245)
             .attr("cy",200)
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#ff0000');
+            .style("fill",'#ff0000')
+            .attr("class", "legend-filter")
+            .attr("value", 1)
+            .attr('cursor', 'pointer');
 
         svg.append("text")
             .attr("x",width-230)
@@ -81,13 +88,17 @@ export function create_legend() {
             .style("fill","white")
             .attr("alignment-baseline","middle");
 
+        // shooter games
         svg.append("circle")
-            .attr("cx",width-250)
+            .attr("cx",width-245)
             .attr("cy",230)
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#80ff00');
+            .style("fill",'#80ff00')
+            .attr("class", "legend-filter")
+            .attr("value", 2)
+            .attr('cursor', 'pointer');
 
         svg.append("text")
             .attr("x",width-230)
@@ -97,13 +108,17 @@ export function create_legend() {
             .style("fill","white")
             .attr("alignment-baseline","middle");
         
+        // RPG games
         svg.append("circle")
-            .attr("cx",width-250)
+            .attr("cx",width-245)
             .attr("cy",260)
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#ff9500');
+            .style("fill",'#ff9500')
+            .attr("class", "legend-filter")
+            .attr("value", 3)
+            .attr('cursor', 'pointer');
 
         svg.append("text")
             .attr("x",width-230)
@@ -113,13 +128,17 @@ export function create_legend() {
             .style("fill","white")
             .attr("alignment-baseline","middle");
 
+        // puzzle arcade games
         svg.append("circle")
-            .attr("cx",width-250)
+            .attr("cx",width-245)
             .attr("cy",290)
             .attr("r", 10)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
-            .style("fill",'#ff00ff');
+            .style("fill",'#ff00ff')
+            .attr("class", "legend-filter")
+            .attr("value", 4)
+            .attr('cursor', 'pointer');
 
         svg.append("text")
             .attr("x",width-230)
@@ -131,7 +150,7 @@ export function create_legend() {
 
         //saturation
         svg.append("circle")
-            .attr("cx",width-250)
+            .attr("cx",width-245)
             .attr("cy",320)
             .attr("r", 10)
             .style('stroke', '#fff')
@@ -139,7 +158,7 @@ export function create_legend() {
             .style("fill",'#ff0000');
 
         svg.append("circle")
-            .attr("cx",width-220)
+            .attr("cx",width-215)
             .attr("cy",320)
             .attr("r", 10)
             .style('stroke', '#fff')
@@ -147,7 +166,7 @@ export function create_legend() {
             .style("fill",'#c51f16');
 
         svg.append("circle")
-            .attr("cx",width-190)
+            .attr("cx",width-185)
             .attr("cy",320)
             .attr("r", 10)
             .style('stroke', '#fff')
@@ -155,7 +174,7 @@ export function create_legend() {
             .style("fill",'#932a25');
 
         svg.append("circle")
-            .attr("cx",width-160)
+            .attr("cx",width-155)
             .attr("cy",320)
             .attr("r", 10)
             .style('stroke', '#fff')
@@ -163,7 +182,7 @@ export function create_legend() {
             .style("fill",'#682f2c');
         
         svg.append("circle")
-            .attr("cx",width-130)
+            .attr("cx",width-125)
             .attr("cy",320)
             .attr("r", 10)
             .style('stroke', '#fff')
@@ -180,7 +199,7 @@ export function create_legend() {
 
         // size
         svg.append("circle")
-            .attr("cx",width-160)
+            .attr("cx",width-155)
             .attr("cy",380)
             .attr("r", 5)
             .style('stroke', '#fff')
@@ -188,7 +207,7 @@ export function create_legend() {
             .style("fill",'rgb(78, 121, 167)');
         
         svg.append("circle")
-            .attr("cx",width-200)
+            .attr("cx",width-195)
             .attr("cy",380)
             .attr("r", 10)
             .style('stroke', '#fff')
@@ -196,7 +215,7 @@ export function create_legend() {
             .style("fill",'rgb(78, 121, 167)');
 
         svg.append("circle")
-            .attr("cx",width-240)
+            .attr("cx",width-235)
             .attr("cy",380)
             .attr("r", 15)
             .style('stroke', '#fff')
@@ -211,8 +230,9 @@ export function create_legend() {
             .style("fill","white")
             .attr("alignment-baseline","middle");
 
+        // black border
         svg.append("circle")
-            .attr("cx",width-240)
+            .attr("cx",width-235)
             .attr("cy",440)
             .attr("r", 8)
             .style('stroke', '#000')

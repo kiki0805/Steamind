@@ -9,6 +9,9 @@ var width = (vizParent.clientWidth),
     height = 720,
     root;
 
+// manually create legend
+create_legend();
+
 function fetchCustomSteamid() {
     const steamid = document.getElementById("mySteamid").value;
     currentSteamid = steamid;
@@ -36,7 +39,8 @@ async function fetchSteamids() {
         currentSteamid = this.value;
         updateVis();
     });
-}
+};
+
 var element = document.getElementById("fetchCustomSteamid");
 element.addEventListener("click", fetchCustomSteamid);
 fetchSteamids();
@@ -45,7 +49,7 @@ async function fetchGames() {
     const response = await fetch(fetchusergames);
     const g = await response.json();
     return g;
-}
+};
 
 fetchGames().then(post => {
     devL = post.developers;
@@ -56,16 +60,16 @@ fetchGames().then(post => {
     steamtree.push({ "name": "Steamuser", "children": post.games });
     steamtree = JSON.stringify(Object.assign({}, steamtree));
     steamtree = JSON.parse(steamtree);
+
     viz(steamtree[0]);
 });
-
-// manually create legend
-create_legend();
 
 var svg = d3.select("#viz").append("svg")
     .attr("id", "svgViz")
     .attr("width", width)
     .attr("height", height);
+
+
 
 function viz(tree) {
     d3.selectAll("#svgViz").remove();
@@ -167,6 +171,18 @@ function viz(tree) {
             .style('fill', 'black') // change this later so it depends on category
             .on('click', filtercategory)
             .on('mouseover', function(d) { nodeHover(d, 0); });
+
+        d3.selectAll('.legend-filter')
+            .on('mouseover', function(d) {
+                d3.select(this).attr('r', '12');
+            })
+            .on('mouseout', function(d) {
+                d3.select(this).attr('r', '10');
+            })
+            .on('click', function() {
+                var cat = steamtree[0].children[(this.attributes.value.value - 1)];
+                filtercategory(cat);
+            });
 
         //If we want text, looks horrible 
         //nodeEnter.append("text")
