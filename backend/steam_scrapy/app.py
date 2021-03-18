@@ -5,6 +5,7 @@ from db import *
 import hashlib
 import requests
 import json
+import os.path
 from utils import dump_games_for_user, filter_games
 
 def crawl_new_user(steamid, timeout=None):
@@ -51,6 +52,12 @@ def get_date_of_user(steamid, limit):
     data = cache.get(f'games_{steamid}_{limit}')
     if data is not None:
         return data
+    f_key = f'games_{steamid}_{limit}'
+    if os.path.isfile(f_key):
+        with open(f_key, 'r') as f:
+            data = json.loads(f.read())
+            cache.set(f'games_{steamid}_{limit}', data)
+            return data
     
     print(f'fetch games for {steamid}')
     user = User.select().where(User.steamid==steamid)
@@ -67,6 +74,8 @@ def get_date_of_user(steamid, limit):
     games = [pt.game for pt in pts]
     data = dump_games_for_user(games, user, limit)
     cache.set(f'games_{steamid}_{limit}', data)
+    with open(f_key, 'w') as f:
+        f.write(json.dumps(data))
     return data
 
 
