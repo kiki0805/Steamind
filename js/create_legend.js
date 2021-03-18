@@ -55,7 +55,7 @@ export function create_legend() {
 
         // category
         svg.append('polygon')
-            .attr('points', `${width - 290},160 ${width - 280},180 ${width - 300},180`)
+            .attr('points', `17, 160, 7,180, 27, 180`)
             .style('stroke', '#fff')
             .style('stroke-width', '1.5px')
             .style('fill', 'black');
@@ -77,7 +77,7 @@ export function create_legend() {
             .style('stroke-width', '1.5px')
             .style("fill",'#ff0000')
             .attr("class", "legend-filter")
-            .attr("value", 1)
+            .attr("value", "Strategy & Simulation Games")
             .attr('cursor', 'pointer');
 
         svg.append("text")
@@ -97,7 +97,7 @@ export function create_legend() {
             .style('stroke-width', '1.5px')
             .style("fill",'#80ff00')
             .attr("class", "legend-filter")
-            .attr("value", 2)
+            .attr("value", "Shooter Games")
             .attr('cursor', 'pointer');
 
         svg.append("text")
@@ -117,7 +117,7 @@ export function create_legend() {
             .style('stroke-width', '1.5px')
             .style("fill",'#ff9500')
             .attr("class", "legend-filter")
-            .attr("value", 3)
+            .attr("value", "RPG Games")
             .attr('cursor', 'pointer');
 
         svg.append("text")
@@ -137,7 +137,7 @@ export function create_legend() {
             .style('stroke-width', '1.5px')
             .style("fill",'#ff00ff')
             .attr("class", "legend-filter")
-            .attr("value", 4)
+            .attr("value", "Puzzle & Arcade Games")
             .attr('cursor', 'pointer');
 
         svg.append("text")

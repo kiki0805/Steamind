@@ -102,9 +102,6 @@ input {
 }
 
 #filter select {
-    background: url('../images/dropdown-arrow.gif');
-    background-repeat: no-repeat;
-    background-position: calc(100%) center;
     background-color: #ffffff;
     color: #292929;
     width: 70%;

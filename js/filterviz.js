@@ -173,7 +173,19 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .on('click', reset)
+            .on('click', function() {
+                // hinder everything from resetting by just dragging on user
+                var cLength = (selection.categories).length;
+                var tLength = (selection.tags).length;
+                var dLength = (selection.developers).length;
+                var popularityV = selection.popularity;
+                var priceV = selection.price;
+
+                // if selection not totally empty
+                if(! (!cLength && !tLength && !dLength && !popularityV && priceV == 100 )) {
+                    reset();
+                }
+            })
             .on('mouseover', function(d) { nodeHover(d, 1); });
 
         //Append circle to category
@@ -193,8 +205,12 @@ function viz(tree) {
                 d3.select(this).attr('r', '10');
             })
             .on('click', function() {
-                var cat = steamtree[0].children[(this.attributes.value.value - 1)];
-                filtercategory(cat);
+                var value = this.attributes.value.value;
+                if((selection.categories).includes(value)) {
+                    removeSelection('categories', value, 1);
+                }else {
+                    addSelection('categories', value, 1);
+                }
             });
 
         //If we want text, looks horrible 
@@ -203,18 +219,23 @@ function viz(tree) {
         //  .text(function(d) { return d.name; });
     }
 
+    // filter category via triangle click
     function filtercategory(d) {
         if (d == currentfilter) { // if we click on category already filtered
             currentfilter = "";
 
-            removeSelection('categories', d.name, 0);   // remove category from selection
-            viz(steamtree[0]);                          // show tree from root node
+            // if category only one currently being displayed
+            if((selection.categories).length <= 1) {
+                removeSelection('categories', d.name, 1);   // remove category from filter and update
+            }else {
+                viz(steamtree[0]);                          // show tree from root node
+            }
         } else {
             if(currentfilter != "") {
                 removeSelection('categories', currentfilter.name, 0);   // remove old category from selection
             }
             currentfilter = d;
-            addSelection('categories', d.name, 0);                      // update with new category
+            addSelection('categories', d.name, 0);     // update with new category
             viz(d);
         }
     }
@@ -322,32 +343,6 @@ function viz(tree) {
         .style('top', this.getBoundingClientRect().y - 60 + 'px');
     }
     */
-
-    // When user filters
-    $('.filter').on('change', function() { // changing pop or price
-        if (this.value == "") {
-            return; // don't filter on default values (choose tag...)
-        } else {   
-            if(this.id != "categories") {
-                addSelection(this.id, this.value, 1);
-            }else {
-                switch(this.value) {
-                    case "Strategy & Simulation Games":
-                        filtercategory(steamtree[0].children[0]);
-                        break;
-                    case "Shooter Games":
-                        filtercategory(steamtree[0].children[1]);
-                        break;
-                    case "RPG Games":
-                        filtercategory(steamtree[0].children[2]);
-                        break;
-                    case "Puzzle & Arcade Games":
-                        filtercategory(steamtree[0].children[3]);
-                        break;
-                }
-            }
-        }
-    });
 
     //When user clicks on a game 
     function gameclick(d) {
@@ -536,15 +531,22 @@ function create_filter_options() {
     });
 };
 
+// When user filters
+$('.filter').on('change', function() { // changing pop or price
+    if (this.value == "") {
+        return; // don't filter on default values (choose tag...)
+    } else {
+        addSelection(this.id, this.value, 1);
+    }
+});
+
 /*** FUNCTIONS ***/
 /* Add attribute to selection list and as a list item on the page */
 function addSelection(type, value, update) {
     if (value != -1) {
-        // limit devs and cats to only be one at a time
+        // limit devs to only one at a time
         if(type == 'developers' && selection[type].length >= 1) {
             removeSelection(type, selection[type][0], 0);
-        }else if(type == 'categories') {
-
         }
 
         if (!selection[type].includes(value)) { // check if item already in filter
