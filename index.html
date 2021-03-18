@@ -24,7 +24,6 @@
 
     <!-- Sidebar -->
     <section id="sidebar">
-        <!-- <section id="sidebar" onmouseover="toggleSidebar()" onmouseout="toggleSidebar()"></section> -->
         <div class="inner">
             <nav>
                 <h2>Steamind</h2>
@@ -44,19 +43,35 @@
         <!-- Intro -->
         <section id="intro" class="wrapper style1 fullscreen fade-up">
             <div class="inner">
-                <div id="infobox">
-                    <!-- Little info circle -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16" id='info' data-toggle="tooltip">
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                </svg>
-                </div>
-                <!-- <i class="fas fa-info-circle fa-2x" data-toggle="tooltip" data-placement="left"></i> -->
+                <div id="info">
+                    <i id="infobtn" class="fas fa-info-circle fa-1x"></i>
 
+                    <div id="custom-modal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2>How to use Steamind</h2>
+                            <p>
+                                Welcome to Steamind! To visualize your own Steam library, please fill in your SteamID in the <b>input field at the top left
+                                corner</b>. If you don't have a Steam account or just want to explore the visualization, there are some <b>prefetched SteamIDs</b>
+                                you can take a look at.<br><br>
+
+                                At the top right there is a <b>legend</b>. You can filter on game categories by clicking on their <b>corresponding circle in the legend</b>,
+                                clicking on their <b>corresponding triangle in the visualization</b>, or by <b>using the filters below the visualization</b>. Above the filters
+                                there is a <b>current filters</b> which shows you all the filters you have on right now. You can <b>delete a filter by clicking on it</b><br><br>
+
+                                If you wish to <b>take a closer look</b> at some games, you can click on them to show their info below the <b>Game Info</b>. By clicking on them
+                                you will <b>lock them in place</b> for easier organization. <b>Click on them again</b> to unlock their positions.<br><br>
+
+                                Those are the basics. Happy exploring!
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 <div id="fetch-steam-id">
                     <!-- Things related to fetching own id data -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" data-toggle="tooltip" id="steamid-info">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
-                    </svg>
+                    </svg> <!-- Little info circle around fetching ID -->
                     <h5>Use your own Steam ID:</h5>
                     <input type='text' id='mySteamid' placeholder="My steamID">
                     <button id='fetchCustomSteamid' class="customButton">Fetch my data</button>
@@ -72,7 +87,7 @@
                         <div>
                             <h5 style="margin-left: 5px;">Tags</h5>
                             <select id="tags" class="filter">
-                        <   option value="">Choose tag</option>
+                            <option value="">Choose tag</option>
                         </select>
                         </div>
                         <div>
@@ -262,9 +277,7 @@
         <script src="//d3js.org/d3.v3.min.js"></script>
         <!-- <script src="d3/d3.js"></script> -->
         <script type="module" src="js/filterviz.js"></script>
-        <!-- <script type="module" src="js/infoBox.js"></script> -->
-        <!-- For testing purposes use script below -->
-        <!--<script src="js/script.js"></script>-->
+        <script type="module" src="js/show_info.js"></script> <!-- For the info circle -->
 </body>
 
 </html>

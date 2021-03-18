@@ -1,7 +1,46 @@
-/*.links line {
-    stroke: #fff;
-    stroke-opacity: 0.6;
-}*/
+#info {
+    float: right;
+    cursor: pointer;
+}
+
+/* background for modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: rgba(102, 192, 244, 0.80);
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px 50px;
+    width: 80%; /* Could be more or less, depending on screen size */
+    font-size: 15px;
+}
+
+/* The Close Button */
+.close {
+    text-align: right;
+    padding-right: 1em;
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    text-decoration: none;
+    cursor: pointer;
+}
 
 #intro {
     margin-top: -50px;
@@ -55,12 +94,6 @@ text {
     background-color: #66c0f4;
 }
 
-.fa-info-circle {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-}
-
 #tooltip p,
 #cooltip p {
     margin-left: 10px;
@@ -99,6 +132,10 @@ input {
     display: flex;
     padding: 0.5em;
     margin: 0.5em 0;
+}
+
+#fetch-steam-id {
+    margin-top: 1em;
 }
 
 #filter-wrap {
@@ -173,7 +210,6 @@ p {
 .team-member img {
     object-fit: cover;
 }
-
 
 /***** FILTER SLIDER STYLING *****/
 

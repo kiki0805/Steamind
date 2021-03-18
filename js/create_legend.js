@@ -1,4 +1,4 @@
-export function create_legend() {
+export function create_legend() { //manually create legend
     var svgParent = d3.select("#legend");
 
     var width = document.getElementById("legend").getBoundingClientRect().width;
@@ -9,13 +9,14 @@ export function create_legend() {
         .attr("width", width)
         .attr("height", height);
 
-    //manually create legend
+    // title
     svg.append("text")
         .attr("x", width - 260)
-        .attr("y", 70)
+        .attr("y", 80)
         .text("Legend")
-        .style("font-size", "17px")
+        .style("font-size", "15px")
         .style("fill", "white")
+        .style("font-weight", "bold")
         .attr("alignment-baseline", "middle");
 
     // user
@@ -192,15 +193,15 @@ export function create_legend() {
     svg.append("text")
         .attr("x", width - 260)
         .attr("y", 350)
-        .text("Review ratio (darker = less popular)")
+        .text("Popularity (darker = less popular)")
         .style("font-size", "15px")
         .style("fill", "white")
         .attr("alignment-baseline", "middle");
 
     // size
     svg.append("circle")
-        .attr("cx", width - 155)
-        .attr("cy", 380)
+        .attr("cx", width - 165)
+        .attr("cy", 385)
         .attr("r", 5)
         .style('stroke', '#fff')
         .style('stroke-width', '1.5px')
@@ -208,7 +209,7 @@ export function create_legend() {
 
     svg.append("circle")
         .attr("cx", width - 195)
-        .attr("cy", 380)
+        .attr("cy", 385)
         .attr("r", 10)
         .style('stroke', '#fff')
         .style('stroke-width', '1.5px')
@@ -216,7 +217,7 @@ export function create_legend() {
 
     svg.append("circle")
         .attr("cx", width - 235)
-        .attr("cy", 380)
+        .attr("cy", 385)
         .attr("r", 15)
         .style('stroke', '#fff')
         .style('stroke-width', '1.5px')
@@ -225,7 +226,7 @@ export function create_legend() {
     svg.append("text")
         .attr("x", width - 260)
         .attr("y", 420)
-        .text("Playtime (Larger = more playtime)")
+        .text("Playtime (larger = more playtime)")
         .style("font-size", "15px")
         .style("fill", "white")
         .attr("alignment-baseline", "middle");
@@ -233,7 +234,7 @@ export function create_legend() {
     // black border
     svg.append("circle")
         .attr("cx", width - 235)
-        .attr("cy", 440)
+        .attr("cy", 450)
         .attr("r", 8)
         .style('stroke', '#000')
         .style('stroke-width', '1.5px')
@@ -241,16 +242,26 @@ export function create_legend() {
 
     svg.append("text")
         .attr("x", width - 260)
-        .attr("y", 465)
-        .text("Black Border = Visited Game")
+        .attr("y", 475)
+        .text("Black Border = Visited Games")
         .style("font-size", "15px")
         .style("fill", "white")
         .attr("alignment-baseline", "middle");
 
+    // separation between legend and tooltip
+    svg.append("line")
+        .attr("x1", width)
+        .attr("x2", width-350)
+        .attr("y1", 490)
+        .attr("y2", 490)
+        .style("stroke", "white")
+        .style("stroke-width", "1.5px");
+
+    // Tooltip
     svg.append("text")
         .attr("x", width - 260)
-        .attr("y", 510)
-        .text("Tooltip")
+        .attr("y", 530)
+        .text("Game Info ⬇")
         .style("font-size", "17px")
         .style("fill", "white")
         .attr("alignment-baseline", "middle");
