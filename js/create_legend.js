@@ -55,7 +55,7 @@ export function create_legend() {
 
     // category
     svg.append('polygon')
-        .attr('points', `17, 160, 7,180, 27, 180`)
+        .attr('points', `${width - 245},160 ${width - 235},180 ${width - 255},180`)
         .style('stroke', '#fff')
         .style('stroke-width', '1.5px')
         .style('fill', 'black');
