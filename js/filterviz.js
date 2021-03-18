@@ -74,6 +74,10 @@ var svg = d3.select("#viz").append("svg")
 function viz(tree) {
     d3.selectAll("#svgViz").remove();
 
+    //It there's only one category, remove rect
+    if (tree.children.length == 1) {
+        tree = tree.children[0];
+    }
     svg = d3.select("#viz").append("svg")
         .attr("id", "svgViz")
         .attr("width", width)
@@ -160,9 +164,6 @@ function viz(tree) {
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
-            .style("display", function() {
-                if (tree.children.length == 1) { return "none"; }
-            })
             .on('click', reset)
             .on('mouseover', function(d) { nodeHover(d, 1); });
 
