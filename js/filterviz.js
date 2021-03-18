@@ -9,6 +9,7 @@ var width = (vizParent.clientWidth),
     height = 720,
     root;
 var $select;
+
 // manually create legend
 create_legend();
 
@@ -203,21 +204,18 @@ function viz(tree) {
     }
 
     function filtercategory(d) {
-
-        if (d == currentfilter) {
+        if (d == currentfilter) { // if we click on category already filtered
             currentfilter = "";
-            viz(steamtree[0]);
 
-            // remove category from selection
-            removeSelection('categories', d.name, 0);
-            //console.log(selection);
+            removeSelection('categories', d.name, 0);   // remove category from selection
+            viz(steamtree[0]);                          // show tree from root node
         } else {
+            if(currentfilter != "") {
+                removeSelection('categories', currentfilter.name, 0);   // remove old category from selection
+            }
             currentfilter = d;
+            addSelection('categories', d.name, 0);                      // update with new category
             viz(d);
-
-            // add category to selection
-            addSelection('categories', d.name, 0);
-            //console.log(selection);
         }
     }
     //Tooltip 
@@ -324,6 +322,32 @@ function viz(tree) {
         .style('top', this.getBoundingClientRect().y - 60 + 'px');
     }
     */
+
+    // When user filters
+    $('.filter').on('change', function() { // changing pop or price
+        if (this.value == "") {
+            return; // don't filter on default values (choose tag...)
+        } else {   
+            if(this.id != "categories") {
+                addSelection(this.id, this.value, 1);
+            }else {
+                switch(this.value) {
+                    case "Strategy & Simulation Games":
+                        filtercategory(steamtree[0].children[0]);
+                        break;
+                    case "Shooter Games":
+                        filtercategory(steamtree[0].children[1]);
+                        break;
+                    case "RPG Games":
+                        filtercategory(steamtree[0].children[2]);
+                        break;
+                    case "Puzzle & Arcade Games":
+                        filtercategory(steamtree[0].children[3]);
+                        break;
+                }
+            }
+        }
+    });
 
     //When user clicks on a game 
     function gameclick(d) {
@@ -510,19 +534,19 @@ function create_filter_options() {
             .attr('value', () => { return developer })
             .text(developer)
     });
-    $('.filter').on('change', function() { 
-        if (this.value == "") {
-            return;
-        } else {   
-            addSelection(this.id, this.value, 1) 
-        }
-    });
 };
 
 /*** FUNCTIONS ***/
 /* Add attribute to selection list and as a list item on the page */
 function addSelection(type, value, update) {
     if (value != -1) {
+        // limit devs and cats to only be one at a time
+        if(type == 'developers' && selection[type].length >= 1) {
+            removeSelection(type, selection[type][0], 0);
+        }else if(type == 'categories') {
+
+        }
+
         if (!selection[type].includes(value)) { // check if item already in filter
             selection[type].push(value);
             selection_div.append('li')
@@ -551,7 +575,7 @@ function removeSelection(type, value, update) {
     d3.select(tmp).remove();
 
     //console.log('updated selection: ', selection);
-    if (currentfilter != "" || !update) {
+    if (!update) {
         viz(steamtree[0]);
     } else {
         updateVis();
@@ -570,39 +594,36 @@ d3.select('#resetVizButton').on('click', function() {
 });
 
 function reset() {
-    // reset only if something has been filtered
-    if (!((selection.categories).length == 0 && (selection.tags).length == 0 && (selection.developers).length == 0 && price == 100 && pop == 0)) {
-        // reset filter selection
-        console.log($select)
-        for (var i = 0; i < $select.length - 2; i++){
-            var element = $select[i];
-            element.selectize.clear(true);
-        }
-        d3.selectAll('.filteredSelection').remove();
-        pop = 0;
-        price = 100;
-        d3.select('#pop_slider').attr('value', pop);
-        d3.select('#pop_val').text(('Min popularity: ' + pop + '%'));
-        d3.select('#price_slider').attr('value', price);
-        d3.select('#price_val').text(('Max price: ' + price + '$'));
-
-
-        // reset everything!
-        selection.categories = [];
-        selection.tags = [];
-        selection.developers = [];
-        selection.price = price;
-        selection.popularity = pop;
-        start = 1;
-        updateVis();
+    // reset filter selection
+    console.log($select)
+    for (var i = 0; i < $select.length - 2; i++){
+        var element = $select[i];
+        element.selectize.clear(true);
     }
+    d3.selectAll('.filteredSelection').remove();
+    pop = 0;
+    price = 100;
+    d3.select('#pop_slider').attr('value', pop);
+    d3.select('#pop_val').text(('Min popularity: ' + pop + '%'));
+    d3.select('#price_slider').attr('value', price);
+    d3.select('#price_val').text(('Max price: ' + price + '$'));
+
+
+    // reset everything!
+    selection.categories = [];
+    selection.tags = [];
+    selection.developers = [];
+    selection.price = price;
+    selection.popularity = pop;
+    start = 1;
+    updateVis();
 }
 
 /* Show loading screen when start/reset */
 var start = 1;
 
 function updateVis() {
-    console.log("updateVis: ", selection);
+    //console.log("updateVis: ", selection);
     $.LoadingOverlay('show');
     /*
     if(start) {
@@ -689,7 +710,7 @@ function sendRequestNoCat() {
             */
         });
 }
-
+/*
 $("#send_request").click(function() {
     if ((selection.categories).length != 0) {
         sendRequestCat();
@@ -697,3 +718,4 @@ $("#send_request").click(function() {
         sendRequestNoCat();
     }
 });
+*/
