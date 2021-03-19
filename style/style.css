@@ -395,3 +395,10 @@ input[type=range]:focus::-ms-fill-upper {
 #sidebar {
     z-index: 100 !important;
 }
+
+.video {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
