@@ -160,7 +160,6 @@ function viz(tree) {
             })
             .style("fill", color)
             .style("stroke", '#fff')
-            .style("stroke-width", "1,5px")
             .call(drag);
 
         //Append circle to games
@@ -175,7 +174,6 @@ function viz(tree) {
 
             })
             .style("stroke", '#fff')
-            .style("stroke-width", "1,5px")
             .on("dblclick", dblclick)
             .on("click", gameclick)
             .on('mouseover', function(d) { nodeHover(d, 0) });
@@ -186,7 +184,6 @@ function viz(tree) {
             .attr('height', 50)
             .style("fill", "rgb(78, 121, 167)")
             .style("stroke", '#fff')
-            .style("stroke-width", "1,5px")
             .on("dblclick", dblclick)
             /* .on('click', function() {
                  // hinder everything from resetting by just dragging on user
@@ -207,7 +204,6 @@ function viz(tree) {
         d3.selectAll('.category').append('polygon')
             .attr('points', '0,-25 -20,10 20,10')
             .style('stroke', '#fff')
-            .style('stroke-width', '1.5px')
             .style('fill', 'black') // change this later so it depends on category
             .on("dblclick", dblclick)
             //.on('click', filtercategory) Removed this, too many options for filtering :) 
@@ -366,7 +362,7 @@ function viz(tree) {
         if (d3.event.defaultPrevented) return;
         d3.select(this)
             .style('stroke', 'black')
-            .style('stroke-width', '1.5px');
+            .style('stroke-width', '2px');
 
         if (d.header_img) {
             //This creates the buylink

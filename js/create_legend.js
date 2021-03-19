@@ -14,7 +14,7 @@ export function create_legend() { //manually create legend
         .attr('x', width - 33)
         .attr('y', 77)
         .text('i')
-        .style('font-size','20px')
+        .style('font-size', '20px')
         .style('font-family', 'serif')
         .style('font-style', 'bold')
         .style('fill', 'white')
@@ -46,7 +46,7 @@ export function create_legend() { //manually create legend
         .attr("width", 20)
         .attr("height", 20)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", "rgb(78, 121, 167)");
 
     svg.append("text")
@@ -63,7 +63,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 140)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", 'rgb(78, 121, 167)');
 
     svg.append("text")
@@ -78,7 +78,7 @@ export function create_legend() { //manually create legend
     svg.append('polygon')
         .attr('points', `${width - 245},160 ${width - 235},180 ${width - 255},180`)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style('fill', 'black');
 
     svg.append("text")
@@ -95,7 +95,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 200)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#ff0000')
         .attr("class", "legend-filter")
         .attr("value", "Strategy & Simulation Games")
@@ -115,7 +115,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 230)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#80ff00')
         .attr("class", "legend-filter")
         .attr("value", "Shooter Games")
@@ -135,7 +135,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 260)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#ff9500')
         .attr("class", "legend-filter")
         .attr("value", "RPG Games")
@@ -155,7 +155,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 290)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#ff00ff')
         .attr("class", "legend-filter")
         .attr("value", "Puzzle & Arcade Games")
@@ -175,7 +175,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 320)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#ff0000');
 
     svg.append("circle")
@@ -183,7 +183,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 320)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#c51f16');
 
     svg.append("circle")
@@ -191,7 +191,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 320)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#932a25');
 
     svg.append("circle")
@@ -199,7 +199,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 320)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#682f2c');
 
     svg.append("circle")
@@ -207,7 +207,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 320)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", '#492927');
 
     svg.append("text")
@@ -224,7 +224,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 385)
         .attr("r", 5)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", 'rgb(78, 121, 167)');
 
     svg.append("circle")
@@ -232,7 +232,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 385)
         .attr("r", 10)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", 'rgb(78, 121, 167)');
 
     svg.append("circle")
@@ -240,7 +240,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 385)
         .attr("r", 15)
         .style('stroke', '#fff')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", 'rgb(78, 121, 167)');
 
     svg.append("text")
@@ -257,7 +257,7 @@ export function create_legend() { //manually create legend
         .attr("cy", 450)
         .attr("r", 8)
         .style('stroke', '#000')
-        .style('stroke-width', '1.5px')
+        .style('stroke-width', '2px')
         .style("fill", 'rgb(78, 121, 167)');
 
     svg.append("text")
@@ -271,11 +271,11 @@ export function create_legend() { //manually create legend
     // separation between legend and tooltip
     svg.append("line")
         .attr("x1", width)
-        .attr("x2", width-350)
+        .attr("x2", width - 350)
         .attr("y1", 490)
         .attr("y2", 490)
         .style("stroke", "white")
-        .style("stroke-width", "1.5px");
+        .style("stroke-width", "2px");
 
     // Tooltip
     svg.append("text")
