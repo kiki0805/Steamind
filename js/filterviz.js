@@ -188,19 +188,19 @@ function viz(tree) {
             .style("stroke", '#fff')
             .style("stroke-width", "1,5px")
             .on("dblclick", dblclick)
-            .on('click', function() {
-                // hinder everything from resetting by just dragging on user
-                var cLength = (selection.categories).length;
-                var tLength = (selection.tags).length;
-                var dLength = (selection.developers).length;
-                var popularityV = selection.popularity;
-                var priceV = selection.price;
+            /* .on('click', function() {
+                 // hinder everything from resetting by just dragging on user
+                 var cLength = (selection.categories).length;
+                 var tLength = (selection.tags).length;
+                 var dLength = (selection.developers).length;
+                 var popularityV = selection.popularity;
+                 var priceV = selection.price;
 
-                // if selection not totally empty
-                if (!(!cLength && !tLength && !dLength && !popularityV && priceV == 100)) {
-                    reset();
-                }
-            })
+                 // if selection not totally empty
+                 if (!(!cLength && !tLength && !dLength && !popularityV && priceV == 100)) {
+                     reset();
+                 }
+             })*/ //Removed this, let's leave it for the reset button hehe :)
             .on('mouseover', function(d) { nodeHover(d, 1); });
 
         //Append circle to category
@@ -210,7 +210,7 @@ function viz(tree) {
             .style('stroke-width', '1.5px')
             .style('fill', 'black') // change this later so it depends on category
             .on("dblclick", dblclick)
-            .on('click', filtercategory)
+            //.on('click', filtercategory) Removed this, too many options for filtering :) 
             .on('mouseover', function(d) { nodeHover(d, 0); });
 
         d3.selectAll('.legend-filter')
